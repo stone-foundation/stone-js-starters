@@ -1,0 +1,23 @@
+{
+  "name": "stone-js-typescript-basic",
+  "version": "1.0.0",
+  "description": "Stone.js typescript basic starter.",
+  "author": "Mr. Stone <evensstone@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "serve": "stone serve",
+    "build": "stone build",
+    "check": "stone typings"
+  },
+  "dependencies": {
+    "@stone-js/adapters": "^0.0.1",
+    "@stone-js/cli": "^0.0.1",
+    "@stone-js/common": "^0.0.1",
+    "@stone-js/core": "^0.0.1",
+    "@stone-js/http": "^0.0.1"
+  }
+}
