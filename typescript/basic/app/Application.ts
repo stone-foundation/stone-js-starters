@@ -1,7 +1,7 @@
 import { StoneApp } from '@stone-js/core/decorators'
 import { Container } from '@stone-js/service-container'
 import { NodeHttpAdapter } from '@stone-js/node-adapter/decorators'
-import { HttpResponse, IncomingHttpEvent, OutgoingHttpResponse } from '@stone-js/event-foundation'
+import { HttpResponse, IncomingHttpEvent, OutgoingHttpResponse } from '@stone-js/http-core'
 
 @StoneApp()
 @NodeHttpAdapter({ default: true })

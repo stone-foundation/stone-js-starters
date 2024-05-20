@@ -1,7 +1,7 @@
 import { EventContext } from '@stone-js/router'
 import { UserService } from '../services/UserService'
 import { Binding } from '@stone-js/service-container'
-import { HttpResponse, OutgoingHttpResponse } from '@stone-js/event-foundation'
+import { HttpResponse, OutgoingHttpResponse } from '@stone-js/http-core'
 import { Controller, Delete, Get, Post, Put } from '@stone-js/router/decorators'
 
 @Controller()

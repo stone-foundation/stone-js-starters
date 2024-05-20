@@ -1,4 +1,4 @@
-import { HttpResponse } from '@stone-js/event-foundation'
+import { HttpResponse } from '@stone-js/http-core'
 import { Controller, Delete, Get, Post, Put } from '@stone-js/router/decorators'
 
 @Controller()
