@@ -1,7 +1,7 @@
 import { StoneApp } from '@stone-js/core/decorators'
 import { Container } from '@stone-js/service-container'
-import { NodeHttpAdapter } from '@stone-js/adapters/decorators'
-import { HttpResponse, IncomingHttpEvent, OutgoingHttpResponse } from '@stone-js/http'
+import { NodeHttpAdapter } from '@stone-js/node-adapter/decorators'
+import { HttpResponse, IncomingHttpEvent, OutgoingHttpResponse } from '@stone-js/event-foundation'
 
 @StoneApp()
 @NodeHttpAdapter({ default: true })
@@ -48,7 +48,7 @@ export class Application {
    */
   handle (event: IncomingHttpEvent): OutgoingHttpResponse {
     console.log('I am here to handle events:', event.method, event.path)
-    return HttpResponse.json({ message: 'Hello World' })
+    return HttpResponse.json({ message: 'Hello World!' })
   }
 
   /**

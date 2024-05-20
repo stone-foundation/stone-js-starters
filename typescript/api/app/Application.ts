@@ -1,9 +1,9 @@
-import { Router } from '@stone-js/router/decorators'
 import { StoneApp } from '@stone-js/core/decorators'
-import { NodeHttpAdapter } from '@stone-js/adapters/decorators'
+import { RouterProvider } from '@stone-js/router/decorators'
+import { NodeHttpAdapter } from '@stone-js/node-adapter/decorators'
 
-@Router()
 @StoneApp()
+@RouterProvider()
 @NodeHttpAdapter({ default: true })
 export class Application {
   /**

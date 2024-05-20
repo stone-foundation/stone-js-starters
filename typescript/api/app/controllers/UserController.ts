@@ -1,7 +1,7 @@
 import { EventContext } from '@stone-js/router'
 import { UserService } from '../services/UserService'
-import { Container } from '@stone-js/service-container'
-import { HttpResponse, OutgoingHttpResponse } from '@stone-js/http'
+import { Binding } from '@stone-js/service-container'
+import { HttpResponse, OutgoingHttpResponse } from '@stone-js/event-foundation'
 import { Controller, Delete, Get, Post, Put } from '@stone-js/router/decorators'
 
 @Controller()
@@ -15,8 +15,8 @@ export class UserController {
    * 
    * @param {Container} container - Stone container. For more details, see: https://www.npmjs.com/package/@stone-js/service-container.
    */
-  constructor (container: Container) {
-    this.userService = container.make('userService')
+  constructor ({ userService }: Binding<UserService>) {
+    this.userService = userService
   }
 
   @Get({

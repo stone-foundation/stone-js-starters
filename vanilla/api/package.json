@@ -13,11 +13,10 @@
     "build": "stone build"
   },
   "dependencies": {
-    "@stone-js/adapters": "^0.0.1",
-    "@stone-js/router": "^0.0.1",
     "@stone-js/cli": "^0.0.1",
-    "@stone-js/common": "^0.0.1",
     "@stone-js/core": "^0.0.1",
-    "@stone-js/http": "^0.0.1"
+    "@stone-js/router": "^0.0.1",
+    "@stone-js/node-adapter": "^0.0.1",
+    "@stone-js/event-foundation": "^0.0.1"
   }
 }
