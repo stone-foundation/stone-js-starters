@@ -11,7 +11,8 @@
   "scripts": {
     "serve": "stone serve",
     "build": "stone build",
-    "check": "stone typings"
+    "check": "stone typings",
+    "export": "stone export"
   },
   "dependencies": {
     "@stone-js/cli": "^0.0.1",
