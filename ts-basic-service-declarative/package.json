@@ -1,0 +1,43 @@
+{
+  "name": "ts-basic-service-declarative",
+  "version": "1.0.0",
+  "description": "Stone.js's starter to create nano services with typescript using declarative API.",
+  "author": "Mr. Stone <evensstone@gmail.com>",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "rollup -c",
+    "build": "rollup -c",
+    "preview": "npm run dev && node ./dist/bootstrap.js",
+    "typings": "stone typings",
+    "test": "vitest run",
+    "test:cvg": "npm run test -- --coverage"
+  },
+  "dependencies": {
+    "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
+    "@stone-js/http-core": "file:/Users/evenspierre/Projects/StoneJS/http-core",
+    "@stone-js/node-http-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-http-adapter",
+    "@stone-js/pipeline": "file:/Users/evenspierre/Projects/StoneJS/pipeline",
+    "@stone-js/router": "file:/Users/evenspierre/Projects/StoneJS/router"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.25.9",
+    "@babel/preset-env": "^7.26.7",
+    "@babel/preset-typescript": "^7.26.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-json": "^6.0.1",
+    "@rollup/plugin-multi-entry": "^6.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@types/node": "^22.12.0",
+    "@vitest/coverage-v8": "^2.1.4",
+    "rollup": "^4.1.5",
+    "rollup-plugin-node-externals": "^8.0.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}

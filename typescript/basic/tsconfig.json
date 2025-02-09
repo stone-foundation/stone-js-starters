@@ -1,20 +1,22 @@
 {
+  "include": [
+    "app/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
+    "strict": true,
+    "allowJs": false,
     "target": "esnext",
     "module": "ESNext",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": false,
+    "sourceMap": true,
     "skipLibCheck": true,
-    "allowJs": false,
-    "strict": false,
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
-    "sourceMap": false,
-    "removeComments": true,
     "isolatedModules": true,
-    "resolveJsonModule": true
-  },
-  "include": [
-    "app/**/*.ts"
-  ]
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+  }
 }

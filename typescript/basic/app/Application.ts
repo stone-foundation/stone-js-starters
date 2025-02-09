@@ -1,64 +1,35 @@
-import { StoneApp } from '@stone-js/core/decorators'
-import { Container } from '@stone-js/service-container'
-import { NodeHttpAdapter } from '@stone-js/node-adapter/decorators'
-import { HttpResponse, IncomingHttpEvent, OutgoingHttpResponse } from '@stone-js/http-core'
+import { StoneApp, LifecycleEventHandler, IBlueprint } from '@stone-js/core'
+import { BodyEventMiddleware, NodeHttpAdapter } from '@stone-js/node-http-adapter'
+import { IncomingHttpEvent, jsonHttpResponse, OutgoingHttpResponse } from '@stone-js/http-core'
 
-@StoneApp()
-@NodeHttpAdapter({ default: true })
-export class Application {
-  private readonly container: Container
+@StoneApp({ name: 'Stone.js Application' })
+@NodeHttpAdapter({
+  url: 'http://localhost:8080',
+  middleware: [
+    { priority: 5, pipe: BodyEventMiddleware },
+  ],
+})
+export class Application implements LifecycleEventHandler<IncomingHttpEvent, OutgoingHttpResponse> {
+  private readonly blueprint: IBlueprint
 
-  /**
-   * Create an Application instance.
-   *
-   * @param {Container} container - Service container. For more details, see: https://www.npmjs.com/package/@stone-js/service-container.
-   */
-  constructor (container: Container) {
-    this.container = container
+  constructor ({ blueprint }: { blueprint: IBlueprint }) {
+    this.blueprint = blueprint
   }
 
-  /**
-   * OnInit Hook
-   * Hook that runs once and only once when the application starts.
-   * Useful for initialization and configuration tasks at startup.
-   * 
-   * @returns
-   */
-  static onInit () {
-    console.log('I am executed once and for all!')
+  static onInit (blueprint: IBlueprint): void {
+    console.log(blueprint.get<string>('stone.name'), 'I am executed once and for all!')
   }
 
-  /**
-   * BeforeHandle Hook
-   * Hook that runs before each event and just before the action handler.
-   * Useful for initialization and configuration that needs to be done before each event.
-   * 
-   * @returns
-   */
-  beforeHandle () {
-    console.log('I am executed before each event!')
+  beforeHandle (): void {
+    console.log(this.blueprint.get<string>('stone.name'), 'I am executed before each event!')
   }
-
-  /**
-   * Event Handler: The Main Entry Point for Your Application
-   * Add your custom application logic here to process the event.
-   * 
-   * @param   {IncomingHttpEvent} event - Stone IncomingEvent. For more details, see: https://github.com/stonemjs/common/blob/main/src/IncomingEvent.mjs.
-   * @returns {OutgoingHttpResponse} Stone OutgoingHttpResponse. For more details, see: https://github.com/stonemjs/http/blob/main/src/HttpResponse.mjs.
-   */
+  
   handle (event: IncomingHttpEvent): OutgoingHttpResponse {
-    console.log('I am here to handle events:', event.method, event.path)
-    return HttpResponse.json({ message: 'Hello World!' })
+    console.log('I am here to handle events:', event.method, event.path, event.get<string>('content-type'), event.body)
+    return jsonHttpResponse({ message: 'Hello World!' })
   }
 
-  /**
-   * Terminate Hook
-   * This hook runs after each response has been sent to the user.
-   * Add your custom logic here to handle cleanup and finalization tasks.
-   * 
-   * @returns
-   */
-  onTerminate () {
-    console.log('I am executed after each response is sent!')
+  onTerminate (): void {
+    console.log(this.blueprint.get<string>('stone.name'), 'I am executed after each response is sent!')
   }
 }

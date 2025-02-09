@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Stone.js typescript basic starter.",
   "author": "Mr. Stone <evensstone@gmail.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
@@ -12,12 +12,21 @@
     "serve": "stone serve",
     "build": "stone build",
     "check": "stone typings",
-    "export": "stone export"
+    "export": "stone export",
+    "test": "vitest run",
+    "test:cvg": "npm run test -- --coverage"
   },
   "dependencies": {
-    "@stone-js/cli": "^0.0.1",
-    "@stone-js/core": "^0.0.1",
-    "@stone-js/http-core": "^0.0.1",
-    "@stone-js/node-adapter": "^0.0.1"
+    "@stone-js/core": "^0.0.35",
+    "@stone-js/http-core": "^0.0.33",
+    "@stone-js/node-cli-adapter": "^0.0.21",
+    "@stone-js/node-http-adapter": "^0.0.21"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@vitest/coverage-v8": "^2.1.4",
+    "vitest": "^2.1.4"
   }
 }
