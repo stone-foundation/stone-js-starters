@@ -1,6 +1,8 @@
 import { Routing } from "@stone-js/router";
 import { Browser } from "@stone-js/browser-adapter";
 // import { NodeHttp } from "@stone-js/node-http-adapter";
+// import { IncomingHttpEvent } from "@stone-js/http-core";
+// import { NodeConsole } from "@stone-js/node-cli-adapter";
 import { ReactIncomingEvent, ReactOutgoingResponse, UseReact } from "@stone-js/use-react";
 import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
 
@@ -22,9 +24,10 @@ import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } fr
  * They are optional and you can remove them if you don't need them.
  */
 @Routing()
+@Browser()
 @UseReact()
-// @NodeHttp({ default: true })
-@Browser({ default: true })
+// @NodeHttp()
+// @NodeConsole({ incomingEvent: IncomingHttpEvent })
 @StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
 export class Application implements IApplication<ReactIncomingEvent, ReactOutgoingResponse> {
   private readonly logger: ILogger

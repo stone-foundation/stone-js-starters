@@ -42,11 +42,10 @@ export class UserErrorPage implements IComponentErrorHandler<ReactIncomingEvent>
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ data, error, statusCode }: RenderErrorContext<RouteNotFoundError>) {
+  render ({ data, statusCode }: RenderErrorContext<RouteNotFoundError>) {
     return (
       <>
         <h1>An error has occured</h1>
-        <p>Error message: {error.message}</p>
         <p>Handler message: {data?.message}</p>
         <p>Status Code: {statusCode}</p>
       </>

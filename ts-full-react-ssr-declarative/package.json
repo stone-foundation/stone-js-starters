@@ -11,11 +11,14 @@
     "preview": "vite preview --outDir dist/client"
   },
   "dependencies": {
+    "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
     "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
+    "@stone-js/http-core": "file:/Users/evenspierre/Projects/StoneJS/http-core",
+    "@stone-js/node-cli-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-cli-adapter",
+    "@stone-js/node-http-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-http-adapter",
     "@stone-js/router": "file:/Users/evenspierre/Projects/StoneJS/router",
     "@stone-js/use-react": "file:/Users/evenspierre/Projects/StoneJS/use-react",
-    "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
-    "@stone-js/node-http-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-http-adapter",
+    "axios": "^1.7.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -24,6 +27,7 @@
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
     "@eslint/js": "^9.17.0",
+    "@types/axios": "^0.14.4",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
@@ -33,7 +37,6 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
-    "rollup-plugin-node-externals": "^8.0.0",
     "tiny-glob": "^0.2.9",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",

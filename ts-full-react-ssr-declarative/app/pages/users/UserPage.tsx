@@ -1,0 +1,57 @@
+import { User } from "../../models/User";
+import { UserService } from "../../services/UserService";
+import { IComponentEventHandler } from "@stone-js/router";
+import { Page, ReactIncomingEvent, RenderContext, IRouter, StoneLink } from "@stone-js/use-react";
+
+export interface UserPageOptions {
+  router: IRouter
+}
+
+/**
+ * User Page component.
+ */
+@Page('/users')
+export class UserPage implements IComponentEventHandler<ReactIncomingEvent> {
+  private readonly userService: UserService
+
+  /**
+   * Create a new Update User Page component.
+   * 
+   * @param userService - The user service.
+   */
+  constructor ({ userService }: { userService: UserService }) {
+    this.userService = userService
+  }
+
+  /**
+   * Handle the incoming event.
+   * 
+   * @param event - The incoming event.
+   * @returns The event data.
+   */
+  async handle (event: ReactIncomingEvent): Promise<User[]> {
+    return await this.userService.listUsers({ limit: event.get<number>('limit', 10) })
+  }
+
+  /**
+   * Render the component.
+   * 
+   * @param options - The options for rendering the component.
+   * @returns The rendered component.
+   */
+  render ({ data }: RenderContext<User[]>) {
+    return (
+      <>
+        <h1>Users</h1>
+        <ul>
+          {data?.map(user => (
+            <li key={user.id}>
+              <StoneLink to={`/users/show/${user.id}`}>{user.name}</StoneLink>
+            </li>
+          ))}
+        </ul>
+        <p><StoneLink to="/users/create">New User</StoneLink></p>
+      </>
+    )
+  }
+}
