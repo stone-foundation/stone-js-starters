@@ -16,7 +16,7 @@ export class Application implements LifecycleEventHandler<IncomingHttpEvent, Out
     this.blueprint = blueprint
   }
 
-  static onInit (blueprint: IBlueprint): void {
+  static onStart (blueprint: IBlueprint): void {
     console.log(blueprint.get<string>('stone.name'), 'I am executed once and for all!')
   }
 

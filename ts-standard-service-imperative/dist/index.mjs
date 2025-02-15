@@ -5534,8 +5534,8 @@ class StoneBuilder {
    * @param listener - The hook function listener to add.
    * @returns The current StoneBuilder instance.
    */
-  onInit(listener) {
-    this.blueprint.add('stone.adapter.hooks.onInit', [listener]);
+  onStart(listener) {
+    this.blueprint.add('stone.adapter.hooks.onStart', [listener]);
     return this;
   }
   /**
@@ -5735,8 +5735,8 @@ class Adapter {
   /**
    * Hook that runs once before everything.
    */
-  async onInit() {
-    await this.executeHooks('onInit');
+  async onStart() {
+    await this.executeHooks('onStart');
   }
   /**
    * Hook that runs before preparing the event context.
@@ -6007,10 +6007,10 @@ const ProviderMiddleware = async (context, next) => {
   return await next(context);
 };
 /**
- * Middleware to register service providers to the `onInit` hook of the current adapter.
+ * Middleware to register service providers to the `onStart` hook of the current adapter.
  *
- * This middleware filters modules to identify service providers that implement the `onInit` hook,
- * and adds them to the `onInit` lifecycle event of the current adapter.
+ * This middleware filters modules to identify service providers that implement the `onStart` hook,
+ * and adds them to the `onStart` lifecycle event of the current adapter.
  *
  * @param {ConfigContext} context - The configuration context containing the modules and blueprint.
  * @param {NextPipe<ConfigContext, IBlueprint>} next - The next function in the middleware pipeline.
@@ -6018,17 +6018,17 @@ const ProviderMiddleware = async (context, next) => {
  *
  * @example
  * ```typescript
- * await RegisterProviderToOnInitHookMiddleware({ modules, blueprint }, next);
+ * await RegisterProviderToOnStartHookMiddleware({ modules, blueprint }, next);
  * ```
  */
-const RegisterProviderToOnInitHookMiddleware = async (context, next) => {
+const RegisterProviderToOnStartHookMiddleware = async (context, next) => {
   const adapter = context.blueprint.get('stone.adapter');
   const providers = context.modules.filter(module => hasMetadata(module, PROVIDER_KEY));
   if (adapter !== undefined) {
-    providers.map(provider => provider).filter(provider => provider.onInit !== undefined).forEach(provider => {
+    providers.map(provider => provider).filter(provider => provider.onStart !== undefined).forEach(provider => {
       adapter.hooks ??= {};
-      adapter.hooks.onInit ??= [];
-      adapter.hooks.onInit = adapter.hooks.onInit.concat(async v => await provider.onInit(v));
+      adapter.hooks.onStart ??= [];
+      adapter.hooks.onStart = adapter.hooks.onStart.concat(async v => await provider.onStart(v));
     });
   }
   return await next(context);
@@ -6276,7 +6276,7 @@ const coreConfigMiddleware = [{
   module: AdapterErrorHandlerMiddleware,
   priority: 0.7
 }, {
-  module: RegisterProviderToOnInitHookMiddleware,
+  module: RegisterProviderToOnStartHookMiddleware,
   priority: 0.7
 }, {
   module: AdapterMiddlewareMiddleware,
@@ -77634,7 +77634,7 @@ class NodeHttpAdapter extends Adapter {
    * ```
    */
   async run() {
-    await this.onInit();
+    await this.onStart();
     return await new Promise((resolve, reject) => {
       this.server.once('error', error => reject(error)).listen(Number(this.url.port), this.url.hostname, () => resolve(this.server));
     });
@@ -77647,12 +77647,12 @@ class NodeHttpAdapter extends Adapter {
    *
    * @throws {NodeHttpAdapterError} If the adapter is used outside a Node.js context.
    */
-  async onInit() {
+  async onStart() {
     if (typeof window === 'object') {
       throw new NodeHttpAdapterError('This `NodeHTTPAdapter` must be used only in Node.js context.');
     }
     this.catchUncaughtExceptionListener();
-    await super.onInit();
+    await super.onStart();
   }
   /**
    * Lifecycle hook for adapter termination.

@@ -2,7 +2,7 @@ import { UserEvent } from "../events/UserEvent"
 import { User, UserInput } from "../models/User"
 import { UserClient } from "../clients/UserClient"
 import { UserNotFoundError } from "../errors/UserNotFoundError"
-import { EventEmitter, IContainer, Service } from "@stone-js/core"
+import { EventEmitter, IContainer, isEmpty, Service } from "@stone-js/core"
 
 /**
  * User Service Options
@@ -22,6 +22,7 @@ export interface UserServiceOptions {
 */
 @Service({ alias: 'userService' })
 export class UserService {
+  private _currentUser?: User
   private readonly userClient: UserClient
   private readonly eventEmitter: EventEmitter
 
@@ -52,6 +53,17 @@ export class UserService {
    */
   async list (limit: number = 10): Promise<User[]> {
     return await this.userClient.list(limit)
+  }
+
+  /**
+   * Get the current user
+   */
+  async currentUser(singleton?: boolean): Promise<User> {
+    if (isEmpty(this._currentUser) || singleton !== true) {
+      this._currentUser = await this.userClient.currentUser()
+    }
+
+    return this._currentUser
   }
 
   /**

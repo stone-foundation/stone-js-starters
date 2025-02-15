@@ -4,8 +4,8 @@ import { UserService } from "./services/UserService";
 import { NodeConsole } from "@stone-js/node-cli-adapter";
 export { NODE_CONSOLE_PLATFORM } from "@stone-js/node-cli-adapter";
 import { IncomingHttpEvent, OutgoingHttpResponse } from "@stone-js/http-core";
-import { MetaBodyEventMiddleware, NodeHttp } from "@stone-js/node-http-adapter";
 import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
+import { MetaBodyEventMiddleware, MetaFilesEventMiddleware, NodeHttp } from "@stone-js/node-http-adapter";
 
 /**
  * Application
@@ -27,7 +27,7 @@ import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } fr
 @Routing()
 @NodeConsole({ incomingEvent: IncomingHttpEvent })
 @StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
-@NodeHttp({ middleware: [MetaBodyEventMiddleware], default: true })
+@NodeHttp({ middleware: [MetaBodyEventMiddleware, MetaFilesEventMiddleware], default: true })
 export class Application implements IApplication<IncomingHttpEvent, OutgoingHttpResponse> {
   private readonly logger: ILogger
   
@@ -50,10 +50,24 @@ export class Application implements IApplication<IncomingHttpEvent, OutgoingHttp
    * At this point, you only have access to the blueprint.
    * Because the container is not yet created.
    * Note: This method is static
+   * 
+   * @param blueprint - The blueprint
    */
-  static onInit(blueprint: IBlueprint): void {
+  static onStart(blueprint: IBlueprint): void {
     const AppName = blueprint.get<string>('stone.name')
-    console.log(`${AppName}'s Application initialized`)
+    console.log(`${AppName}'s Application started`)
+  }
+
+  /**
+   * Stop the application
+   * Run just before the application stops.
+   * Note: This method is static
+   * 
+   * @param blueprint - The blueprint
+   */
+  static onStop(blueprint: IBlueprint): void {
+    const AppName = blueprint.get<string>('stone.name')
+    console.log(`${AppName}'s Application stopped`)
   }
 
   /**

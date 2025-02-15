@@ -1,5 +1,5 @@
 import { User } from "../../models/User";
-import { UserForm } from "../../components/UserForm";
+import { UserForm } from "../../components/UserForm/UserForm";
 import { UserService } from "../../services/UserService";
 import { IComponentEventHandler } from "@stone-js/router";
 import { Page, ReactIncomingEvent, RenderContext } from "@stone-js/use-react";

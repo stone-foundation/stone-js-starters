@@ -49,7 +49,8 @@ export class ListUsersCommand implements ICommandHandler<IncomingEvent> {
    */
   async handle (event: IncomingEvent): Promise<void> {
     const limit = event.get<number>('limit', 10);
-    const users = await this.userService.listUsers({ limit });
-    this.logger.info('List users command', users);
+    const users = await this.userService.list(limit);
+    this.logger.info('List users command');
+    console.table(users);
   }
 }

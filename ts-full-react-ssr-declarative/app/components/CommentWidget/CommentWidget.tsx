@@ -1,10 +1,8 @@
 import { User } from "../../models/User"
-import { Article } from "../../models/Article"
+import { Post } from "../../models/Post"
 import { FC, useEffect, useState } from "react"
-import { IContainer, ILogger } from "@stone-js/core"
 import { CommentItem } from "../CommentItem/CommentItem"
 import { CommentForm } from "../CommentForm/CommentForm"
-import { ReactIncomingEvent } from "@stone-js/use-react"
 import { CommentService } from "../../services/CommentService"
 import { CommentInput, CommentView } from "../../models/Comment"
 
@@ -12,31 +10,27 @@ import { CommentInput, CommentView } from "../../models/Comment"
  * Comment Widget Options
  */
 export interface CommentWidgetOptions {
-  article: Article
-  container: IContainer
-  event: ReactIncomingEvent
+  post: Post
+  user: User
+  commentService: CommentService
 }
 
 /**
  * Comment Items component.
  */
-export const CommentWidget: FC<CommentWidgetOptions> = ({ article, event, container }) => {
-  const user = event.getUser<User>() ?? {} as User
-  const logger = container.make<ILogger>('logger')
+export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentService }) => {
   const [comments, setComments] = useState<CommentView[]>([])
-  const commentService = container.make<CommentService>(CommentService)
   const [fetchingStatus, setFetchingStatus] = useState<'idle' | 'loading' | 'error'>('idle')
 
   // Fetch comments
   const fetchComments = async () => {
     try {
       setFetchingStatus('loading')
-      const comments = await commentService.list(article.id)
+      const comments = await commentService.list(post.id)
       setFetchingStatus('idle')
       setComments(comments)
-    } catch (error: any) {
+    } catch (_: any) {
       setFetchingStatus('error')
-      logger.error(error.message, { error })
     }
   }
 
@@ -45,9 +39,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ article, event, contai
     try {
       await commentService.create(commentInput)
       await fetchComments()
-    } catch (error: any) {
-      logger.error(error.message, { error })
-
+    } catch (_: any) {
       setComments(comments.map(comment => ({
         ...comment,
         status: comment.id === commentInput.id ? 'error' : comment.status
@@ -56,12 +48,12 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ article, event, contai
   }
 
   // Handle save
-  const handleSave = async (content: string) => {
-    const id = comments.length + 1
+  const handleOnSave = async (content: string) => {
+    const id = Math.random()
     const commentInput: CommentInput = {
       id,
       content,
-      articleId: article.id
+      postId: post.id
     }
 
     const commentView: CommentView = {
@@ -77,7 +69,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ article, event, contai
   }
 
   // Fetch comments on mount
-  useEffect(() => { fetchComments().then(() => {}) }, [article.id])
+  useEffect(() => { fetchComments().then(() => {}) }, [post.id])
 
   // Render
   if (comments.length === 0 && fetchingStatus === 'loading') {
@@ -89,10 +81,10 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ article, event, contai
   } else {
     return (
       <div>
-        <CommentForm handleSave={handleSave} />
+        <CommentForm onSave={handleOnSave} />
         <div>
-          {comments.map((comment, index) => (
-            <CommentItem key={index} commentView={comment} handleRetrySave={saveComment} />
+          {comments.map((comment) => (
+            <CommentItem key={comment.id} commentView={comment} onRetry={saveComment} />
           ))}
         </div>
       </div>

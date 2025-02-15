@@ -33,8 +33,8 @@ export class CommentClient {
    * @param limit - The limit of Comments to list
    * @returns The list of Comments
    */
-  async list(articleId: number, limit: number = 10): Promise<Comment[]> {
-    const query = new URLSearchParams({ articleId: articleId.toString(), limit: limit.toString() })
+  async list(postId: number, limit: number = 10): Promise<Comment[]> {
+    const query = new URLSearchParams({ postId: postId.toString(), limit: limit.toString() })
     return await this.client.get<Comment[]>(`${this.path}?${query}`)
   }
 

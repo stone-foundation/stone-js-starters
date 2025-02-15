@@ -1,8 +1,8 @@
 import { Routing } from "@stone-js/router";
 import { Browser } from "@stone-js/browser-adapter";
-// import { NodeHttp } from "@stone-js/node-http-adapter";
-// import { IncomingHttpEvent } from "@stone-js/http-core";
-// import { NodeConsole } from "@stone-js/node-cli-adapter";
+import { NodeHttp } from "@stone-js/node-http-adapter";
+import { IncomingHttpEvent } from "@stone-js/http-core";
+import { NodeConsole } from "@stone-js/node-cli-adapter";
 import { ReactIncomingEvent, ReactOutgoingResponse, UseReact } from "@stone-js/use-react";
 import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
 
@@ -26,8 +26,8 @@ import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } fr
 @Routing()
 @Browser()
 @UseReact()
-// @NodeHttp()
-// @NodeConsole({ incomingEvent: IncomingHttpEvent })
+@NodeHttp()
+@NodeConsole({ incomingEvent: IncomingHttpEvent })
 @StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
 export class Application implements IApplication<ReactIncomingEvent, ReactOutgoingResponse> {
   private readonly logger: ILogger
@@ -51,7 +51,7 @@ export class Application implements IApplication<ReactIncomingEvent, ReactOutgoi
    * Because the container is not yet created.
    * Note: This method is static
    */
-  static onInit(blueprint: IBlueprint): void {
+  static onStart(blueprint: IBlueprint): void {
     const AppName = blueprint.get<string>('stone.name')
     console.log(`${AppName}'s Application initialized`)
   }

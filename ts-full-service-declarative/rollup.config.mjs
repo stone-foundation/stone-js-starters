@@ -8,10 +8,12 @@ import nodeExternals from 'rollup-plugin-node-externals'
 
 export default {
   input: 'app/**/*.ts',
+  context: 'globalThis',
   output: {
     format: 'es',
     file: 'dist/app.mjs'
   },
+  external:['@libsql/client', 'bcrypt'],
   plugins: [
     multi(),
     nodeExternals({ deps: false }), // Must always be before `nodeResolve()`.
@@ -38,5 +40,14 @@ export default {
       ],
       plugins: [['@babel/plugin-proposal-decorators', { version: '2023-11' }]],
     })
-  ]
+  ],
+  onwarn(warning, warn) {
+    // Suppress only the yargs circular dependency warning
+    if (
+      warning.code === "CIRCULAR_DEPENDENCY" &&
+      /node_modules[/\\]yargs/.test(warning.message)
+    ) { return }
+
+    warn(warning)
+  },
 }

@@ -35,11 +35,11 @@ export class CommentService {
   /**
    * List comments
    * 
-   * @param articleId - The id of the article to list comments
+   * @param postId - The id of the post to list comments
    * @param limit - The limit of comments to list
    */
-  async list (articleId: number, limit: number = 10): Promise<Comment[]> {
-    return await this.commentClient.list(articleId, limit)
+  async list (postId: number, limit: number = 10): Promise<Comment[]> {
+    return await this.commentClient.list(postId, limit)
   }
 
   /**

@@ -8,7 +8,7 @@ export interface Comment {
   author: User
   content: string
   authorId: number
-  articleId: number
+  postId: number
   createdAt: number
 }
 
@@ -18,7 +18,7 @@ export interface Comment {
 export interface CommentInput {
   id: number
   content: string
-  articleId: number
+  postId: number
 }
 
 /**

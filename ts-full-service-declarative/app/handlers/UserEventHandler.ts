@@ -1,8 +1,10 @@
-import { User } from '../models/User';
 import { ILogger } from "@stone-js/core";
+import { File } from "@stone-js/filesystem";
 import { UserService } from '../services/UserService';
+import { User, UserModel, UserResponse } from '../models/User';
 import { Delete, EventHandler, Get, Patch, Post } from "@stone-js/router";
-import { IncomingHttpEvent, JsonHttpResponse, NoContentHttpResponse } from "@stone-js/http-core";
+import { FileHttpResponse, IncomingHttpEvent, JsonHttpResponse, NoContentHttpResponse } from "@stone-js/http-core";
+
 /**
  * User Event Handler Options
 */
@@ -42,8 +44,20 @@ export class UserEventHandler {
   */
   @Get('/', { name: 'list' })
   @JsonHttpResponse(200)
-  async listUsers (event: IncomingHttpEvent): Promise<User[]> {
-    return await this.userService.listUsers({ limit: event.get<number>('limit', 10) })
+  async list(event: IncomingHttpEvent): Promise<UserResponse[]> {
+    return await this.userService.list(event.get<number>('limit', 10))
+  }
+
+  /**
+   * Show current user
+   * 
+   * @param event - IncomingHttpEvent
+   * @returns User
+  */
+  @Get('/me')
+  showCurrent(event: IncomingHttpEvent): UserResponse {
+    const user = { ...event.getUser<UserModel>(), password: undefined }
+    return user as UserResponse
   }
 
   /**
@@ -55,8 +69,23 @@ export class UserEventHandler {
    * Because literal object is returned as json.
   */
   @Get('/:user@id(\\d+)', { bindings: { user: UserService } })
-  showUser (event: IncomingHttpEvent): User {
-    return event.get<User>('user', {} as User)
+  show(event: IncomingHttpEvent): UserResponse {
+    return event.get<UserResponse>('user', {} as UserResponse)
+  }
+
+  /**
+   * Show a user avatar
+   * 
+   * @param event - IncomingHttpEvent
+   * @returns File
+   * @throws FileError if the file is not valid.
+   * @throws NotFoundError if the user is not found.
+   */
+  @Get('/:user@id(\\d+)/avatar', { bindings: { user: UserService } })
+  @FileHttpResponse()
+  avatar(event: IncomingHttpEvent): File {
+    const user = event.get<UserResponse>('user', {} as UserResponse)
+    return File.create(`public/uploads/${user.avatar}`)
   }
 
   /**
@@ -67,8 +96,27 @@ export class UserEventHandler {
   */
   @Post('/')
   @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async createUser (event: IncomingHttpEvent): Promise<void> {
-    await this.userService.createUser({ user: event.body })
+  async create(event: IncomingHttpEvent): Promise<void> {
+    const payload = event.getBody<UserModel>({} as any)
+
+    if (event.hasFile('avatar')) {
+      const file = event.getFile('avatar')?.[0]
+      payload.avatar = `${crypto.randomUUID()}-${file?.getClientOriginalName()}`
+      event.getFile('avatar')?.[0]?.move('public/uploads', payload.avatar)
+    }
+
+    await this.userService.create(payload)
+  }
+
+  /**
+   * Update the current user
+   * 
+   * With explicit rules definition.
+  */
+  @Patch('/me')
+  @JsonHttpResponse(204)
+  async updateCurrent(event: IncomingHttpEvent): Promise<UserResponse> {
+    return await this.userService.update(event.getUser<UserModel>()?.id ?? 0, event.getBody<UserModel>({} as any))
   }
 
   /**
@@ -78,8 +126,8 @@ export class UserEventHandler {
   */
   @Patch('/:id', { rules: { id: /\d+/ } })
   @JsonHttpResponse(204)
-  async updateUser (event: IncomingHttpEvent): Promise<User> {
-    return await this.userService.updateUser({ id: event.get<string>('id', ''), user: event.body })
+  async update(event: IncomingHttpEvent): Promise<UserResponse> {
+    return await this.userService.update(event.get<number>('id', 0), event.getBody<UserModel>({} as any))
   }
 
   /**
@@ -88,9 +136,9 @@ export class UserEventHandler {
    * Explcitily returning a status code.
   */
   @Delete('/:id')
-  async deleteUser (event: IncomingHttpEvent): Promise<unknown> {
-    this.logger.info('Currennt connected User', event.getUser())
-    await this.userService.deleteUser({ id: event.get<string>('id', '') })
+  async delete(event: IncomingHttpEvent): Promise<unknown> {
+    await this.userService.delete(event.get<number>('id', 0))
+    this.logger.info(`User deleted: ${event.get<number>('id')}, by user: ${event.getUser<User>()?.id}`)
     return { statusCode : 204 }
   }
 }

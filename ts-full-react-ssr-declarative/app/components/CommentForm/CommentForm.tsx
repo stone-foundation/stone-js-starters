@@ -1,31 +1,35 @@
-import { FC, useRef } from 'react';
+import { FC, useRef } from 'react'
 
 /**
  * Comment Form Props
  */
 export interface CommentFormOptions {
-  handleSave: (content: string) => Promise<void>
+  onSave: (content: string) => Promise<void>
 }
 
 /**
  * Comment Form component.
  */
-export const CommentForm: FC<CommentFormOptions> = ({ handleSave }) => {
-  const commentContentRef = useRef<string>('')
+export const CommentForm: FC<CommentFormOptions> = ({ onSave }) => {
+  const contentRef = useRef<HTMLInputElement>(null)
 
+  // Handle the form submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await handleSave(commentContentRef.current)
-  };
+    event.preventDefault()
+    if (contentRef.current === null) return
 
-  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    commentContentRef.current = event.target.value;
-  };
+    const content = contentRef.current.value.trim()
+    if (content.length === 0) return // Prevent empty submissions
+    
+    contentRef.current.value = '' // Clear input field
+    await onSave(content)
+  }
 
+  // Render the component
   return (
     <form onSubmit={handleSubmit}>
       <p>
-        <input type='text' onChange={handleContentChange} placeholder='Write a comment...' />
+        <input ref={contentRef} type='text' placeholder='Write a comment...' />
         <button type='submit'>Add Comment</button>
       </p>
     </form>

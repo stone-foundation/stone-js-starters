@@ -51,7 +51,7 @@ export class Application implements IApplication<IncomingHttpEvent, OutgoingHttp
    * Because the container is not yet created.
    * Note: This method is static
    */
-  static onInit(blueprint: IBlueprint): void {
+  static onStart(blueprint: IBlueprint): void {
     const AppName = blueprint.get<string>('stone.name')
     console.log(`${AppName}'s Application initialized`)
   }

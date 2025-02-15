@@ -1,12 +1,14 @@
-import { Dummydb } from "../Dummydb"
-import { User } from "../models/User"
-import { Stone } from "@stone-js/core"
+import { eq } from 'drizzle-orm'
+import { Stone } from '@stone-js/core'
+import { users } from '../database/schema'
+import { UserModel } from '../models/User'
+import { LibSQLDatabase } from 'drizzle-orm/libsql'
 
 /**
  * User Repository Options
  */
 export interface UserRepositoryOptions {
-  db: Dummydb
+  database: LibSQLDatabase
 }
 
 /**
@@ -14,15 +16,19 @@ export interface UserRepositoryOptions {
  * 
  * @Stone() is a decorator that marks a class as a Stone component.
  * @Stone() Think of it like a Bean in Spring or a Component in Angular.
- * The alias is required to get benefits of desctructuring Dependency Injection.
- * @Service() is an alias of @Stone() decorator.
+ * The alias is required to get benefits of destructuring Dependency Injection.
  */
 @Stone({ alias: 'userRepository' })
 export class UserRepository {
-  private readonly db: Dummydb
+  private readonly database: LibSQLDatabase
 
-  constructor({ db }: UserRepositoryOptions) {
-    this.db = db
+  /**
+   * Create a new instance of UserRepository
+   * 
+   * @param options - The options to create the repository
+   */
+  constructor({ database }: UserRepositoryOptions) {
+    this.database = database
   }
 
   /**
@@ -31,48 +37,63 @@ export class UserRepository {
    * @param limit - The limit of users to list
    * @returns The list of users
    */
-  async listUsers({ limit }: { limit: number }): Promise<User[]> {
-    return await this.db.table('users').limit(limit).get();
+  async list(limit: number): Promise<UserModel[]> {
+    return await this.database.select().from(users).limit(limit)
   }
 
   /**
-   * Find a user
+   * Find a user by ID
    * 
-   * @param id - The id of the user to find
-   * @returns The user
+   * @param id - The ID of the user to find
+   * @returns The user or undefined if not found
    */
-  async findUser(conditions: Record<string, any>): Promise<User | undefined> {
-    return await this.db.table('users').where(conditions).first();
+  async findById(id: number): Promise<UserModel | undefined> {
+    const result = await this.database.select().from(users).where(eq(users.id, id)).get()
+    return result ?? undefined
+  }
+
+  /**
+   * Find a user by dynamic conditions
+   * 
+   * @param conditions - Conditions to match the user
+   * @returns The user or undefined if not found
+   */
+  async findBy(conditions: Partial<UserModel>): Promise<UserModel | undefined> {
+    const result = await this.database.select().from(users).where(eq(users.email, conditions.email!)).get();
+    return result ?? undefined;
   }
 
   /**
    * Create a user
    * 
    * @param user - The user to create
-   * @returns The id of the created
+   * @returns The ID of the created user
    */
-  async createUser({ user }: { user: any }): Promise<number | undefined> {
-    return await this.db.table('users').insert(user);
+  async create(user: Omit<UserModel, 'id'>): Promise<bigint | undefined> {
+    const result = await this.database.insert(users).values(user)
+    return result.lastInsertRowid
   }
 
   /**
    * Update a user
    * 
-   * @param id - The id of the user to update
+   * @param id - The ID of the user to update
    * @param user - The user data to update
-   * @returns The number of updated users
+   * @returns The updated user or undefined if not found
    */
-  async updateUser({ id, user }: { id: string, user: any }): Promise<User> {
-    return await this.db.table('users').where({ id }).update(user);
+  async update(id: number, user: Partial<UserModel>): Promise<UserModel | undefined> {
+    const result = await this.database.update(users).set(user).where(eq(users.id, id)).returning().get()
+    return result ?? undefined
   }
 
   /**
    * Delete a user
    * 
-   * @param id - The id of the user to delete
-   * @returns The number of deleted users
+   * @param id - The ID of the user to delete
+   * @returns `true` if the user was deleted, `false` if the user was not found
    */
-  async deleteUser({ id }: { id: string }): Promise<void> {
-    return await this.db.table('users').where({ id }).delete();
+  async delete(id: number): Promise<boolean> {
+    const result = await this.database.delete(users).where(eq(users.id, id)).run()
+    return result.rowsAffected > 0
   }
 }

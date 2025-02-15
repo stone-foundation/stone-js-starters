@@ -15,13 +15,13 @@ export class Application {
   }
 
   /**
-   * OnInit Hook
+   * OnStart Hook
    * Hook that runs once and only once when the application starts.
    * Useful for initialization and configuration tasks at startup.
    * 
    * @returns
    */
-  static onInit () {
+  static onStart () {
     console.log('I am executed once and for all!')
   }
 

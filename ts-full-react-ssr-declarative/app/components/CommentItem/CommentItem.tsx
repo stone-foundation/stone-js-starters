@@ -7,20 +7,22 @@ import { CommentView } from '../../models/Comment'
  */
 export interface CommentItemProps {
   commentView: CommentView
-  handleRetrySave: (commentView: CommentView) => Promise<void>
+  onRetry: (commentView: CommentView) => Promise<void>
 }
 
 /**
  * Comment Item component.
  */
-export const CommentItem: FC<CommentItemProps> = ({ commentView, handleRetrySave }) => {
+export const CommentItem: FC<CommentItemProps> = ({ commentView, onRetry }) => {
   const [comment, setComment] = useState<CommentView>(commentView)
 
+  // Handle the retry
   const handleOnClick = async () => {
     setComment({ ...comment, status: 'saving' })
-    await handleRetrySave(comment)
+    await onRetry(comment)
   }
 
+  // Render the component
   return (
     <div>
       <p>{comment.content}</p>

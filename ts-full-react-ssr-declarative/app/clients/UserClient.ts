@@ -38,6 +38,15 @@ export class UserClient {
   }
 
   /**
+   * Get the current user
+   * 
+   * @returns The current user
+   */
+  async currentUser(): Promise<User> {
+    return await this.client.get<User>(`${this.path}/me`)
+  }
+
+  /**
    * Find a user
    * 
    * @param id - The id of the user to find

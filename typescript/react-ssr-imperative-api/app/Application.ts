@@ -14,7 +14,7 @@ export class Application implements IProvider<ReactIncomingEvent, ReactOutgoingR
   /**
    * Hook that runs once and before everything else.
    */
-  static onInit (blueprint: IBlueprint): void {
+  static onStart (blueprint: IBlueprint): void {
     blueprint.set('stone.router.definitions', this.routeDefinitions())
   }
 
