@@ -30,22 +30,24 @@ export class CommentClient {
   /**
    * List comments
    * 
+   * @param postId - The id of the Post to list Comments
    * @param limit - The limit of Comments to list
    * @returns The list of Comments
    */
   async list(postId: number, limit: number = 10): Promise<Comment[]> {
-    const query = new URLSearchParams({ postId: postId.toString(), limit: limit.toString() })
-    return await this.client.get<Comment[]>(`${this.path}?${query}`)
+    const query = new URLSearchParams({ limit: limit.toString() })
+    return await this.client.get<Comment[]>(`${this.path}/posts/${postId}?${query}`)
   }
 
   /**
    * Create a comment
    * 
+   * @param postId - The id of the Post to create the Comment for
    * @param comment - The Comment to create
    * @returns The created Comment
    */
-  async create(comment: CommentInput) {
-    return this.client.post(this.path, comment)
+  async create(postId: number, comment: CommentInput) {
+    return this.client.post(`${this.path}/posts/${postId}`, comment)
   }
 
   /**

@@ -38,6 +38,17 @@ export class PostClient {
   }
 
   /**
+   * List posts by author
+   * 
+   * @param id - The id of the author to list posts
+   * @param limit - The limit of posts to list
+   * @returns The list of posts
+   */
+  async listByAuthor(id: number, limit: number = 10): Promise<Post[]> {
+    return await this.client.get<Post[]>(`${this.path}/authors/${id}?limit=${limit}`)
+  }
+
+  /**
    * Find an post
    * 
    * @param id - The id of the post to find

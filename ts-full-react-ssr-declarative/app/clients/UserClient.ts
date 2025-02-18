@@ -66,6 +66,16 @@ export class UserClient {
   }
 
   /**
+   * Update the current user
+   * 
+   * @param user - The current user
+   * @returns The current user
+   */
+  async updateCurrent(user: UserInput) {
+    return this.client.patch(`${this.path}/me`, user)
+  }
+
+  /**
    * Update a user
    * 
    * @param id - The id of the user to update

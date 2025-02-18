@@ -1,10 +1,10 @@
 import { User } from "../../models/User";
 import { UserService } from "../../services/UserService";
 import { IComponentEventHandler } from "@stone-js/router";
-import { Page, ReactIncomingEvent, RenderContext, IRouter, StoneLink } from "@stone-js/use-react";
+import { Page, ReactIncomingEvent, RenderContext, StoneLink } from "@stone-js/use-react";
 
 export interface UserPageOptions {
-  router: IRouter
+  userService: UserService
 }
 
 /**
@@ -19,7 +19,7 @@ export class UserPage implements IComponentEventHandler<ReactIncomingEvent> {
    * 
    * @param userService - The user service.
    */
-  constructor ({ userService }: { userService: UserService }) {
+  constructor ({ userService }: UserPageOptions) {
     this.userService = userService
   }
 
@@ -30,7 +30,7 @@ export class UserPage implements IComponentEventHandler<ReactIncomingEvent> {
    * @returns The event data.
    */
   async handle (event: ReactIncomingEvent): Promise<User[]> {
-    return await this.userService.listUsers({ limit: event.get<number>('limit', 10) })
+    return await this.userService.list(event.get<number>('limit', 10))
   }
 
   /**

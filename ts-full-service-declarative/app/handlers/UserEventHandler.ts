@@ -3,7 +3,7 @@ import { File } from "@stone-js/filesystem";
 import { UserService } from '../services/UserService';
 import { User, UserModel, UserResponse } from '../models/User';
 import { Delete, EventHandler, Get, Patch, Post } from "@stone-js/router";
-import { FileHttpResponse, IncomingHttpEvent, JsonHttpResponse, NoContentHttpResponse } from "@stone-js/http-core";
+import { IncomingHttpEvent, JsonHttpResponse, NoContentHttpResponse } from "@stone-js/http-core";
 
 /**
  * User Event Handler Options
@@ -32,7 +32,7 @@ export class UserEventHandler {
    * @param userService
    * @param logger
    */
-  constructor({ userService, logger }: UserEventHandlerOptions) {
+  constructor({ logger, userService }: UserEventHandlerOptions) {
     this.logger = logger
     this.userService = userService
   }
@@ -82,7 +82,6 @@ export class UserEventHandler {
    * @throws NotFoundError if the user is not found.
    */
   @Get('/:user@id(\\d+)/avatar', { bindings: { user: UserService } })
-  @FileHttpResponse()
   avatar(event: IncomingHttpEvent): File {
     const user = event.get<UserResponse>('user', {} as UserResponse)
     return File.create(`public/uploads/${user.avatar}`)
@@ -97,15 +96,7 @@ export class UserEventHandler {
   @Post('/')
   @NoContentHttpResponse({ 'content-type': 'application/json' })
   async create(event: IncomingHttpEvent): Promise<void> {
-    const payload = event.getBody<UserModel>({} as any)
-
-    if (event.hasFile('avatar')) {
-      const file = event.getFile('avatar')?.[0]
-      payload.avatar = `${crypto.randomUUID()}-${file?.getClientOriginalName()}`
-      event.getFile('avatar')?.[0]?.move('public/uploads', payload.avatar)
-    }
-
-    await this.userService.create(payload)
+    await this.userService.create(this.handleFileUpload(event))
   }
 
   /**
@@ -116,7 +107,10 @@ export class UserEventHandler {
   @Patch('/me')
   @JsonHttpResponse(204)
   async updateCurrent(event: IncomingHttpEvent): Promise<UserResponse> {
-    return await this.userService.update(event.getUser<UserModel>()?.id ?? 0, event.getBody<UserModel>({} as any))
+    return await this.userService.update(
+      event.getUser<UserModel>()?.id ?? 0,
+      this.handleFileUpload(event)
+    )
   }
 
   /**
@@ -127,7 +121,10 @@ export class UserEventHandler {
   @Patch('/:id', { rules: { id: /\d+/ } })
   @JsonHttpResponse(204)
   async update(event: IncomingHttpEvent): Promise<UserResponse> {
-    return await this.userService.update(event.get<number>('id', 0), event.getBody<UserModel>({} as any))
+    return await this.userService.update(
+      event.get<number>('id', 0),
+      this.handleFileUpload(event)
+    )
   }
 
   /**
@@ -140,5 +137,23 @@ export class UserEventHandler {
     await this.userService.delete(event.get<number>('id', 0))
     this.logger.info(`User deleted: ${event.get<number>('id')}, by user: ${event.getUser<User>()?.id}`)
     return { statusCode : 204 }
+  }
+
+  /**
+   * Handle file upload
+   * 
+   * @param event - IncomingHttpEvent
+   * @param payload - UserModel
+  */
+  private handleFileUpload(event: IncomingHttpEvent): UserModel {
+    const payload = event.getBody<UserModel>({} as any)
+
+    if (event.hasFile('avatar')) {
+      const file = event.getFile('avatar')?.[0]
+      payload.avatar = `${crypto.randomUUID()}-${file?.getClientOriginalName()}`
+      file?.move('public/uploads', payload.avatar)
+    }
+    
+    return payload
   }
 }

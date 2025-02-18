@@ -1,7 +1,6 @@
 import { Post, PostInput } from "../models/Post"
-import { PostEvent } from "../events/PostEvent"
 import { PostClient } from "../clients/PostClient"
-import { EventEmitter, IContainer, Service } from "@stone-js/core"
+import { IContainer, Service } from "@stone-js/core"
 import { PostNotFoundError } from "../errors/PostNotFoundError"
 
 /**
@@ -9,7 +8,6 @@ import { PostNotFoundError } from "../errors/PostNotFoundError"
 */
 export interface PostServiceOptions {
   postClient: PostClient
-  eventEmitter: EventEmitter
 }
 
 /**
@@ -23,7 +21,6 @@ export interface PostServiceOptions {
 @Service({ alias: 'postService' })
 export class PostService {
   private readonly postClient: PostClient
-  private readonly eventEmitter: EventEmitter
 
   /**
    * Resolve route binding
@@ -40,9 +37,8 @@ export class PostService {
   /**
    * Create a new Post Service
   */
-  constructor({ postClient, eventEmitter }: PostServiceOptions) {
+  constructor({ postClient }: PostServiceOptions) {
     this.postClient = postClient;
-    this.eventEmitter = eventEmitter;
   }
 
   /**
@@ -52,6 +48,16 @@ export class PostService {
    */
   async list (limit: number = 10): Promise<Post[]> {
     return await this.postClient.list(limit)
+  }
+
+  /**
+   * List posts by author
+   * 
+   * @param id - The id of the author to list posts
+   * @param limit - The limit of posts to list
+   */
+  async listbyAuthor (id: number, limit: number = 10): Promise<Post[]> {
+    return await this.postClient.listByAuthor(id, limit)
   }
 
   /**
@@ -65,7 +71,7 @@ export class PostService {
       return await this.postClient.find(conditions.id)
     } catch (error: any) {
       if (error.status === 404) {
-        throw new PostNotFoundError(error.message)
+        throw new PostNotFoundError(error.message, { cause: error })
       } else {
         throw error
       }
@@ -78,7 +84,6 @@ export class PostService {
    * @param post - The post to create
    */
   async create(post: PostInput): Promise<Post> {
-    await this.eventEmitter.emit(new PostEvent(post))
     return await this.postClient.create(post)
   }
 

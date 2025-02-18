@@ -6,7 +6,7 @@ import { PostInput } from '../../models/Post';
  */
 export interface PostFormOptions {
   post?: PostInput
-  onSave: (post: PostInput) => Promise<void>
+  onSubmit: (post: PostInput) => Promise<void>
 }
 
 /**
@@ -14,10 +14,9 @@ export interface PostFormOptions {
  * 
  * @param options - The options to create the Post Form component.
  */
-export const PostForm: FC<PostFormOptions> = ({ post, onSave }) => {
+export const PostForm: FC<PostFormOptions> = ({ post, onSubmit }) => {
   // Create a reference to the post
   const postRef = useRef<PostInput>({
-    id: post?.id ?? 0,
     title: post?.title ?? '',
     content: post?.content ?? ''
   });
@@ -25,7 +24,7 @@ export const PostForm: FC<PostFormOptions> = ({ post, onSave }) => {
   // Handle the form submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await onSave(postRef.current)
+    await onSubmit(postRef.current)
   }
 
   // Handle the field change

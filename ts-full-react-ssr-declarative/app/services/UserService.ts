@@ -58,7 +58,7 @@ export class UserService {
   /**
    * Get the current user
    */
-  async currentUser(singleton?: boolean): Promise<User> {
+  async current(singleton?: boolean): Promise<User> {
     if (isEmpty(this._currentUser) || singleton !== true) {
       this._currentUser = await this.userClient.currentUser()
     }
@@ -77,7 +77,7 @@ export class UserService {
       return await this.userClient.find(conditions.id)
     } catch (error: any) {
       if (error.status === 404) {
-        throw new UserNotFoundError(error.message)
+        throw new UserNotFoundError(error.message, { cause: error })
       } else {
         throw error
       }
@@ -92,6 +92,15 @@ export class UserService {
   async create(user: UserInput): Promise<void> {
     await this.eventEmitter.emit(new UserEvent(user))
     await this.userClient.create(user)
+  }
+
+  /**
+   * Update the current user
+   * 
+   * @param user - The user data to update
+   */
+  async updateCurrent(user: UserInput): Promise<User> {
+    return await this.userClient.updateCurrent(user)
   }
 
   /**

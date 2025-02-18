@@ -10,7 +10,6 @@ export class HomePage implements IComponentEventHandler<ReactIncomingEvent> {
   /**
    * Render the component.
    * 
-   * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
   render (): ReactNode {

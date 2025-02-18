@@ -45,7 +45,7 @@ export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent
     return (
       <>
         <h1>New Post</h1>
-        <PostForm onSave={this.createPost} />
+        <PostForm onSubmit={this.createPost} />
       </>
     )
   }

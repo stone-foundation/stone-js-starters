@@ -1,25 +1,47 @@
-import { FC, useState } from "react"
-import { User } from "../../models/User"
+import { FC, useRef } from 'react';
+import { UserInput } from '../../models/User';
 
+/**
+ * User Form Options
+ */
 export interface UserFormOptions {
-  value?: User
-  handleSubmit: (user: User) => void
+  user?: UserInput
+  onSubmit: (user: UserInput) => Promise<void>
 }
 
-export const UserForm: FC<UserFormOptions> = ({ handleSubmit, value }) => {
-  const [user, setUser] = useState<User>(value ?? {} as User)
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    handleSubmit(user)
+/**
+ * User Form component.
+ * 
+ * @param options - The options to create the User Form component.
+ */
+export const UserForm: FC<UserFormOptions> = ({ user, onSubmit }) => {
+  // Create a reference to the user
+  const userRef = useRef<UserInput>({
+    name: user?.name ?? '',
+    email: user?.email ?? ''
+  });
+
+  // Handle the form submit
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    await onSubmit(userRef.current)
   }
 
+  // Handle the field change
+  const onChange = (field: keyof UserInput) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    userRef.current[field] = event.target.value;
+  };
+
+  // Render the component
   return (
-    <form onSubmit={onSubmit}>
-      <label htmlFor="name">Your name:</label>
-      <input id="name" type="text" onInput={(v) => setUser({ ...user, name: (v.target as any).value })} value={user.name} />
-      <label htmlFor="email">Your email:</label>
-      <input id="email" type="text" onInput={(v) => setUser({ ...user, email: (v.target as any).value })} value={user.email} />
-      <button type="submit">Submit</button>
+    <form onSubmit={handleSubmit}>
+      <label htmlFor='name'>Name:</label>
+      <input id='name' type='text' onChange={onChange('name')} defaultValue={userRef.current.name} />
+      
+      <label htmlFor='email'>Email:</label>
+      <input id='email' type='email' onChange={onChange('email')} defaultValue={userRef.current.email} />
+      
+      <button type='submit'>User</button>
     </form>
-  )
-}
+  );
+};

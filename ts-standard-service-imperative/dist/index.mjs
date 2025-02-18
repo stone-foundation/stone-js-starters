@@ -4196,32 +4196,32 @@ function hasMetadataSymbol(target) {
 }
 
 /**
- * Class representing a ConfigBuilder for the Stone.js framework.
+ * Class representing a BlueprintBuilder for the Stone.js framework.
  *
- * The ConfigBuilder is responsible for constructing and configuring the dynamic, complex structured options required by the Stone.js framework.
+ * The BlueprintBuilder is responsible for constructing and configuring the dynamic, complex structured options required by the Stone.js framework.
  * It inspects various modules, extracts metadata, and builds the "blueprint" object which serves as the primary configuration for the Stone.js application.
  * This class also manages middleware used to process and populate the configuration during the application setup.
  *
- * The ConfigBuilder allows users to create a unified configuration that is used to initialize and bootstrap the Stone.js application,
+ * The BlueprintBuilder allows users to create a unified configuration that is used to initialize and bootstrap the Stone.js application,
  * ensuring all necessary metadata is aggregated into a blueprint that can be used consistently throughout the application lifecycle.
  *
  * @author Mr. Stone <evensstone@gmail.com>
  */
-class ConfigBuilder {
+class BlueprintBuilder {
   options;
   /**
-   * Create a ConfigBuilder.
+   * Create a BlueprintBuilder.
    *
-   * @param options - The options to create a ConfigBuilder.
-   * @returns A new ConfigBuilder instance.
+   * @param options - The options to create a BlueprintBuilder.
+   * @returns A new BlueprintBuilder instance.
    */
   static create(options) {
     return new this(options);
   }
   /**
-   * Create a ConfigBuilder.
+   * Create a BlueprintBuilder.
    *
-   * @param options - The options to create a ConfigBuilder.
+   * @param options - The options to create a BlueprintBuilder.
    */
   constructor(options = {
     middleware: [],
@@ -4242,8 +4242,8 @@ class ConfigBuilder {
    *
    * @example
    * ```typescript
-   * const configBuilder = ConfigBuilder.create();
-   * const blueprint = await configBuilder.build(rawModules);
+   * const BlueprintBuilder = BlueprintBuilder.create();
+   * const blueprint = await BlueprintBuilder.build(rawModules);
    * ```
    */
   async build(modules, blueprint = Config.create()) {
@@ -5586,7 +5586,7 @@ class StoneBuilder {
    * @returns The platform-specific response.
    */
   async run() {
-    const blueprint = await ConfigBuilder.create().build(this.modules, this.blueprint);
+    const blueprint = await BlueprintBuilder.create().build(this.modules, this.blueprint);
     return await StoneFactory.create({
       blueprint
     }).run();

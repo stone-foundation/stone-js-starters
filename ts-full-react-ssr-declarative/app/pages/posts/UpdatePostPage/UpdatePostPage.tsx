@@ -43,10 +43,10 @@ export class UpdatePostPage implements IComponentEventHandler<ReactIncomingEvent
     if (isNotEmpty<Post>(post)) {
       return (
         <>
-          <h1>{post?.title}</h1>
+          <h1>{post.title}</h1>
           <PostForm
             post={post}
-            onSave={this.updatePost}
+            onSubmit={async (postInput) => await this.updatePost(post.id, postInput)}
           />
           <StoneLink to={`/posts/${post.id}`}>Back</StoneLink>
         </>
@@ -65,9 +65,9 @@ export class UpdatePostPage implements IComponentEventHandler<ReactIncomingEvent
    * 
    * @param post - The post to update.
    */
-  private async updatePost (post: PostInput): Promise<void> {
+  private async updatePost (id: number, post: PostInput): Promise<void> {
     try {
-      await this.postService.update(post.id, post)
+      await this.postService.update(id, post)
       window.alert('Post updated successfully')
     } catch (error: any) {
       window.alert('Error updating the post')

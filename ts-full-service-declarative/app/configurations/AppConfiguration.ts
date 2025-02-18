@@ -1,5 +1,6 @@
 import { Config } from "@libsql/client"
 import { getString } from "@stone-js/env"
+import { MetaHandleCorsMiddleware } from "@stone-js/http-core"
 import { Configuration, IBlueprint, IConfiguration, LogLevel, Promiseable } from "@stone-js/core"
 
 /**
@@ -20,6 +21,8 @@ export class AppConfiguration implements IConfiguration {
       .set('database', this.databaseConfig())
       .set('security', this.securityConfig())
       .set('stone.logger.level', LogLevel.INFO)
+      .set('stone.http.cors.preflightStop', true)
+      .add('stone.kernel.middleware', [MetaHandleCorsMiddleware])
   }
 
   /**

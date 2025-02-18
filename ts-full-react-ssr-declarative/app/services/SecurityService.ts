@@ -44,6 +44,22 @@ export class SecurityService {
   }
 
   /**
+   * Logout a user
+  */
+  async logout(): Promise<void> {
+    await this.securityClient.logout()
+  }
+
+  /**
+   * Refresh the user token
+   * 
+   * @returns The user token
+  */
+  async refresh(): Promise<UserToken> {
+    return await this.securityClient.refresh()
+  }
+
+  /**
    * Register a user
    * 
    * @param user - The user to register

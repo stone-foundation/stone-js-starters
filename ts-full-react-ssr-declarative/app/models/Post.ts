@@ -17,7 +17,6 @@ export interface Post {
  * New Post Interface
 */
 export interface PostInput {
-  id: number
   title: string
   content: string
 }

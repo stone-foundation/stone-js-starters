@@ -1,23 +1,31 @@
 import { ReactNode } from "react";
 import { User } from "../../models/User";
+import { isNotEmpty } from "@stone-js/core";
 import { UserService } from "../../services/UserService";
-import { IContainer, isNotEmpty } from "@stone-js/core";
 import { IComponentEventHandler } from "@stone-js/router";
 import { Page, ReactIncomingEvent, RenderContext, StoneLink } from "@stone-js/use-react";
+
+/**
+ * Show User Page options.
+ */
+export interface ShowUserPageOptions {
+  userService: UserService
+}
 
 /**
  * Show User Page component.
  */
 @Page('/users/:user@id(\\d+)', { bindings: { user: UserService } })
 export class ShowUserPage implements IComponentEventHandler<ReactIncomingEvent> {
+  private readonly userService: UserService
+
   /**
-   * Handle the incoming event.
+   * Create a new Show User Page component.
    * 
-   * @param event - The incoming event.
-   * @returns The outgoing response data.
+   * @param options - The options to create the Show User Page component.
    */
-  handle (event: ReactIncomingEvent): User | undefined {
-    return event.get<User>('user')
+  constructor ({ userService }: ShowUserPageOptions) {
+    this.userService = userService
   }
 
   /**
@@ -26,30 +34,29 @@ export class ShowUserPage implements IComponentEventHandler<ReactIncomingEvent> 
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ data: user, container }: RenderContext<User>): ReactNode {
+  render ({ event }: RenderContext): ReactNode {
+    const user = event.get<User>('user')
+
     return (
       <>
         <h1>Show user</h1>
         <p>Name: {user?.name}</p>
         <p>Email: {user?.email}</p>
         <StoneLink to={`/users/edit/${user?.id}`}>Edit</StoneLink>
-        <button onClick={() => this.deleteUser(container, user)}>Delete</button>
+        <button onClick={async () => await this.deleteUser(user)}>Delete</button>
       </>
     )
   }
 
-  private deleteUser (container: IContainer, user?: User): void {
-    if (isNotEmpty<User>(user)) {
-      const res = window.prompt('Are you sure you want to delete this user?')
-
-      if (res?.toLowerCase() === 'yes') {
-        container
-          .make<UserService>('userService')
-          .deleteUser({ id: user.id })
-          .then(() => {
-            console.log('user deleted')
-          })
-      }
+  /**
+   * Delete the user.
+   * 
+   * @param container - The container.
+   * @param user - The user
+   */
+  private async deleteUser (user?: User): Promise<void> {
+    if (isNotEmpty<User>(user) && window.confirm('Are you sure you want to delete this user?')) {
+      await this.userService.delete(user.id)
     }
   }
 }

@@ -5,6 +5,7 @@ export interface User {
   id: number
   name: string
   email: string
+  avatar: string
   createdAt: number
 }
 
@@ -31,6 +32,7 @@ export interface UserRegister {
   name: string
   email: string
   password: string
+  confirmPassword: string
 }
 
 /**
@@ -39,6 +41,7 @@ export interface UserRegister {
 export interface UserChangePassword {
   password: string
   newPassword: string
+  confirmPassword: string
 }
 
 /**

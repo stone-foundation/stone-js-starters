@@ -37,7 +37,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
   // Save comment
   const saveComment = async (commentInput: CommentInput) => {
     try {
-      await commentService.create(commentInput)
+      await commentService.create(post.id, commentInput)
       await fetchComments()
     } catch (_: any) {
       setComments(comments.map(comment => ({
@@ -48,7 +48,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
   }
 
   // Handle save
-  const handleOnSave = async (content: string) => {
+  const handleOnSubmit = async (content: string) => {
     const id = Math.random()
     const commentInput: CommentInput = {
       id,
@@ -81,7 +81,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
   } else {
     return (
       <div>
-        <CommentForm onSave={handleOnSave} />
+        <CommentForm onSubmit={handleOnSubmit} />
         <div>
           {comments.map((comment) => (
             <CommentItem key={comment.id} commentView={comment} onRetry={saveComment} />

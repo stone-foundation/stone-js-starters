@@ -1,7 +1,7 @@
-import { User } from "../../models/User";
-import { UserForm } from "../../components/UserForm/UserForm";
+import { UserInput } from "../../models/User";
 import { UserService } from "../../services/UserService";
 import { IComponentEventHandler } from "@stone-js/router";
+import { UserForm } from "../../components/UserForm/UserForm";
 import { Page, ReactIncomingEvent } from "@stone-js/use-react";
 
 /**
@@ -30,15 +30,18 @@ export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent
     return (
       <>
         <h1>User form</h1>
-        <UserForm handleSubmit={this.saveUser} />
+        <UserForm onSubmit={this.saveUser} />
       </>
     )
   }
 
-  private saveUser (user: User) {
+  /**
+   * Save the user.
+   * 
+   * @param user - The user
+   */
+  private async saveUser (user: UserInput): Promise<void> {
     console.log('user saved', user)
-    this.userService.createUser({ user }).then(() => {
-      console.log('user created')
-    })
+    await this.userService.create(user)
   }
 }

@@ -17,7 +17,7 @@ export interface AuthMiddlewareOptions {
  */
 @Middleware({
   global: true,
-  params: ['/login', '/register']
+  params: [['/login', '/register']]
 })
 export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutgoingResponse> {
   private readonly snapshot: ISnapshot
@@ -69,12 +69,12 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
    */
   private async resolveCurrentUser(event: ReactIncomingEvent): Promise<void> {
     if (isServer()) {
-      const user = await this.userService.currentUser()
+      const user = await this.userService.current()
       event.setUserResolver(() => user)
       this.snapshot.set(`${event.fingerprint()}.user`, user)
     } else {
       let user = this.snapshot.get(`${event.fingerprint()}.user`)
-      user ??= await this.userService.currentUser(true)
+      user ??= await this.userService.current(true)
       event.setUserResolver(() => user)
     }
   }

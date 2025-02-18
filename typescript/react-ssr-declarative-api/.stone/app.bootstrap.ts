@@ -1,4 +1,4 @@
-import { ConfigBuilder, StoneFactory } from '@stone-js/core'
+import { BlueprintBuilder, StoneFactory } from '@stone-js/core'
 
 /**
  * Import application modules.
@@ -11,7 +11,7 @@ const modules = Object.values(rawModules).flatMap((module: any) => Object.values
  * 
  * @returns {IBlueprint}
  */
-const blueprint = await ConfigBuilder.create().build(modules)
+const blueprint = await BlueprintBuilder.create().build(modules)
 
 /**
  * Run application.

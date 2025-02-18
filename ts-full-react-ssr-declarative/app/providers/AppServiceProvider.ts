@@ -1,4 +1,4 @@
-import { Axios } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { AxiosClient } from "../clients/AxiosClient";
 import { IncomingHttpEvent, OutgoingHttpResponse } from "@stone-js/http-core";
 import { IBlueprint, IContainer, IServiceProvider, Provider } from "@stone-js/core";
@@ -35,8 +35,8 @@ export class AppServiceProvider implements IServiceProvider<IncomingHttpEvent, O
     }).alias(AxiosClient, ['axiosClient', 'httpClient'])
   }
 
-  private getAxiosInstance (container: IContainer): Axios {
+  private getAxiosInstance (container: IContainer): AxiosInstance {
     const baseURL = container.make<IBlueprint>('blueprint').get<string>('app.api.baseURL', 'http://localhost:8080')
-    return new Axios({ baseURL, adapter: 'fetch' })
+    return axios.create({ baseURL })
   }
 }

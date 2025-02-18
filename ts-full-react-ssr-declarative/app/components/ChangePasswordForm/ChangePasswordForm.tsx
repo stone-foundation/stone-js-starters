@@ -1,48 +1,50 @@
 import { FC, useRef } from 'react';
-import { PostInput } from '../../models/Post';
+import { UserChangePassword } from '../../models/User';
 
 /**
- * Post Form Options
+ * Change Password Form Options
  */
-export interface PostFormOptions {
-  post?: PostInput
-  onSave: (post: PostInput) => Promise<void>
+export interface ChangePasswordFormOptions {
+  onSubmit: (user: UserChangePassword) => Promise<void>
 }
 
 /**
- * Post Form component.
+ * Change Password Form component.
  * 
- * @param options - The options to create the Post Form component.
+ * @param options - The options to create the Change Password Form component.
  */
-export const PostForm: FC<PostFormOptions> = ({ post, onSave }) => {
-  // Create a reference to the post
-  const postRef = useRef<PostInput>({
-    id: post?.id ?? 0,
-    title: post?.title ?? '',
-    content: post?.content ?? ''
+export const ChangePasswordForm: FC<ChangePasswordFormOptions> = ({ onSubmit }) => {
+  // Create a reference to the user
+  const userRef = useRef<UserChangePassword>({
+    password: '',
+    newPassword: '',
+    confirmPassword: ''
   });
 
   // Handle the form submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await onSave(postRef.current)
+    await onSubmit(userRef.current)
   }
 
   // Handle the field change
-  const onChange = (field: keyof PostInput) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    postRef.current[field] = event.target.value;
+  const onChange = (field: keyof UserChangePassword) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    userRef.current[field] = event.target.value;
   };
 
   // Render the component
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor='title'>Title:</label>
-      <input id='title' type='text' onChange={onChange('title')} defaultValue={postRef.current.title} />
+      <label htmlFor='password'>Current Password:</label>
+      <input id='password' type='password' onChange={onChange('password')} defaultValue={userRef.current.password} />
+
+      <label htmlFor='newPassword'>New Password:</label>
+      <input id='newPassword' type='password' onChange={onChange('newPassword')} defaultValue={userRef.current.newPassword} />
       
-      <label htmlFor='content'>Content:</label>
-      <input id='content' type='text' onChange={onChange('content')} defaultValue={postRef.current.content} />
+      <label htmlFor='confirmPassword'>Confirm password:</label>
+      <input id='confirmPassword' type='password' onChange={onChange('confirmPassword')} defaultValue={userRef.current.confirmPassword} />
       
-      <button type='submit'>Publish</button>
+      <button type='submit'>ChangePassword</button>
     </form>
   );
 };

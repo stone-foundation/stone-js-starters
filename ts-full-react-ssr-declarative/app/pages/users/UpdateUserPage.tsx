@@ -1,13 +1,21 @@
-import { User } from "../../models/User";
-import { UserForm } from "../../components/UserForm/UserForm";
+import { ReactNode } from "react";
+import { User, UserInput } from "../../models/User";
 import { UserService } from "../../services/UserService";
 import { IComponentEventHandler } from "@stone-js/router";
+import { UserForm } from "../../components/UserForm/UserForm";
 import { Page, ReactIncomingEvent, RenderContext } from "@stone-js/use-react";
+
+/**
+ * Update User Page options.
+ */
+export interface UpdateUserPageOptions {
+  userService: UserService
+}
 
 /**
  * Update User Page component.
  */
-@Page('/users/:user@id(\\d+)/edit')
+@Page('/users/:user@id(\\d+)/edit', { bindings: { user: UserService } })
 export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly userService: UserService
 
@@ -16,18 +24,8 @@ export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent
    * 
    * @param userService - The user service.
    */
-  constructor ({ userService }: { userService: UserService }) {
+  constructor ({ userService }: UpdateUserPageOptions) {
     this.userService = userService
-  }
-
-  /**
-   * Handle the incoming event.
-   * 
-   * @param event - The incoming event.
-   * @returns The event data.
-   */
-  async handle (event: ReactIncomingEvent): Promise<User> {
-    return await this.userService.findUser({ id: event.get<string>('id') })
   }
 
   /**
@@ -36,19 +34,23 @@ export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ data }: RenderContext<User>) {
+  render ({ event }: RenderContext): ReactNode {
+    const user = event.get<User>('user')
+
     return (
       <>
         <h1>Update user</h1>
-        <UserForm value={data} handleSubmit={this.saveUser} />
+        <UserForm user={user} onSubmit={async (userInput) => await this.saveUser(user?.id ?? 0, userInput)} />
       </>
     )
   }
 
-  private saveUser (user: User) {
-    console.log('user saved', user)
-    this.userService.updateUser({ id: user.id, user }).then(() => {
-      console.log('user updated')
-    })
+  /**
+   * Save the user.
+   * 
+   * @param user - The user
+   */
+  private async saveUser (id: number, user: UserInput): Promise<void> {
+    await this.userService.update(id, user)
   }
 }

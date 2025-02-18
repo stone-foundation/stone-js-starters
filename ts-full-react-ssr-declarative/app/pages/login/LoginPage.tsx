@@ -1,3 +1,4 @@
+import './LoginPage.css'
 import { UserLogin } from "../../models/User";
 import { IComponentEventHandler } from "@stone-js/router";
 import { SecurityService } from "../../services/SecurityService";
@@ -44,7 +45,7 @@ export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
       <div>
         <LoginForm
           error={error}
-          onLogin={async (user: UserLogin) => await this.login(user, setError)}
+          onSubmit={async (user: UserLogin) => await this.login(user, setError)}
         />
       </div>
     )
@@ -61,6 +62,7 @@ export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
   ): Promise<void> {
     try {
       const token = await this.securityService.login(user)
+      console.log('Token:', token)
       this.securityService.saveToken(token)
       this.router.navigate('/')
     } catch (_: any) {

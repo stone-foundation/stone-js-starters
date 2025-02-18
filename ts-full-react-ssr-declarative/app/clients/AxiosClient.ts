@@ -1,6 +1,6 @@
 import { isNotEmpty } from "@stone-js/core"
-import { AxiosError, Axios, AxiosRequestConfig } from "axios"
 import { NotAuthenticateError } from "../errors/NotAuthenticateError"
+import { AxiosError, Axios, AxiosRequestConfig, AxiosResponse } from "axios"
 
 /**
  * Axios Client Options
@@ -34,9 +34,13 @@ export class AxiosClient {
    * @throws NotAuthenticateError
    * @throws AxiosError
    */
-  async request<R = any, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
+  async request<T = any, R = AxiosResponse<T>, D = any>(url: string, payload?: D, options?: AxiosRequestConfig<D>): Promise<T> {
     try {
-      return (await this.axios.request({ url, data, ...options })).data
+      const headers = options?.headers || {}
+      headers['Accept'] ??= 'application/json'
+      headers['Content-Type'] ??= 'application/json'
+      const { data } = (await this.axios.request({ ...options, url, data: payload, headers }))
+      return data
     } catch (error: any) {
       if (isNotEmpty<AxiosError<R, D>>(error) && error.status === 401) {
         throw new NotAuthenticateError(error.message, { cause: error })
@@ -53,7 +57,7 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async get<R = any, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<R> {
+  async get<T = any, R = AxiosResponse<T>, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<R> {
     return await this.request<R, D>(url, undefined, { ...options, method: 'GET' })
   }
 
@@ -65,7 +69,7 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async post<R = any, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
+  async post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
     return await this.request<R, D>(url, data, { ...options, method: 'POST' })
   }
 
@@ -77,7 +81,7 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async put<R = any, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
+  async put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
     return await this.request<R, D>(url, data, { ...options, method: 'PUT' })
   }
 
@@ -89,7 +93,7 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async patch<R = any, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
+  async patch<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
     return await this.request<R, D>(url, data, { ...options, method: 'PATCH' })
   }
 
@@ -100,7 +104,7 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async delete<R = any, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<R> {
+  async delete<T = any, R = AxiosResponse<T>, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<R> {
     return await this.request<R, D>(url, undefined, { ...options, method: 'DELETE' })
   }
 }

@@ -1,5 +1,4 @@
-import { CommentEvent } from "../events/CommentEvent"
-import { EventEmitter, Service } from "@stone-js/core"
+import { Service } from "@stone-js/core"
 import { CommentClient } from "../clients/CommentClient"
 import { Comment, CommentInput } from "../models/Comment"
 
@@ -8,7 +7,6 @@ import { Comment, CommentInput } from "../models/Comment"
 */
 export interface CommentServiceOptions {
   commentClient: CommentClient
-  eventEmitter: EventEmitter
 }
 
 /**
@@ -22,14 +20,12 @@ export interface CommentServiceOptions {
 @Service({ alias: 'commentService' })
 export class CommentService {
   private readonly commentClient: CommentClient
-  private readonly eventEmitter: EventEmitter
 
   /**
    * Create a new Comment Service
   */
-  constructor({ commentClient, eventEmitter }: CommentServiceOptions) {
+  constructor({ commentClient }: CommentServiceOptions) {
     this.commentClient = commentClient;
-    this.eventEmitter = eventEmitter;
   }
 
   /**
@@ -45,11 +41,11 @@ export class CommentService {
   /**
    * Create a comment
    * 
+   * @param postId - The id of the post to create the comment for
    * @param comment - The comment to create
    */
-  async create(comment: CommentInput): Promise<void> {
-    await this.eventEmitter.emit(new CommentEvent(comment))
-    await this.commentClient.create(comment)
+  async create(postId: number, comment: CommentInput): Promise<void> {
+    await this.commentClient.create(postId, comment)
   }
 
   /**

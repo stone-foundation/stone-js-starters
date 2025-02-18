@@ -6,7 +6,7 @@ import { UserLogin } from '../../models/User';
  */
 export interface LoginFormOptions {
   error: boolean
-  onLogin: (user: UserLogin) => Promise<void>
+  onSubmit: (user: UserLogin) => Promise<void>
 }
 
 /**
@@ -14,7 +14,7 @@ export interface LoginFormOptions {
  * 
  * @param options - The options to create the Login Form component.
  */
-export const LoginForm: FC<LoginFormOptions> = ({ error, onLogin }) => {
+export const LoginForm: FC<LoginFormOptions> = ({ error, onSubmit }) => {
   // Create a reference to the login
   const loginRef = useRef<UserLogin>({
     email: '',
@@ -24,7 +24,7 @@ export const LoginForm: FC<LoginFormOptions> = ({ error, onLogin }) => {
   // Handle the form submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await onLogin(loginRef.current)
+    await onSubmit(loginRef.current)
   }
 
   // Handle the field change

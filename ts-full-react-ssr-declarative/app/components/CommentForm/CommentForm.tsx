@@ -4,13 +4,13 @@ import { FC, useRef } from 'react'
  * Comment Form Props
  */
 export interface CommentFormOptions {
-  onSave: (content: string) => Promise<void>
+  onSubmit: (content: string) => Promise<void>
 }
 
 /**
  * Comment Form component.
  */
-export const CommentForm: FC<CommentFormOptions> = ({ onSave }) => {
+export const CommentForm: FC<CommentFormOptions> = ({ onSubmit }) => {
   const contentRef = useRef<HTMLInputElement>(null)
 
   // Handle the form submit
@@ -22,7 +22,7 @@ export const CommentForm: FC<CommentFormOptions> = ({ onSave }) => {
     if (content.length === 0) return // Prevent empty submissions
     
     contentRef.current.value = '' // Clear input field
-    await onSave(content)
+    await onSubmit(content)
   }
 
   // Render the component

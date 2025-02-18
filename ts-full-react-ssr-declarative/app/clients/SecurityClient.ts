@@ -15,7 +15,6 @@ export interface SecurityClientOptions {
  */
 @Stone({ alias: 'securityClient' })
 export class SecurityClient {
-  private readonly path: string
   private readonly client: AxiosClient
 
   /**
@@ -24,7 +23,6 @@ export class SecurityClient {
    * @param options - The options to create the Security Client.
    */
   constructor({ httpClient }: SecurityClientOptions) {
-    this.path = '/'
     this.client = httpClient
   }
 
@@ -35,7 +33,23 @@ export class SecurityClient {
    * @returns The user token
    */
   async login(user: UserLogin): Promise<UserToken> {
-    return this.client.post<UserToken>(`${this.path}/login`, user)
+    return await this.client.post<UserToken>('/login', user)
+  }
+
+  /**
+   * Refresh the user token
+   * 
+   * @returns The user token
+   */
+  async refresh(): Promise<UserToken> {
+    return await this.client.post<UserToken>('/refresh')
+  }
+
+  /**
+   * Logout a user
+   */
+  async logout(): Promise<void> {
+    await this.client.post<UserToken>('/logout')
   }
 
   /**
@@ -44,7 +58,7 @@ export class SecurityClient {
    * @param user - The user to register
    */
   async register(user: UserRegister): Promise<void> {
-    await this.client.post(`${this.path}/register`, user)
+    await this.client.post('/register', user)
   }
 
   /**
@@ -53,6 +67,6 @@ export class SecurityClient {
    * @param password - The password to change
    */
   async changePassword(password: UserChangePassword): Promise<void> {
-    await this.client.patch(`${this.path}/change-password`, password)
+    await this.client.patch('/change-password', password)
   }
 }
