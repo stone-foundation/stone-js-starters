@@ -1,13 +1,13 @@
-import { ReactIncomingEvent } from "@stone-js/use-react"
+import { Service } from "@stone-js/core"
+import { TokenService } from "./TokenService"
 import { SecurityClient } from "../clients/SecurityClient"
-import { IContainer, isNotEmpty, Service } from "@stone-js/core"
-import { UserChangePassword, UserLogin, UserRegister, UserToken } from "../models/User"
+import { UserChangePassword, UserLogin, UserRegister } from "../models/User"
 
 /**
  * Security Service Options
 */
 export interface SecurityServiceOptions {
-  container: IContainer
+  tokenService: TokenService
   securityClient: SecurityClient
 }
 
@@ -21,15 +21,14 @@ export interface SecurityServiceOptions {
 */
 @Service({ alias: 'securityService' })
 export class SecurityService {
-  private token?: UserToken
-  private readonly container: IContainer
+  private readonly tokenService: TokenService
   private readonly securityClient: SecurityClient
 
   /**
    * Create a new Security Service
   */
-  constructor({ container, securityClient }: SecurityServiceOptions) {
-    this.container = container
+  constructor({ tokenService, securityClient }: SecurityServiceOptions) {
+    this.tokenService = tokenService
     this.securityClient = securityClient;
   }
 
@@ -39,8 +38,9 @@ export class SecurityService {
    * @param user - The user to login
    * @returns The user token
   */
-  async login(user: UserLogin): Promise<UserToken> {
-    return await this.securityClient.login(user)
+  async login(user: UserLogin): Promise<void> {
+    const token = await this.securityClient.login(user)
+    this.tokenService.saveToken(token)
   }
 
   /**
@@ -48,15 +48,7 @@ export class SecurityService {
   */
   async logout(): Promise<void> {
     await this.securityClient.logout()
-  }
-
-  /**
-   * Refresh the user token
-   * 
-   * @returns The user token
-  */
-  async refresh(): Promise<UserToken> {
-    return await this.securityClient.refresh()
+    this.tokenService.removeToken()
   }
 
   /**
@@ -78,55 +70,11 @@ export class SecurityService {
   }
 
   /**
-   * Set the token
-   * 
-   * The event must be resolved on demand 
-   * because the event is not available at the time of service creation.
-   * The event is available only when the request is made.
-   * 
-   * @param token - The token to set
-  */
-  saveToken(token: UserToken): void {
-    this.container.make<ReactIncomingEvent>('event').cookies.add(
-      'token',
-      { ...token, createdAt: Date.now() },
-      {
-        secure: true,
-        httpOnly: false,
-        expires: new Date(token.createdAt + token.expiresIn)
-      }
-    )
-  }
-
-  /**
-   * Get the token
-   * 
-   * The event must be resolved on demand 
-   * because the event is not available at the time of service creation.
-   * The event is available only when the request is made.
-   * 
-   * @returns The token
-  */
-  getToken(): UserToken | undefined {
-    return this.container.make<ReactIncomingEvent>('event').cookies.getValue('token')
-  }
-
-  /**
-   * Get the access token
-   * 
-   * @returns The access token
-   */
-  getAccessToken(): string | undefined {
-    return this.getToken()?.accessToken
-  }
-
-  /**
    * Check if the user is authenticated
    * 
    * @returns True if the user is authenticated, false otherwise
    */
   isAuthenticated(): boolean {
-    this.token ??= this.getToken()
-    return isNotEmpty<UserToken>(this.token) && (this.token.createdAt + this.token.expiresIn) > Date.now()
+    return this.tokenService.isAuthenticated()
   }
 }

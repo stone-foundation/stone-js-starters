@@ -1,13 +1,13 @@
-import './SecurityLayout.css';
+import './ErrorLayout.css';
 import { ReactNode } from "react";
 import { IComponentEventHandler } from "@stone-js/router";
 import { PageLayout, ReactIncomingEvent, RenderLayoutContext, StoneOutlet } from "@stone-js/use-react";
 
 /**
- * Security Layout component.
+ * Error Layout component.
  */
-@PageLayout({ name: 'security' })
-export class SecurityLayout implements IComponentEventHandler<ReactIncomingEvent> {
+@PageLayout({ name: 'error' })
+export class ErrorLayout implements IComponentEventHandler<ReactIncomingEvent> {
   /**
    * Render the component.
    * 
@@ -26,7 +26,9 @@ export class SecurityLayout implements IComponentEventHandler<ReactIncomingEvent
         </header>
         <main>
           <div className="container">
-            <StoneOutlet>{children}</StoneOutlet>
+            <div className="panel">
+              <StoneOutlet>{children}</StoneOutlet>
+            </div>
           </div>
         </main>
         <footer className='mt-24'>

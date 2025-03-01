@@ -42,8 +42,9 @@ export class ShowUserPage implements IComponentEventHandler<ReactIncomingEvent> 
         <h1>Show user</h1>
         <p>Name: {user?.name}</p>
         <p>Email: {user?.email}</p>
-        <StoneLink to={`/users/edit/${user?.id}`}>Edit</StoneLink>
+        <StoneLink to={`/users/${user?.id}/edit`}>Edit</StoneLink>
         <button onClick={async () => await this.deleteUser(user)}>Delete</button>
+        <StoneLink to='/users'>Go to users</StoneLink>
       </>
     )
   }

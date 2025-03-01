@@ -4,12 +4,13 @@ import { User } from "../../models/User";
 import { IBlueprint, isNotEmpty } from '@stone-js/core';
 import { IComponentEventHandler } from "@stone-js/router";
 import { SecurityService } from '../../services/SecurityService';
-import { PageLayout, ReactIncomingEvent, RenderLayoutContext, StoneLink, StoneOutlet } from "@stone-js/use-react";
+import { IRouter, PageLayout, ReactIncomingEvent, RenderLayoutContext, StoneLink, StoneOutlet } from "@stone-js/use-react";
 
 /**
  * App Layout options.
  */
 export interface AppLayoutOptions {
+  router: IRouter
   blueprint: IBlueprint
   securityService: SecurityService
 }
@@ -19,6 +20,7 @@ export interface AppLayoutOptions {
  */
 @PageLayout({ name: 'default' })
 export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
+  private readonly router: IRouter
   private readonly blueprint: IBlueprint
   private readonly securityService: SecurityService
 
@@ -27,7 +29,8 @@ export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
    * 
    * @param options - The options to create the App Layout component.
    */
-  constructor ({ blueprint, securityService }: AppLayoutOptions) {
+  constructor ({ router, blueprint, securityService }: AppLayoutOptions) {
+    this.router = router
     this.blueprint = blueprint
     this.securityService = securityService
   }
@@ -42,7 +45,7 @@ export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
     const user = event.getUser<User>() ?? {} as User
 
     return (
-      <div className="container">
+      <div>
         <header>
           <p>
             <img src="/assets/stonejs.png" alt="Stone.js Logo" />
@@ -60,7 +63,7 @@ export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
           )}
           <p>
           {isNotEmpty<User>(user)
-            ? <button onClick={this.logout}>Logout</button>
+            ? <button onClick={this.logout.bind(this)}>Logout</button>
             : <StoneLink to='/login'>Login</StoneLink>
           }
           </p>
@@ -79,6 +82,7 @@ export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
   async logout (): Promise<void> {
     if (window.confirm('Are you sure you want to logout?')) {
       await this.securityService.logout()
+      this.router.navigate('/', true)
     }
   }
 

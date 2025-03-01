@@ -46,7 +46,7 @@ export class UserPage implements IComponentEventHandler<ReactIncomingEvent> {
         <ul>
           {data?.map(user => (
             <li key={user.id}>
-              <StoneLink to={`/users/show/${user.id}`}>{user.name}</StoneLink>
+              <StoneLink to={`/users/${user.id}`}>{user.name}</StoneLink>
             </li>
           ))}
         </ul>

@@ -2,13 +2,13 @@ import { UserInput } from "../../models/User";
 import { UserService } from "../../services/UserService";
 import { IComponentEventHandler } from "@stone-js/router";
 import { UserForm } from "../../components/UserForm/UserForm";
-import { Page, ReactIncomingEvent } from "@stone-js/use-react";
+import { Page, ReactIncomingEvent, StoneLink } from "@stone-js/use-react";
 
 /**
- * Create Post Page component.
+ * Create User Page component.
  */
-@Page('/posts/create')
-export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent> {
+@Page('/users/create')
+export class CreateUserPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly userService: UserService
 
   /**
@@ -30,7 +30,8 @@ export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent
     return (
       <>
         <h1>User form</h1>
-        <UserForm onSubmit={this.saveUser} />
+        <UserForm onSubmit={this.saveUser.bind(this)} />
+        <StoneLink to='/users'>Go to users</StoneLink>
       </>
     )
   }

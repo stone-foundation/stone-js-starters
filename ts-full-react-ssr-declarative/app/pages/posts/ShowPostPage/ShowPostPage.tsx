@@ -56,7 +56,7 @@ export class ShowPostPage implements IComponentEventHandler<ReactIncomingEvent> 
         <PostDetails
           user={user}
           post={post}
-          onDelete={this.deletePost}
+          onDelete={this.deletePost.bind(this)}
           commentService={this.commentService}
         />
       )

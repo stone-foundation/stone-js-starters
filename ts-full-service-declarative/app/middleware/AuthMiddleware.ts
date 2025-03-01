@@ -1,5 +1,4 @@
 import { SecurityService } from "../services/SecurityService";
-import { NODE_CONSOLE_PLATFORM } from "@stone-js/node-cli-adapter";
 import { IMiddleware, Middleware, NextMiddleware } from "@stone-js/core";
 import { IncomingHttpEvent, OutgoingHttpResponse } from "@stone-js/http-core";
 
@@ -41,15 +40,15 @@ export class AuthMiddleware implements IMiddleware<IncomingHttpEvent, OutgoingHt
     next: NextMiddleware<IncomingHttpEvent, OutgoingHttpResponse>,
     excludes: string[] = []
   ): Promise<OutgoingHttpResponse> {
-    if (!excludes.includes(event.pathname) && event.source.platform !== NODE_CONSOLE_PLATFORM) {
-      const user = await this.securityService.authenticate(
-        event.get<string>('Authorization', '').replace('Bearer ', ''),
-        event.ip,
-        event.userAgent
-      )
-      event.setUserResolver(() => user)
+    const isExcludedPath = excludes.includes(event.pathname);
+    const isOptionsRequest = event.isMethod('OPTIONS');
+  
+    if (!isExcludedPath && !isOptionsRequest) {
+      const token = event.get<string>('Authorization', '').replace('Bearer ', '');
+      const user = await this.securityService.authenticate(token, event.ip, event.userAgent);
+      event.setUserResolver(() => user);
     }
-
-    return await next(event)
+  
+    return await next(event);
   }
 }

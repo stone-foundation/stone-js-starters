@@ -54,7 +54,7 @@ export class SecurityErrorHandler implements IErrorHandler<IncomingHttpEvent> {
     return {
       statusCode,
       content: {
-        errors: [{ message }]
+        errors: { message }
       }
     }
   }

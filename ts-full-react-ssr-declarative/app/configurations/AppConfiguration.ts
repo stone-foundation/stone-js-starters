@@ -11,5 +11,6 @@ export class AppConfiguration implements IConfiguration {
   configure(blueprint: IBlueprint): Promiseable<void> {
     blueprint
       .set('app.api.baseURL', 'http://localhost:8080')
+      .set('stone.kernel.skipMiddleware', false)
   }
 }

@@ -1,11 +1,33 @@
+import { 
+  IncomingHttpEvent, 
+  OutgoingHttpResponse,
+  IncomingHttpEventOptions, 
+} from "@stone-js/http-core";
+import {
+  NodeHttp,
+  MetaBodyEventMiddleware, 
+  MetaFilesEventMiddleware, 
+} from "@stone-js/node-http-adapter";
+import { 
+  Hook,
+  isEmpty, 
+  StoneApp,
+  LogLevel, 
+  IContainer, 
+  IBlueprint, 
+  IKernelHook, 
+  IAdapterHook, 
+  AdapterContext, 
+  IBlueprintHook, 
+  BlueprintContext, 
+  AdapterEventBuilderType, 
+  AdapterHookListenerContext, 
+} from "@stone-js/core";
 export { stoneApp } from "@stone-js/core";
 import { Routing } from "@stone-js/router";
-import { UserService } from "./services/UserService";
 import { NodeConsole } from "@stone-js/node-cli-adapter";
+import { PipelineHookContext } from "@stone-js/pipeline";
 export { NODE_CONSOLE_PLATFORM } from "@stone-js/node-cli-adapter";
-import { IncomingHttpEvent, OutgoingHttpResponse } from "@stone-js/http-core";
-import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
-import { MetaBodyEventMiddleware, MetaFilesEventMiddleware, NodeHttp } from "@stone-js/node-http-adapter";
 
 /**
  * Application
@@ -20,83 +42,290 @@ import { MetaBodyEventMiddleware, MetaFilesEventMiddleware, NodeHttp } from "@st
  * BodyEventMiddleware is used to parse the incoming event body.
  * BodyEventMiddleware is imported because it is not installed by default.
  * 
- * You have access to the Stone's application lifecycle hooks.
- * You can also have access to them in the ServiceProviders.
- * They are optional and you can remove them if you don't need them.
+ * Note: In this example we implement the IBlueprintHook, IAdapterHook and IKernelHook interfaces for demonstration purposes.
  */
 @Routing()
-@NodeConsole({ incomingEvent: IncomingHttpEvent })
+@NodeConsole()
 @StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
 @NodeHttp({ middleware: [MetaBodyEventMiddleware, MetaFilesEventMiddleware], default: true })
-export class Application implements IApplication<IncomingHttpEvent, OutgoingHttpResponse> {
-  private readonly logger: ILogger
+export class Application implements IBlueprintHook, IAdapterHook, IKernelHook<IncomingHttpEvent, OutgoingHttpResponse> {
+  /**
+   * Run before the blueprint is prepared
+   * 
+   * @param context - The blueprint context
+   */
+  @Hook('onPreparingBlueprint')
+  onPreparingBlueprint({ blueprint, modules }: BlueprintContext): void {
+    blueprint.set('tmpBlueprintTimer', Date.now())
+    console.log(`Preparing blueprint by introspecting ${modules.length} modules...`)
+  }
+
+  /**
+   * Run before each blueprint middleware is processed
+   * 
+   * @param context - The pipeline context
+   */
+  @Hook('onProcessingBlueprintMiddleware')
+  onProcessingBlueprintMiddleware ({ passable, pipe }: PipelineHookContext<BlueprintContext, IBlueprint>): void {
+    passable.blueprint.set(`tmpBlueprintMiddleware.${pipe.module.name}`, Date.now())
+  }
+
+  /**
+   * Run after each blueprint middleware is processed
+   * 
+   * @param context - The pipeline context
+   */
+  @Hook('onBlueprintMiddlewareProcessed')
+  onBlueprintMiddlewareProcessed ({ passable, pipe }: PipelineHookContext<BlueprintContext, IBlueprint>): void {
+    const name = `tmpBlueprintMiddleware.${pipe.module.name}`
+    const start = passable.blueprint.get(name, 0)
+    const Type = pipe.isClass ? 'Class' : pipe.isFactory ? 'Factory' : pipe.isAlias ? 'Alias' : 'Callable'
+    const value = {
+      Middleware: pipe.module.name,
+      Type,
+      Priority: pipe.priority,
+      'Execution Time': `${Date.now() - start}ms`
+    }
+
+    passable.blueprint.set(name, value)
+  }
+
+  /**
+   * Run after the blueprint is prepared
+   * 
+   * @param context - The blueprint context
+   */
+  @Hook('onBlueprintPrepared')
+  onBlueprintPrepared({ blueprint }: BlueprintContext): void {
+    const timer = Date.now() - blueprint.get('tmpBlueprintTimer', 0)
+    const middleware = Object.values(blueprint.get('tmpBlueprintMiddleware', {}))
+    const message = `Blueprint prepared in ${timer}ms, with ${middleware.length} middleware`
+
+    console.table(middleware)
+    console.log(message)
+  }
+
+  /**
+   * Run before the application starts
+   * 
+   * @param context - The adapter context
+   */
+  @Hook('onStart')
+  onStart ({ blueprint, context }: AdapterHookListenerContext): void {
+    console.log('Starting application...')
+    console.log('Context isEmpty?', isEmpty(context))
+    console.log('Blueprint keys:', Object.keys(blueprint.all()).length)
+  }
+
+  /**
+   * Run before each adapter middleware is processed
+   * 
+   * @param context - The pipeline context
+   */
+  @Hook('onProcessingAdapterMiddleware')
+  onProcessingAdapterMiddleware ({ passable, pipe, pipes }: PipelineHookContext<
+    AdapterContext<unknown, unknown, unknown, IncomingHttpEvent, IncomingHttpEventOptions, OutgoingHttpResponse>,
+    AdapterEventBuilderType<any>
+  >): void {
+    console.log('Processing adapter middleware...')
+    console.log('Middleware count:', pipes.length)
+    console.log('Middleware name:', pipe.name)
+    console.log('IncomingEvent isEmpty?', isEmpty(passable.incomingEvent))
+  }
   
   /**
-   * Create a new instance of Application
-   * At this point, all the dependencies are resolved and injected.
-   * You can access the container and all the services.
+   * Run after each adapter middleware is processed
+   * 
+   * @param context - The pipeline context
+   */
+  @Hook('onAdapterMiddlewareProcessed')
+  onAdapterMiddlewareProcessed ({ passable, pipe, pipes }: PipelineHookContext<
+    AdapterContext<unknown, unknown, unknown, IncomingHttpEvent, IncomingHttpEventOptions, OutgoingHttpResponse>,
+    AdapterEventBuilderType<any>
+  >): void {
+    console.log('Adapter middleware processed...')
+    console.log('Middleware count:', pipes.length)
+    console.log('Middleware name:', pipe.name)
+    console.log('IncomingEvent isEmpty?', isEmpty(passable.incomingEvent))
+  }
+
+  /**
+   * Run before building each incoming event
+   * 
+   * @param context - The adapter context
+   */
+  @Hook('onBuildingIncomingEvent')
+  onBuildingIncomingEvent ({ context }: AdapterHookListenerContext<
+    AdapterContext<unknown, unknown, unknown, IncomingHttpEvent, IncomingHttpEventOptions, OutgoingHttpResponse>
+  >): void {
+    console.log('Building incoming event...')
+    console.log('IncomingEvent isEmpty?', isEmpty(context?.incomingEvent))
+  }
+
+  /**
+   * Run before handling each adapter error
+   * 
+   * @param context - The adapter context
+   */
+  @Hook('onHandlingAdapterError')
+  onHandlingAdapterError ({ error }: AdapterHookListenerContext<
+    AdapterContext<unknown, unknown, unknown, IncomingHttpEvent, IncomingHttpEventOptions, OutgoingHttpResponse>
+  >): void {
+    console.error('Handling adapter error...')
+    console.error('Error:', error)
+  }
+
+  /**
+   * Run before building each outgoing response
+   * 
+   * @param context - The adapter context
+   */
+  @Hook('onBuildingRawResponse')
+  onBuildingRawResponse ({ context }: AdapterHookListenerContext<
+    AdapterContext<unknown, unknown, unknown, IncomingHttpEvent, IncomingHttpEventOptions, OutgoingHttpResponse>
+  >): void {
+    console.log('Building raw response...')
+    console.log('IncomingEvent isEmpty?', isEmpty(context?.incomingEvent))
+    console.log('OutgoingResponse isEmpty?', isEmpty(context?.outgoingResponse))
+  }
+
+  /**
+   * Run just before the application stops
+   * 
+   * @param context - The adapter context
+   */
+  @Hook('onStop')
+  onStop ({ blueprint, context }: AdapterHookListenerContext): void {
+    console.log('Stopping application...')
+    console.log('Context isEmpty?', isEmpty(context))
+    console.log('Blueprint keys:', Object.keys(blueprint.all()).length)
+  }
+
+  /**
+   * Run after the application is initialized
+   * The container is available at this point.
+   * All services are registered and ready to be used.
    * 
    * @param container - The container
    */
-  constructor({ userService, logger }: { userService: UserService, logger: ILogger }) {
-    this.logger = logger
-    this.logger.info('Application is created')
-    this.logger.info('User Service:', userService)
+  @Hook('onInit')
+  onInit (container: IContainer): void {
+    console.log('Initializing application...')
+    console.log('Container services count:', container.getBindings().size)
   }
 
   /**
-   * Initialize the application
-   * Run at each cold start.
-   * At this point, you only have access to the blueprint.
-   * Because the container is not yet created.
-   * Note: This method is static
+   * Run before handling each event
    * 
-   * @param blueprint - The blueprint
+   * @param container - The container
    */
-  static onStart(blueprint: IBlueprint): void {
-    const AppName = blueprint.get<string>('stone.name')
-    console.log(`${AppName}'s Application started`)
+  @Hook('onHandlingEvent')
+  onHandlingEvent (container: IContainer): void {
+    try {
+      console.log('Handling event...')
+      container.make('event')
+    } catch (error: any) {
+      console.log('The incoming event is not yet bound at this stage', error.message)
+    }
   }
 
   /**
-   * Stop the application
-   * Run just before the application stops.
-   * Note: This method is static
+   * Run before processing each kernel middleware
    * 
-   * @param blueprint - The blueprint
+   * @param context - The pipeline context
    */
-  static onStop(blueprint: IBlueprint): void {
-    const AppName = blueprint.get<string>('stone.name')
-    console.log(`${AppName}'s Application stopped`)
+  @Hook('onProcessingKernelMiddleware')
+  onProcessingKernelMiddleware (
+    { passable, pipe, pipes }: PipelineHookContext<IncomingHttpEvent, OutgoingHttpResponse>
+  ): void {
+    console.log('Processing kernel middleware...')
+    console.log('Middleware count:', pipes.length)
+    console.log('Middleware name:', pipe.name)
+    console.log('Incoming Source name', passable.source.platform)
   }
 
   /**
-   * Prepare the application
-   * Run at each warm start in server context.
-   * And at each cold start in browser context.
+   * Run after processing each kernel middleware
+   * 
+   * @param context - The pipeline context
    */
-  onPrepare(): Promiseable<void> {
-    this.logger.info('Application is preparing')
+  @Hook('onKernelMiddlewareProcessed')
+  onKernelMiddlewareProcessed (
+    { passable, pipe, pipes }: PipelineHookContext<IncomingHttpEvent, OutgoingHttpResponse>
+  ): void {
+    console.log('Kernel middleware processed...')
+    console.log('Middleware count:', pipes.length)
+    console.log('Middleware name:', pipe.name)
+    console.log('Incoming Source name', passable.source.platform)
   }
 
   /**
-   * Before handle the incoming event
+   * Run before executing each event handler
+   * 
+   * @param container - The container
    */
-  beforeHandle(): Promiseable<void> {
-    this.logger.info('Before handle incoming event')
+  @Hook('onExecutingEventHandler')
+  onExecutingEventHandler ({ event }: { event: IncomingHttpEvent }): void {
+    console.log('Executing event handler...')
+    console.log('The incoming event is yet bound at this stage', event.source.platform)
   }
 
   /**
-   * After the incoming event has been processed
+   * Run before handling each error
+   * 
+   * @param container - The container
    */
-  afterHandle(): Promiseable<void> {
-    this.logger.info('After handle incoming event')
+  @Hook('onExecutingErrorHandler')
+  onExecutingErrorHandler ({ error }: { error: any }): void {
+    console.log('Executing error handler...')
+    console.log('Error', error)
   }
 
   /**
-   * After the platform event has been sent to the user
+   * Run before preparing each response
+   * 
+   * @param container - The container
    */
-  onTerminate (): Promiseable<void> {
-    this.logger.info('The event has been sent to the user')
+  @Hook('onPreparingResponse')
+  onPreparingResponse ({ response }: { response: OutgoingHttpResponse }): void {
+    console.log('Preparing response...')
+    console.log('Response headers', response.headers)
+  }
+
+  /**
+   * Run after preparing each response
+   * 
+   * @param container - The container
+   */
+  @Hook('onResponsePrepared')
+  onResponsePrepared ({ response }: { response: OutgoingHttpResponse }): void {
+    console.log('Response prepared...')
+    console.log('Response headers', response.headers)
+  }
+
+  /**
+   * Run after handling each event
+   * 
+   * @param context - The pipeline context
+   */
+  @Hook('onEventHandled')
+  onEventHandled (
+    { event, response }: { event: IncomingHttpEvent, response: OutgoingHttpResponse }
+  ): void {
+    console.log('Event handled...')
+    console.log('Event headers', event.headers)
+    console.log('Response headers', response.headers)
+  }
+
+  /**
+   * Run after executing each event handler
+   * 
+   * @param container - The container
+   */
+  @Hook('onTerminate')
+  onTerminate (container: IContainer): void {
+    console.log('Terminating event handling...')
+    console.log('Is IncomingEvent exist', container.bound('event'))
+    console.log('Is OutgoingResponse exist', container.bound('response'))
   }
 }

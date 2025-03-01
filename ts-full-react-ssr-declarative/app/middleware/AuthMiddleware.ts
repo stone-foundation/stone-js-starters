@@ -1,6 +1,6 @@
 import { UserService } from "../services/UserService";
 import { SecurityService } from "../services/SecurityService";
-import { IMiddleware, Middleware, NextMiddleware } from "@stone-js/core";
+import { IBlueprint, IMiddleware, Middleware, NextMiddleware } from "@stone-js/core";
 import { ISnapshot, isServer, ReactIncomingEvent, ReactOutgoingResponse, reactRedirectResponse } from "@stone-js/use-react";
 
 /**
@@ -8,6 +8,7 @@ import { ISnapshot, isServer, ReactIncomingEvent, ReactOutgoingResponse, reactRe
 */
 export interface AuthMiddlewareOptions {
   snapshot: ISnapshot
+  blueprint: IBlueprint
   userService: UserService
   securityService: SecurityService
 }
@@ -21,6 +22,7 @@ export interface AuthMiddlewareOptions {
 })
 export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutgoingResponse> {
   private readonly snapshot: ISnapshot
+  private readonly blueprint: IBlueprint
   private readonly userService: UserService
   private readonly securityService: SecurityService
 
@@ -29,8 +31,9 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
    * 
    * @param userService
    */
-  constructor({ snapshot, userService, securityService }: AuthMiddlewareOptions) {
+  constructor({ blueprint, snapshot, userService, securityService }: AuthMiddlewareOptions) {
     this.snapshot = snapshot
+    this.blueprint = blueprint
     this.userService = userService
     this.securityService = securityService
   }
@@ -49,6 +52,7 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
   ): Promise<ReactOutgoingResponse> {
     if (!excludes.includes(event.pathname)) {
       if (!this.securityService.isAuthenticated()) {
+        this.blueprint.set('app.requestedUrl', event.pathname)
         return reactRedirectResponse({ url: '/login' })
       }
       await this.resolveCurrentUser(event)

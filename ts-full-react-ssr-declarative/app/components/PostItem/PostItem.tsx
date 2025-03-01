@@ -18,7 +18,7 @@ export const PostItem: FC<PostItemOptions> = ({ post }) => {
   return (
     <article>
       <h3>
-        <StoneLink to={`/users/${post.id}`}>{post.title}</StoneLink>
+        <StoneLink to={`/posts/${post.id}`}>{post.title}</StoneLink>
       </h3>
       <p>
         <span>{post.author.name}</span>
@@ -26,8 +26,8 @@ export const PostItem: FC<PostItemOptions> = ({ post }) => {
       </p>
       <p>{post.content.substring(0, 32)}</p>
       <p>
-        <StoneLink to={`/users/${post.id}`}>Show</StoneLink>
-        <StoneLink to={`/users/edit/${post.id}`}>Edit</StoneLink>
+        <StoneLink to={`/posts/${post.id}`}>Show</StoneLink>
+        <StoneLink to={`/posts/${post.id}/edit`}>Edit</StoneLink>
       </p>
     </article>
   );

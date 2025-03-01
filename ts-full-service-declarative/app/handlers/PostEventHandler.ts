@@ -3,7 +3,7 @@ import { ILogger } from '@stone-js/core'
 import { PostService } from '../services/PostService'
 import { PostModel, PostResponse } from '../models/Post'
 import { Delete, EventHandler, Get, Patch, Post } from '@stone-js/router'
-import { IncomingHttpEvent, InternalServerError, JsonHttpResponse, NoContentHttpResponse } from '@stone-js/http-core'
+import { IncomingHttpEvent, InternalServerError, JsonHttpResponse } from '@stone-js/http-core'
 
 /**
  * Post Event Handler Options
@@ -68,12 +68,13 @@ export class PostEventHandler {
    * Create a post
    */
   @Post('/')
-  @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async create(event: IncomingHttpEvent): Promise<void> {
-    await this.postService.create({
+  async create(event: IncomingHttpEvent): Promise<{ id?: number }> {
+    const id = await this.postService.create({
       ...event.getBody<PostModel>({} as any),
       authorId: event.getUser<User>()?.id ?? 0
     })
+
+    return { id: Number(id) }
   }
 
   /**

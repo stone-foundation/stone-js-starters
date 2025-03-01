@@ -45,7 +45,7 @@ export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent
     return (
       <>
         <h1>New Post</h1>
-        <PostForm onSubmit={this.createPost} />
+        <PostForm onSubmit={this.createPost.bind(this)} />
       </>
     )
   }
@@ -60,6 +60,7 @@ export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent
       const post = await this.postService.create(postInput)
       this.router.navigate(`/posts/${post.id}`)
     } catch (error: any) {
+      console.error(error)
       window.alert('Error creating the post')
       this.logger.error(error.message, { error })
     }

@@ -3,7 +3,7 @@ import { File } from "@stone-js/filesystem";
 import { UserService } from '../services/UserService';
 import { User, UserModel, UserResponse } from '../models/User';
 import { Delete, EventHandler, Get, Patch, Post } from "@stone-js/router";
-import { IncomingHttpEvent, JsonHttpResponse, NoContentHttpResponse } from "@stone-js/http-core";
+import { IncomingHttpEvent, JsonHttpResponse } from "@stone-js/http-core";
 
 /**
  * User Event Handler Options
@@ -94,9 +94,9 @@ export class UserEventHandler {
    * Using headers to define the content type.
   */
   @Post('/')
-  @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async create(event: IncomingHttpEvent): Promise<void> {
-    await this.userService.create(this.handleFileUpload(event))
+  async create(event: IncomingHttpEvent): Promise<{ id?: number }> {
+    const id = await this.userService.create(this.handleFileUpload(event))
+    return { id: Number(id) }
   }
 
   /**

@@ -4,7 +4,7 @@ import { sign, SignOptions, verify } from "jsonwebtoken"
 import { UserRepository } from "../repositories/UserRepository"
 import { BadCredentialsError } from "../errors/CredentialsError"
 import { IBlueprint, isEmpty, isNotEmpty, Service } from "@stone-js/core"
-import { BadRequestError, IncomingHttpEvent, NotFoundError, UnauthorizedError } from "@stone-js/http-core"
+import { BadRequestError, IncomingHttpEvent, UnauthorizedError } from "@stone-js/http-core"
 import { UserLogin, UserToken, UserRegister, UserChangePassword, UserModel, UserTokenPayload } from "../models/User"
 
 /**
@@ -133,8 +133,8 @@ export class SecurityService {
    * @param hashedPassword - The stored hashed password.
    * @returns `true` if the password matches, otherwise `false`.
    */
-  async comparePassword (password: string, hashedPassword: string): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword);
+  async comparePassword (password: string, hashedPassword?: string | null): Promise<boolean> {
+    return await bcrypt.compare(password, hashedPassword ?? '');
   }
 
   /**

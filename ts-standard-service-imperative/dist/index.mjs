@@ -4809,28 +4809,28 @@ class Kernel {
    * Invoke subsequent hooks.
    * Resolve the app event handler.
    */
-  async onPrepare() {
+  async onInit() {
     this.registerBaseBindings();
     await this.runLiveConfigurations();
     await this.resolveProviders();
     for (const provider of this.providers) {
-      await provider.onPrepare?.();
+      await provider.onInit?.();
     }
     await this.registerProviders();
-    await this.executeHooks('onPrepare');
-    await this.resolveApplication()?.onPrepare?.();
+    await this.executeHooks('onInit');
+    await this.resolveApplication()?.onInit?.();
   }
   /**
    * Boot the providers.
    * Invoke subsequent hooks.
    */
-  async beforeHandle() {
+  async onHandlingEvent() {
     for (const provider of this.providers) {
-      await provider.beforeHandle?.();
+      await provider.onHandlingEvent?.();
     }
     await this.bootProviders();
-    await this.executeHooks('beforeHandle');
-    await this.resolveApplication()?.beforeHandle?.();
+    await this.executeHooks('onHandlingEvent');
+    await this.resolveApplication()?.onHandlingEvent?.();
   }
   /**
    * Handle Stone IncomingEvent.
@@ -4844,12 +4844,12 @@ class Kernel {
   /**
    * Invoke subsequent hooks after handling the event.
    */
-  async afterHandle(context) {
+  async onEventHandled(context) {
     for (const provider of this.providers) {
-      await provider.afterHandle?.(context);
+      await provider.onEventHandled?.(context);
     }
-    await this.executeHooks('afterHandle');
-    await this.resolveApplication()?.afterHandle?.(context);
+    await this.executeHooks('onEventHandled');
+    await this.resolveApplication()?.onEventHandled?.(context);
   }
   /**
    * Invoke subsequent hooks on termination.
@@ -4975,7 +4975,7 @@ class Kernel {
    */
   resolveEventHandler() {
     if (this.resolvedEventHandler === undefined) {
-      const mixedEventHandler = this.blueprint.get('stone.handler');
+      const mixedEventHandler = this.blueprint.get('stone.kernel.eventHandler');
       if (isMetaClassModule(mixedEventHandler)) {
         this.resolvedEventHandler = this.container.resolve(mixedEventHandler.module, true);
       } else if (isMetaFactoryModule(mixedEventHandler)) {
@@ -5541,7 +5541,7 @@ class StoneBuilder {
   /**
    * Hook to register modules to the service container.
    * This hook is called when the application is prepared.
-   * Just after the onPrepare hook.
+   * Just after the onInit hook.
    * At this point, the application is ready to register modules to the service container.
    * And all third-party modules are already registered.
    * Usefull to register your own modules to the service container.
@@ -5550,7 +5550,7 @@ class StoneBuilder {
    * @returns The current StoneBuilder instance.
    */
   onRegister(listener) {
-    this.hook('onPrepare', listener);
+    this.hook('onInit', listener);
     return this;
   }
   /**
@@ -5565,7 +5565,7 @@ class StoneBuilder {
    * @returns The current StoneBuilder instance.
    */
   onBoot(listener) {
-    this.hook('beforeHandle', listener);
+    this.hook('onHandlingEvent', listener);
     return this;
   }
   /**
@@ -5576,7 +5576,7 @@ class StoneBuilder {
    * @returns The platform-specific response.
    */
   async handle(handler) {
-    this.blueprint.set('stone.handler', handler);
+    this.blueprint.set('stone.kernel.eventHandler', handler);
     return await this.run();
   }
   /**
@@ -5715,9 +5715,9 @@ class Adapter {
     }
     const middleware = this.blueprint.get('stone.adapter.middleware', []);
     try {
-      await this.beforeHandle(eventHandler);
+      await this.onHandlingEvent(eventHandler);
       const responseBuilder = await Pipeline.create(this.makePipelineOptions()).send(context).through(...middleware).then(async ctx => await this.prepareResponse(eventHandler, ctx));
-      await this.afterHandle(eventHandler, context);
+      await this.onEventHandled(eventHandler, context);
       context.rawResponse = await responseBuilder.build().respond();
     } catch (error) {
       context.rawResponse = await this.resolveErrorHandler(error).handle(error, context);
@@ -5743,10 +5743,10 @@ class Adapter {
    *
    * @param eventHandler - Action handler to be run.
    */
-  async onPrepare(eventHandler) {
-    await this.executeHooks('onPrepare');
-    if (isHandlerHasHook(eventHandler, 'onPrepare')) {
-      await eventHandler.onPrepare();
+  async onInit(eventHandler) {
+    await this.executeHooks('onInit');
+    if (isHandlerHasHook(eventHandler, 'onInit')) {
+      await eventHandler.onInit();
     }
   }
   /**
@@ -5754,10 +5754,10 @@ class Adapter {
    *
    * @param eventHandler - Action handler to be run.
    */
-  async beforeHandle(eventHandler) {
-    await this.executeHooks('beforeHandle');
-    if (isHandlerHasHook(eventHandler, 'beforeHandle')) {
-      await eventHandler.beforeHandle();
+  async onHandlingEvent(eventHandler) {
+    await this.executeHooks('onHandlingEvent');
+    if (isHandlerHasHook(eventHandler, 'onHandlingEvent')) {
+      await eventHandler.onHandlingEvent();
     }
   }
   /**
@@ -5766,10 +5766,10 @@ class Adapter {
    * @param eventHandler - Action handler to be run.
    * @param context - The event context.
    */
-  async afterHandle(eventHandler, context) {
-    await this.executeHooks('afterHandle', context);
-    if (isHandlerHasHook(eventHandler, 'afterHandle')) {
-      await eventHandler.afterHandle(this.makeHookContext(context));
+  async onEventHandled(eventHandler, context) {
+    await this.executeHooks('onEventHandled', context);
+    if (isHandlerHasHook(eventHandler, 'onEventHandled')) {
+      await eventHandler.onEventHandled(this.makeHookContext(context));
     }
   }
   /**
@@ -5953,9 +5953,9 @@ const ApplicationEntryPointMiddleware = async (context, next) => {
       module
     };
     blueprint.set('stone.application', metaApp);
-    !blueprint.has('stone.handler.module') && blueprint.set('stone.handler', metaApp);
+    !blueprint.has('stone.kernel.eventHandler.module') && blueprint.set('stone.kernel.eventHandler', metaApp);
   }
-  if (!blueprint.has('stone.handler.module')) {
+  if (!blueprint.has('stone.kernel.eventHandler.module')) {
     throw new SetupError('No main event handler found. Every Stone.js app must define one main event handler.');
   }
   return blueprint;
@@ -8506,7 +8506,7 @@ async function RouteDefinitionsMiddleware(context, next) {
  * ```
  */
 async function SetRouterEventHandlerMiddleware(context, next) {
-  context.blueprint.set('stone.handler', {
+  context.blueprint.set('stone.kernel.eventHandler', {
     module: RouterEventHandler,
     isClass: true
   });
@@ -77680,7 +77680,7 @@ class NodeHttpAdapter extends Adapter {
    */
   async eventListener(rawEvent, rawResponse) {
     const eventHandler = this.handlerResolver(this.blueprint);
-    await this.onPrepare(eventHandler);
+    await this.onInit(eventHandler);
     const incomingEventBuilder = AdapterEventBuilder.create({
       resolver: options => IncomingHttpEvent.create(options)
     });

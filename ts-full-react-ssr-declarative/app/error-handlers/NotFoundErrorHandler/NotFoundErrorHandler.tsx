@@ -1,16 +1,20 @@
+import './NotFoundErrorHandler.css'
 import { ILogger } from "@stone-js/core";
 import { RouteNotFoundError } from "@stone-js/router";
-import { ErrorPage, IComponentErrorHandler, ReactIncomingEvent, RenderErrorContext } from "@stone-js/use-react";
+import { ErrorHandler, IComponentErrorHandler, PageStatus, ReactIncomingEvent, RenderErrorContext } from "@stone-js/use-react";
 
 /**
- * User Error Page component.
+ * NotFound Error Handler component.
  */
-@ErrorPage({ error: 'RouteNotFoundError' })
-export class UserErrorPage implements IComponentErrorHandler<ReactIncomingEvent> {
+@ErrorHandler({
+  layout: 'error',
+  error: ['RouteNotFoundError', 'PostNotFoundError', 'UserNotFoundError']
+})
+export class NotFoundErrorHandler implements IComponentErrorHandler<ReactIncomingEvent> {
   private readonly logger: ILogger
 
   /**
-   * Create an UserErrorPage.
+   * Create an NotFoundErrorHandler.
    *
    * @param logger - The logger.
    */
@@ -25,15 +29,10 @@ export class UserErrorPage implements IComponentErrorHandler<ReactIncomingEvent>
    * @param event - The incoming event.
    * @returns The response.
    */
+  @PageStatus(404)
   handle (error: RouteNotFoundError, event: ReactIncomingEvent) {
     this.logger.error(error.message, { error })
-
-    return {
-      content: {
-        message: `No user found with name: ${event.get<string>('name')}`
-      },
-      statusCode: 404
-    }
+    return { message: `Page not found: ${event.pathname}` }
   }
 
   /**
@@ -44,11 +43,11 @@ export class UserErrorPage implements IComponentErrorHandler<ReactIncomingEvent>
    */
   render ({ data, statusCode }: RenderErrorContext<RouteNotFoundError>) {
     return (
-      <>
-        <h1>An error has occured</h1>
-        <p>Handler message: {data?.message}</p>
-        <p>Status Code: {statusCode}</p>
-      </>
+      <div className='text-center'>
+        <h1 className='h1'>{statusCode}</h1>
+        <h2 className='h4'>OOps! It seems you are lost?</h2>
+        <p className='text-muted mt-24'>{data?.message}</p>
+      </div>
     )
   }
 }

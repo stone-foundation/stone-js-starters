@@ -1,5 +1,5 @@
 import { UserEvent } from "../events/UserEvent";
-import { EventEmitter, IEventSubscriber, ILogger, KernelEvent, Subscriber } from "@stone-js/core";
+import { EventEmitter, IEventSubscriber, ILogger, Subscriber } from "@stone-js/core";
 
 /**
  * User Event Subscriber Options
@@ -33,9 +33,6 @@ export class UserEventSubscriber implements IEventSubscriber {
     eventEmitter
       .on(UserEvent.USER_CREATED, (event: UserEvent) => {
         this.logger.info('User event subscriber', event.user);
-      })
-      .on(KernelEvent.RESPONSE_PREPARED, (_event: KernelEvent) => {
-        this.logger.info('Response was prepared');
       })
   }
 }

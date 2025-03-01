@@ -20,7 +20,7 @@ export class Application implements LifecycleEventHandler<IncomingHttpEvent, Out
     console.log(blueprint.get<string>('stone.name'), 'I am executed once and for all!')
   }
 
-  beforeHandle (): void {
+  onHandlingEvent (): void {
     console.log(this.blueprint.get<string>('stone.name'), 'I am executed before each event!')
   }
   

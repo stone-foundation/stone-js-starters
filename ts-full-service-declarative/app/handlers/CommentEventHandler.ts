@@ -5,7 +5,7 @@ import { PostService } from '../services/PostService'
 import { CommentService } from '../services/CommentService'
 import { CommentModel, CommentResponse } from '../models/Comment'
 import { Delete, EventHandler, Get, Post } from '@stone-js/router'
-import { IncomingHttpEvent, JsonHttpResponse, NoContentHttpResponse } from '@stone-js/http-core'
+import { IncomingHttpEvent, JsonHttpResponse } from '@stone-js/http-core'
 
 /**
  * Comment Event Handler Options
@@ -81,13 +81,14 @@ export class CommentEventHandler {
    * Create a comment
    */
   @Post('/posts/:post@id(\\d+)', { bindings: { post: PostService } })
-  @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async create(event: IncomingHttpEvent): Promise<void> {
-    await this.commentService.create({
+  async create(event: IncomingHttpEvent): Promise<{ id?: number }> {
+    const id = await this.commentService.create({
       ...event.getBody<CommentModel>({} as any),
       authorId: event.getUser<User>()?.id ?? 0,
       postId: event.get<BlogPost>('post', { id: 0 } as any).id,
     })
+
+    return { id: Number(id) }
   }
 
   /**

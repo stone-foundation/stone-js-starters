@@ -1,16 +1,19 @@
 import './LoginPage.css'
+import { IBlueprint } from '@stone-js/core';
 import { UserLogin } from "../../models/User";
 import { IComponentEventHandler } from "@stone-js/router";
 import { SecurityService } from "../../services/SecurityService";
 import { LoginForm } from "../../components/LoginForm/LoginForm";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
-import { IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
+import { ErrorManager, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
 
 /**
  * Login Page options.
  */
 interface LoginPageOptions {
   router: IRouter
+  blueprint: IBlueprint
+  errorManager: ErrorManager
   securityService: SecurityService
 }
 
@@ -20,6 +23,7 @@ interface LoginPageOptions {
 @Page('/login', { layout: 'security' })
 export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly router: IRouter
+  private readonly blueprint: IBlueprint
   private readonly securityService: SecurityService
 
   /**
@@ -27,8 +31,9 @@ export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
    * 
    * @param options - The options to create the Login Page component.
    */
-  constructor ({ router, securityService }: LoginPageOptions) {
+  constructor ({ router, blueprint, securityService }: LoginPageOptions) {
     this.router = router
+    this.blueprint = blueprint
     this.securityService = securityService
   }
 
@@ -61,10 +66,8 @@ export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
     setError: Dispatch<SetStateAction<boolean>>
   ): Promise<void> {
     try {
-      const token = await this.securityService.login(user)
-      console.log('Token:', token)
-      this.securityService.saveToken(token)
-      this.router.navigate('/')
+      await this.securityService.login(user)
+      this.router.navigate(this.blueprint.get('app.requestedUrl', '/'), true)
     } catch (_: any) {
       setError(true)
     }

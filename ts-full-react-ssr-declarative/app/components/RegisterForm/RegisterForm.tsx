@@ -1,10 +1,14 @@
-import { FC, useRef } from 'react';
-import { UserRegister } from '../../models/User';
+import { FC, useState } from 'react';
+import { isNotEmpty } from '@stone-js/core';
+import { StoneLink } from '@stone-js/use-react';
+import { UserRegister, UserRegisterErrors } from '../../models/User';
 
 /**
  * Register Form Options
  */
 export interface RegisterFormOptions {
+  done: boolean
+  error?: UserRegisterErrors
   onSubmit: (user: UserRegister) => Promise<void>
 }
 
@@ -13,9 +17,9 @@ export interface RegisterFormOptions {
  * 
  * @param options - The options to create the Register Form component.
  */
-export const RegisterForm: FC<RegisterFormOptions> = ({ onSubmit }) => {
+export const RegisterForm: FC<RegisterFormOptions> = ({ onSubmit, error, done }) => {
   // Create a reference to the user
-  const userRef = useRef<UserRegister>({
+  const [user, setUser] = useState<UserRegister>({
     name: '',
     email: '',
     password: '',
@@ -25,30 +29,82 @@ export const RegisterForm: FC<RegisterFormOptions> = ({ onSubmit }) => {
   // Handle the form submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await onSubmit(userRef.current)
+    isValid() && await onSubmit(user)
   }
+
+  const isValid = () => isNotEmpty(user.name) && isNotEmpty(user.email) && isNotEmpty(user.password) && user.password === user.confirmPassword
 
   // Handle the field change
   const onChange = (field: keyof UserRegister) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    userRef.current[field] = event.target.value;
+    setUser({ ...user, [field]: event.target.value });
   };
+
+  // Create the form component
+  const formComponent = (
+    <form onSubmit={handleSubmit} className="panel">
+      {error?.message && <p className='alert alert-danger alert-small'>{error?.message}</p>}
+
+      <div>
+        <label htmlFor='name' className='label'>Name:</label>
+        <input
+          id='name'
+          type='text'
+          className='input'
+          placeholder='Enter your name'
+          onChange={onChange('name')} defaultValue={user.name}
+        />
+      </div>
+
+      <div>
+        <label htmlFor='email' className='label'>Email:</label>
+        <input
+          id='email'
+          type='email'
+          className='input'
+          placeholder='Enter your email'
+          onChange={onChange('email')} defaultValue={user.email}
+        />
+      </div>
+      
+      <div>
+        <label htmlFor='password' className='label'>Password:</label>
+        <input
+          id='password'
+          type='password'
+          className='input'
+          placeholder='Enter your password'
+          onChange={onChange('password')} defaultValue={user.password}
+        />
+      </div>
+      
+      <div>
+        <label htmlFor='confirmPassword' className='label'>Confirm password:</label>
+        <input
+          id='confirmPassword'
+          type='password'
+          className='input'
+          placeholder='Confirm your password'
+          onChange={onChange('confirmPassword')} defaultValue={user.confirmPassword}
+        />
+      </div>
+      
+      <button type='submit' className='button button-secondary button-full mt-24' disabled={!isValid()}>Register</button>
+    </form>
+  );
+  
+  // Create the done component
+  const doneComponent = <div className="panel"><p className="alert alert-success">Registration successful! 🎉 You can now login</p></div>
+
+  // Get the component
+  const component = done === true ? doneComponent : formComponent;
 
   // Render the component
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor='name'>Name:</label>
-      <input id='name' type='text' onChange={onChange('name')} defaultValue={userRef.current.name} />
-      
-      <label htmlFor='email'>Email:</label>
-      <input id='email' type='email' onChange={onChange('email')} defaultValue={userRef.current.email} />
-      
-      <label htmlFor='password'>Password:</label>
-      <input id='password' type='password' onChange={onChange('password')} defaultValue={userRef.current.password} />
-      
-      <label htmlFor='confirmPassword'>Confirm password:</label>
-      <input id='confirmPassword' type='password' onChange={onChange('confirmPassword')} defaultValue={userRef.current.confirmPassword} />
-      
-      <button type='submit'>Register</button>
-    </form>
-  );
+    <div>
+      {component}
+      <p className='mt-24 text-center'>
+        <StoneLink to='/login' className="button button-primary">Login</StoneLink>
+      </p>
+    </div>
+  )
 };

@@ -61,21 +61,21 @@ export class Application implements IApplication<IncomingHttpEvent, OutgoingHttp
    * Run at each warm start in server context.
    * And at each cold start in browser context.
    */
-  onPrepare(): Promiseable<void> {
+  onInit(): Promiseable<void> {
     this.logger.info('Application is preparing')
   }
 
   /**
    * Before handle the incoming event
    */
-  beforeHandle(): Promiseable<void> {
+  onHandlingEvent(): Promiseable<void> {
     this.logger.info('Before handle incoming event')
   }
 
   /**
    * After the incoming event has been processed
    */
-  afterHandle(): Promiseable<void> {
+  onEventHandled(): Promiseable<void> {
     this.logger.info('After handle incoming event')
   }
 

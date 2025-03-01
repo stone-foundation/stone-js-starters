@@ -36,6 +36,11 @@ export interface UserRegister {
 }
 
 /**
+ * User Register Errors Type
+*/
+export type UserRegisterErrors = Record<string, string>
+
+/**
  * User Change Password Interface
 */
 export interface UserChangePassword {

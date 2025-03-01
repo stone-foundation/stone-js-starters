@@ -47,7 +47,7 @@ export class CommentClient {
    * @returns The created Comment
    */
   async create(postId: number, comment: CommentInput) {
-    return this.client.post(`${this.path}/posts/${postId}`, comment)
+    return this.client.post(`${this.path}/posts/${postId}`, { ...comment, id: undefined })
   }
 
   /**

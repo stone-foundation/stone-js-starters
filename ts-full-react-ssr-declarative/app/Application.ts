@@ -1,10 +1,9 @@
 import { Routing } from "@stone-js/router";
 import { Browser } from "@stone-js/browser-adapter";
 // import { NodeHttp } from "@stone-js/node-http-adapter";
-// import { IncomingHttpEvent } from "@stone-js/http-core";
 // import { NodeConsole } from "@stone-js/node-cli-adapter";
-import { ReactIncomingEvent, ReactOutgoingResponse, UseReact } from "@stone-js/use-react";
-import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
+import { ReactIncomingEvent, ReactOutgoingResponse, Hook, UseReact } from "@stone-js/use-react";
+import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
 
 /**
  * Application
@@ -27,33 +26,19 @@ import { IApplication, IBlueprint, ILogger, LogLevel, Promiseable, StoneApp } fr
 @Browser()
 @UseReact()
 // @NodeHttp()
-// @NodeConsole({ incomingEvent: IncomingHttpEvent })
-@StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
-export class Application implements IApplication<ReactIncomingEvent, ReactOutgoingResponse> {
-  private readonly logger: ILogger
-  
+// @NodeConsole()
+@StoneApp({ name: 'My Stone', logger: { level: LogLevel.INFO } })
+export class Application implements IAdapterHook, IKernelHook<ReactIncomingEvent, ReactOutgoingResponse> {
   /**
-   * Create a new instance of Application
-   * At this point, all the dependencies are resolved and injected.
-   * You can access the container and all the services.
-   * 
-   * @param container - The container
-   */
-  constructor({ logger }: { logger: ILogger }) {
-    this.logger = logger
-    this.logger.info('Application is created')
-  }
-
-  /**
-   * Initialize the application
+   * Start the application
    * Run at each cold start.
    * At this point, you only have access to the blueprint.
    * Because the container is not yet created.
-   * Note: This method is static
    */
-  static onStart(blueprint: IBlueprint): void {
+  @Hook('onStart')
+  onStart({ blueprint }: { blueprint: IBlueprint }): void {
     const AppName = blueprint.get<string>('stone.name')
-    console.log(`${AppName}'s Application initialized`)
+    console.log(`${AppName}'s Application is starting`)
   }
 
   /**
@@ -61,28 +46,40 @@ export class Application implements IApplication<ReactIncomingEvent, ReactOutgoi
    * Run at each warm start in server context.
    * And at each cold start in browser context.
    */
-  onPrepare(): Promiseable<void> {
-    this.logger.info('Application is preparing')
+  @Hook('onInit')
+  onInit({ logger }: { logger: ILogger }): Promiseable<void> {
+    logger.info('Application is initializing')
   }
 
   /**
    * Before handle the incoming event
    */
-  beforeHandle(): Promiseable<void> {
-    this.logger.info('Before handle incoming event')
+  @Hook('onHandlingEvent')
+  onHandlingEvent({ logger }: { logger: ILogger }): Promiseable<void> {
+    logger.info('Before handle incoming event')
+  }
+
+  /**
+   * Before prepare the react page
+   */
+  @Hook('onPreparingPage')
+  onPreparingPage({ container }: { container: IContainer }): Promiseable<void> {
+    container.make<ILogger>('logger').info('Before prepare the react page')
   }
 
   /**
    * After the incoming event has been processed
    */
-  afterHandle(): Promiseable<void> {
-    this.logger.info('After handle incoming event')
+  @Hook('onEventHandled')
+  onEventHandled({ logger }: { logger: ILogger }): Promiseable<void> {
+    logger.info('After handle incoming event')
   }
 
   /**
    * After the platform event has been sent to the user
    */
-  onTerminate (): Promiseable<void> {
-    this.logger.info('The event has been sent to the user')
+  @Hook('onTerminate')
+  onTerminate ({ logger }: { logger: ILogger }): Promiseable<void> {
+    logger.info('The event has been sent to the user')
   }
 }

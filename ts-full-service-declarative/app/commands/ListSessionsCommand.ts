@@ -1,6 +1,6 @@
 import { UserService } from "../services/UserService";
-import { ILogger, IncomingEvent, isEmpty } from "@stone-js/core";
 import { SessionService } from "../services/SessionService";
+import { ILogger, IncomingEvent, isEmpty } from "@stone-js/core";
 import { Command, CommandBuilder, ICommandHandler } from "@stone-js/node-cli-adapter";
 
 /**

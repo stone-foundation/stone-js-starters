@@ -3,7 +3,7 @@ import { User, UserInput } from "../../models/User";
 import { UserService } from "../../services/UserService";
 import { IComponentEventHandler } from "@stone-js/router";
 import { UserForm } from "../../components/UserForm/UserForm";
-import { Page, ReactIncomingEvent, RenderContext } from "@stone-js/use-react";
+import { Page, ReactIncomingEvent, RenderContext, StoneLink } from "@stone-js/use-react";
 
 /**
  * Update User Page options.
@@ -41,6 +41,8 @@ export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent
       <>
         <h1>Update user</h1>
         <UserForm user={user} onSubmit={async (userInput) => await this.saveUser(user?.id ?? 0, userInput)} />
+        <StoneLink to={`/users/${user?.id}`}>Back to user</StoneLink>
+        <StoneLink to='/users'>Go to users</StoneLink>
       </>
     )
   }

@@ -20,7 +20,7 @@ export class Application {
   }
 
   /**
-   * BeforeHandle Hook
+   * OnHandlingEvent Hook
    * Hook that runs before each event and just before the action handler.
    * Useful for initialization and configuration that needs to be done before each event.
    * 
@@ -28,7 +28,7 @@ export class Application {
    * 
    * @returns
    */
-  beforeHandle () {
+  onHandlingEvent () {
     console.log('I am executed before each event!')
   }
 

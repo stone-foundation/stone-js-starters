@@ -18,6 +18,9 @@ export class UserLiveConfiguration implements IConfiguration {
     console.log('I am live cause i am loaded at each request...')
   }
 
+  /**
+   * Fetch the configuration remotely
+   */
   async fetchConfigurationRemotly(): Promise<string> {
     console.log('Fetching configuration...')
     return Promise.resolve('My Fetched app name')

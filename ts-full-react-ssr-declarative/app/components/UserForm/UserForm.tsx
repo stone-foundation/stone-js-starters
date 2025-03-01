@@ -41,7 +41,7 @@ export const UserForm: FC<UserFormOptions> = ({ user, onSubmit }) => {
       <label htmlFor='email'>Email:</label>
       <input id='email' type='email' onChange={onChange('email')} defaultValue={userRef.current.email} />
       
-      <button type='submit'>User</button>
+      <button type='submit'>Save</button>
     </form>
   );
 };

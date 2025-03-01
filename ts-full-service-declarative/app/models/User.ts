@@ -8,8 +8,8 @@ export interface UserModel {
   id: number
   name: string
   email: string
-  avatar?: string
-  password?: string
+  avatar?: string | null
+  password?: string | null
   createdAt: number
   updatedAt: number
 }

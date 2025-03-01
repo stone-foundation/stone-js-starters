@@ -1,5 +1,6 @@
-import { isNotEmpty } from "@stone-js/core"
-import { NotAuthenticateError } from "../errors/NotAuthenticateError"
+import { isEmpty, isNotEmpty } from "@stone-js/core"
+import { TokenService } from "../services/TokenService"
+import { UnauthorizedError } from "../errors/UnauthorizedError"
 import { AxiosError, Axios, AxiosRequestConfig, AxiosResponse } from "axios"
 
 /**
@@ -7,6 +8,7 @@ import { AxiosError, Axios, AxiosRequestConfig, AxiosResponse } from "axios"
  */
 export interface AxiosClientOptions {
   axios: Axios
+  tokenService: TokenService
 }
 
 /**
@@ -14,14 +16,16 @@ export interface AxiosClientOptions {
  */
 export class AxiosClient {
   private readonly axios: Axios
+  private readonly tokenService: TokenService
 
   /**
    * Create a new Axios Client
    * 
    * @param options - The options to create the Axios Client.
    */
-  constructor({ axios }: AxiosClientOptions) {
+  constructor({ axios, tokenService }: AxiosClientOptions) {
     this.axios = axios
+    this.tokenService = tokenService
   }
 
   /**
@@ -37,13 +41,17 @@ export class AxiosClient {
   async request<T = any, R = AxiosResponse<T>, D = any>(url: string, payload?: D, options?: AxiosRequestConfig<D>): Promise<T> {
     try {
       const headers = options?.headers || {}
+      const token = await this.getAccessToken()
+      // const validateStatus = (status: number) => status >= 200 && status < 500
+
       headers['Accept'] ??= 'application/json'
       headers['Content-Type'] ??= 'application/json'
-      const { data } = (await this.axios.request({ ...options, url, data: payload, headers }))
-      return data
+      headers['Authorization'] = isEmpty(token) ? '' : `Bearer ${token}`
+
+      return (await this.axios.request({ ...options, url, data: payload, headers, /*validateStatus*/ })).data
     } catch (error: any) {
       if (isNotEmpty<AxiosError<R, D>>(error) && error.status === 401) {
-        throw new NotAuthenticateError(error.message, { cause: error })
+        throw new UnauthorizedError(error.message, { cause: error })
       } else {
         throw error
       }
@@ -57,8 +65,8 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async get<T = any, R = AxiosResponse<T>, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<R> {
-    return await this.request<R, D>(url, undefined, { ...options, method: 'GET' })
+  async get<T = any, R = AxiosResponse<T>, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<T> {
+    return await this.request<T, R, D>(url, undefined, { ...options, method: 'GET' })
   }
 
   /**
@@ -69,8 +77,8 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
-    return await this.request<R, D>(url, data, { ...options, method: 'POST' })
+  async post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<T>  {
+    return await this.request<T, R, D>(url, data, { ...options, method: 'POST' })
   }
 
   /**
@@ -81,8 +89,8 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
-    return await this.request<R, D>(url, data, { ...options, method: 'PUT' })
+  async put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<T>  {
+    return await this.request<T, R, D>(url, data, { ...options, method: 'PUT' })
   }
 
   /**
@@ -93,8 +101,8 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async patch<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<R> {
-    return await this.request<R, D>(url, data, { ...options, method: 'PATCH' })
+  async patch<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, options?: AxiosRequestConfig<D>): Promise<T>  {
+    return await this.request<T, R, D>(url, data, { ...options, method: 'PATCH' })
   }
 
   /**
@@ -104,7 +112,19 @@ export class AxiosClient {
    * @param options - The request options
    * @returns The response data
    */
-  async delete<T = any, R = AxiosResponse<T>, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<R> {
-    return await this.request<R, D>(url, undefined, { ...options, method: 'DELETE' })
+  async delete<T = any, R = AxiosResponse<T>, D = any>(url: string, options?: AxiosRequestConfig<D>): Promise<T>  {
+    return await this.request<T, R, D>(url, undefined, { ...options, method: 'DELETE' })
+  }
+
+  /**
+   * Get the access token
+   * 
+   * @returns The access token
+   */
+  private async getAccessToken(): Promise<string> {
+    if (isNotEmpty(this.tokenService.getAccessToken()) && !this.tokenService.isAuthenticated()) {
+      await this.tokenService.refresh()
+    }
+    return this.tokenService.getAccessToken() ?? ''
   }
 }

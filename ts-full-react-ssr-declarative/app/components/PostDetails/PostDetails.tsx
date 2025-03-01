@@ -31,7 +31,7 @@ export const PostDetails: FC<PostDetailsOptions> = ({ user, onDelete, post, comm
       </p>
       <p>{post.content}</p>
       <p>
-        <StoneLink to={`/users/edit/${post.id}`}>Edit</StoneLink>
+        <StoneLink to={`/posts/${post.id}/edit`}>Edit</StoneLink>
         <button onClick={async () => await onDelete(post)}>Delete</button>
       </p>
       <CommentWidget user={user} commentService={commentService} post={post} />
