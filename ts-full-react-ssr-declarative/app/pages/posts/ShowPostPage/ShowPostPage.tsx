@@ -21,7 +21,7 @@ export interface ShowPostPageOptions {
 /**
  * Show Post Page component.
  */
-@Page('/posts/:post@id(\\d+)', { bindings: { post: PostService } })
+@Page('/posts/:post@id(\\d+)', { bindings: { post: 'postService@findBy' } })
 export class ShowPostPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly router: IRouter
   private readonly logger: ILogger

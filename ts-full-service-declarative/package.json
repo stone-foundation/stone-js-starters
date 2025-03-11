@@ -9,9 +9,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "rollup -c",
-    "build": "rollup -c",
-    "preview": "npm run dev && node ./dist/bootstrap.js",
+    "dev": "stone dev",
+    "build": "stone build",
+    "preview": "stone preview",
     "typings": "stone typings",
     "test": "vitest run",
     "test:cvg": "npm run test -- --coverage"
@@ -19,6 +19,7 @@
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "@stone-js/env": "file:/Users/evenspierre/Projects/StoneJS/env",
+    "@stone-js/cli": "file:/Users/evenspierre/Projects/StoneJS/cli",
     "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
     "@stone-js/router": "file:/Users/evenspierre/Projects/StoneJS/router",
     "@stone-js/pipeline": "file:/Users/evenspierre/Projects/StoneJS/pipeline",

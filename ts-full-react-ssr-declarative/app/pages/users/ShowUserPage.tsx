@@ -15,7 +15,7 @@ export interface ShowUserPageOptions {
 /**
  * Show User Page component.
  */
-@Page('/users/:user@id(\\d+)', { bindings: { user: UserService } })
+@Page('/users/:user@id(\\d+)', { bindings: { user: 'userService@findBy' } })
 export class ShowUserPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly userService: UserService
 

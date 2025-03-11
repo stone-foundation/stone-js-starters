@@ -20,7 +20,7 @@ export class SecurityLayout implements IComponentEventHandler<ReactIncomingEvent
         <header className="mt-64">
           <div className="container">
             <p className="pa-24">
-              <img src="/assets/img/logo.png" className="logo" alt="Stone.js Logo" />
+              <img src='/logo.png' className="logo" alt="Stone.js Logo" />
             </p>
           </div>
         </header>

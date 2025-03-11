@@ -1,5 +1,5 @@
+import jwt from "jsonwebtoken"
 import { Session } from "./Session"
-import { JwtPayload } from "jsonwebtoken"
 
 /**
  * User Interface
@@ -71,7 +71,7 @@ export interface UserToken {
 /**
  * User Token Payload Interface
 */
-export interface UserTokenPayload extends JwtPayload {
+export interface UserTokenPayload extends jwt.JwtPayload {
   user: User
   session: Session
 }

@@ -45,10 +45,13 @@ export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
     const user = event.getUser<User>() ?? {} as User
 
     return (
-      <div>
+      <div className='app-layout'>
         <header>
           <p>
-            <img src="/assets/stonejs.png" alt="Stone.js Logo" />
+            <StoneLink to='/' className='logo'>
+              <img src='/logo.png' alt="Stone.js Logo" />
+              <span>Stone.js</span>
+            </StoneLink>
           </p>
           {isNotEmpty<User>(user) && (
             <p>

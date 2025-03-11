@@ -16,7 +16,7 @@ export interface UpdatePostPageOptions {
 /**
  * Update Post Page component.
  */
-@Page('/posts/:post@id(\\d+)/edit', { bindings: { post: PostService } })
+@Page('/posts/:post@id(\\d+)/edit', { bindings: { post: 'postService@findBy' } })
 export class UpdatePostPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly logger: ILogger
   private readonly postService: PostService

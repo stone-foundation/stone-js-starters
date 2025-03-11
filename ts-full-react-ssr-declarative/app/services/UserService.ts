@@ -2,7 +2,7 @@ import { UserEvent } from "../events/UserEvent"
 import { User, UserInput } from "../models/User"
 import { UserClient } from "../clients/UserClient"
 import { UserNotFoundError } from "../errors/UserNotFoundError"
-import { EventEmitter, IContainer, isEmpty, Service } from "@stone-js/core"
+import { EventEmitter, isEmpty, Service } from "@stone-js/core"
 
 /**
  * User Service Options
@@ -27,18 +27,6 @@ export class UserService {
   private readonly eventEmitter: EventEmitter
 
   /**
-   * Resolve route binding
-   * 
-   * @param key - The key of the binding
-   * @param value - The value of the binding
-   * @param container - The container
-   */
-  static async resolveRouteBinding(key: string, value: any, container: IContainer): Promise<User | undefined> {
-    const userService = container.resolve<UserService>('userService')
-    return await userService.find({ [key]: value })
-  }
-
-  /**
    * Create a new User Service
   */
   constructor({ userClient, eventEmitter }: UserServiceOptions) {
@@ -51,7 +39,7 @@ export class UserService {
    * 
    * @param limit - The limit of users to list
    */
-  async list (limit: number = 10): Promise<User[]> {
+  async list(limit: number = 10): Promise<User[]> {
     return await this.userClient.list(limit)
   }
 
@@ -72,7 +60,7 @@ export class UserService {
    * @param conditions - The conditions to find the user
    * @returns The found user
    */
-  async find (conditions: Record<string, any>): Promise<User> {
+  async find(conditions: Record<string, any>): Promise<User> {
     try {
       return await this.userClient.find(conditions.id)
     } catch (error: any) {
@@ -82,6 +70,18 @@ export class UserService {
         throw error
       }
     }
+  }
+
+  /**
+   * Find a user by key
+   * 
+   * @param key - The key to find the user
+   * @param value - The value to find the user
+   * @returns The found user
+   * @throws UserNotFoundError
+   */
+  async findBy(key: string, value: any): Promise<User | undefined> {
+    return await this.find({ [key]: value })
   }
 
   /**

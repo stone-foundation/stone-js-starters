@@ -1,7 +1,7 @@
 import { Routing } from "@stone-js/router";
 import { Browser } from "@stone-js/browser-adapter";
-// import { NodeHttp } from "@stone-js/node-http-adapter";
-// import { NodeConsole } from "@stone-js/node-cli-adapter";
+import { NodeHttp } from "@stone-js/node-http-adapter";
+import { NodeConsole } from "@stone-js/node-cli-adapter";
 import { ReactIncomingEvent, ReactOutgoingResponse, Hook, UseReact } from "@stone-js/use-react";
 import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
 
@@ -25,9 +25,9 @@ import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, P
 @Routing()
 @Browser()
 @UseReact()
-// @NodeHttp()
-// @NodeConsole()
-@StoneApp({ name: 'My Stone', logger: { level: LogLevel.INFO } })
+@NodeConsole()
+@NodeHttp({ default: true, url: 'http://localhost:3100' })
+@StoneApp({ name: 'My Stones', logger: { level: LogLevel.INFO } })
 export class Application implements IAdapterHook, IKernelHook<ReactIncomingEvent, ReactOutgoingResponse> {
   /**
    * Start the application
@@ -70,9 +70,9 @@ export class Application implements IAdapterHook, IKernelHook<ReactIncomingEvent
   /**
    * After the incoming event has been processed
    */
-  @Hook('onEventHandled')
-  onEventHandled({ logger }: { logger: ILogger }): Promiseable<void> {
-    logger.info('After handle incoming event')
+  @Hook('onProcessingKernelMiddleware')
+  onProcessingKernelMiddleware({ pipe }: { pipe: any }): Promiseable<void> {
+    console.info('Kernel middleware is processing', pipe.module.name)
   }
 
   /**

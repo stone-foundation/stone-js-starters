@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 import { SessionService } from "./SessionService"
-import { sign, SignOptions, verify } from "jsonwebtoken"
 import { UserRepository } from "../repositories/UserRepository"
 import { BadCredentialsError } from "../errors/CredentialsError"
 import { IBlueprint, isEmpty, isNotEmpty, Service } from "@stone-js/core"
@@ -160,7 +160,7 @@ export class SecurityService {
       )
     }
 
-    return sign(
+    return jwt.sign(
       {
         user: {
           ...user,
@@ -169,7 +169,7 @@ export class SecurityService {
         session
       },
       this.blueprint.get<string>('security.secret', 'secret'),
-      this.blueprint.get<SignOptions>('security.jwt')
+      this.blueprint.get<jwt.SignOptions>('security.jwt')
     )
   }
 
@@ -181,7 +181,7 @@ export class SecurityService {
    */
   verifyToken = (token: string): UserTokenPayload => {
     try {
-      return verify(
+      return jwt.verify(
         token,
         this.blueprint.get<string>('security.secret', 'secret')
       ) as UserTokenPayload

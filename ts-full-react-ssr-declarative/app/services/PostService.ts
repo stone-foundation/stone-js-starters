@@ -1,6 +1,6 @@
+import { Service } from "@stone-js/core"
 import { Post, PostInput } from "../models/Post"
 import { PostClient } from "../clients/PostClient"
-import { IContainer, Service } from "@stone-js/core"
 import { PostNotFoundError } from "../errors/PostNotFoundError"
 
 /**
@@ -23,18 +23,6 @@ export class PostService {
   private readonly postClient: PostClient
 
   /**
-   * Resolve route binding
-   * 
-   * @param key - The key of the binding
-   * @param value - The value of the binding
-   * @param container - The container
-   */
-  static async resolveRouteBinding(key: string, value: string, container: IContainer): Promise<Post | undefined> {
-    const postService = container.resolve<PostService>('postService')
-    return await postService.find({ [key]: value })
-  }
-
-  /**
    * Create a new Post Service
   */
   constructor({ postClient }: PostServiceOptions) {
@@ -46,7 +34,7 @@ export class PostService {
    * 
    * @param limit - The limit of posts to list
    */
-  async list (limit: number = 10): Promise<Post[]> {
+  async list(limit: number = 10): Promise<Post[]> {
     return await this.postClient.list(limit)
   }
 
@@ -56,7 +44,7 @@ export class PostService {
    * @param id - The id of the author to list posts
    * @param limit - The limit of posts to list
    */
-  async listbyAuthor (id: number, limit: number = 10): Promise<Post[]> {
+  async listbyAuthor(id: number, limit: number = 10): Promise<Post[]> {
     return await this.postClient.listByAuthor(id, limit)
   }
 
@@ -66,7 +54,7 @@ export class PostService {
    * @param conditions - The conditions to find the post
    * @returns The found post
    */
-  async find (conditions: Record<string, any>): Promise<Post> {
+  async find(conditions: Record<string, any>): Promise<Post> {
     try {
       return await this.postClient.find(conditions.id)
     } catch (error: any) {
@@ -76,6 +64,18 @@ export class PostService {
         throw error
       }
     }
+  }
+
+  /**
+   * Find a post by key
+   * 
+   * @param key - The key to find the post
+   * @param value - The value to find the post
+   * @returns The found post
+   * @throws PostNotFoundError
+   */
+  async findBy(key: string, value: string): Promise<Post | undefined> {
+    return await this.find({ [key]: value })
   }
 
   /**

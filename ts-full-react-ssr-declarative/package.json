@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --ssr .stone/index.ts --outDir dist/server",
-    "preview": "vite preview --outDir dist/client"
+    "dev": "stone dev",
+    "build": "stone build",
+    "preview": "stone preview",
+    "build:server": "stone build --ssr"
   },
   "dependencies": {
     "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
@@ -17,14 +16,18 @@
     "@stone-js/node-cli-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-cli-adapter",
     "@stone-js/node-http-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-http-adapter",
     "@stone-js/router": "file:/Users/evenspierre/Projects/StoneJS/router",
+    "@stone-js/cli": "file:/Users/evenspierre/Projects/StoneJS/cli",
+    "@stone-js/filesystem": "file:/Users/evenspierre/Projects/StoneJS/filesystem",
     "@stone-js/use-react": "file:/Users/evenspierre/Projects/StoneJS/use-react",
     "axios": "^1.7.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.9",
     "@babel/plugin-proposal-decorators": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
     "@eslint/js": "^9.17.0",
     "@types/axios": "^0.14.4",
@@ -36,6 +39,7 @@
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
+    "glob": "^10.4.5",
     "globals": "^15.14.0",
     "tiny-glob": "^0.2.9",
     "typescript": "~5.6.2",

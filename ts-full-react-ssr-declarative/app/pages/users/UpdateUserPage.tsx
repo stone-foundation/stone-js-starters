@@ -15,7 +15,7 @@ export interface UpdateUserPageOptions {
 /**
  * Update User Page component.
  */
-@Page('/users/:user@id(\\d+)/edit', { bindings: { user: UserService } })
+@Page('/users/:user@id(\\d+)/edit', { bindings: { user: 'userService@findBy' } })
 export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent> {
   private readonly userService: UserService
 
