@@ -23,7 +23,7 @@ export class AppConfiguration implements IConfiguration {
       .set('stone.logger.level', LogLevel.INFO)
       .set('stone.http.cors.preflightStop', true)
       .set('stone.http.cors.allowedHeaders', ['*'])
-      .add('stone.builder.middleware', [MetaCORSHeadersMiddleware])
+      .add('stone.blueprint.middleware', [MetaCORSHeadersMiddleware])
   }
 
   /**

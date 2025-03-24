@@ -27,7 +27,7 @@ import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, P
 @UseReact()
 @NodeConsole()
 @NodeHttp({ default: true, url: 'http://localhost:3100' })
-@StoneApp({ name: 'My Stones', logger: { level: LogLevel.INFO } })
+@StoneApp({ name: 'My Stone', logger: { level: LogLevel.INFO } })
 export class Application implements IAdapterHook, IKernelHook<ReactIncomingEvent, ReactOutgoingResponse> {
   /**
    * Start the application

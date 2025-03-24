@@ -1,4 +1,5 @@
 import { Service } from "@stone-js/core"
+import { randomUUID } from "node:crypto"
 import { UserModel } from "../models/User"
 import { Session } from "../models/Session"
 import { SessionRepository } from "../repositories/SessionRepository"
@@ -86,7 +87,7 @@ export class SessionService {
       userAgent,
       userId: user.id,
       createdAt: Date.now(),
-      uuid: crypto.randomUUID(),
+      uuid: randomUUID(),
       lastActivityAt: Date.now(),
       expiresAt: Date.now() + 3600,
     }

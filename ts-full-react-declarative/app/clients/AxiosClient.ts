@@ -1,6 +1,7 @@
 import { isEmpty, isNotEmpty } from "@stone-js/core"
 import { TokenService } from "../services/TokenService"
 import { UnauthorizedError } from "../errors/UnauthorizedError"
+import { isServer, ReactIncomingEvent } from "@stone-js/use-react"
 import { AxiosError, Axios, AxiosRequestConfig, AxiosResponse } from "axios"
 
 /**
@@ -8,6 +9,7 @@ import { AxiosError, Axios, AxiosRequestConfig, AxiosResponse } from "axios"
  */
 export interface AxiosClientOptions {
   axios: Axios
+  event: ReactIncomingEvent
   tokenService: TokenService
 }
 
@@ -16,6 +18,7 @@ export interface AxiosClientOptions {
  */
 export class AxiosClient {
   private readonly axios: Axios
+  private readonly event: ReactIncomingEvent
   private readonly tokenService: TokenService
 
   /**
@@ -23,8 +26,9 @@ export class AxiosClient {
    * 
    * @param options - The options to create the Axios Client.
    */
-  constructor({ axios, tokenService }: AxiosClientOptions) {
+  constructor({ axios, event, tokenService }: AxiosClientOptions) {
     this.axios = axios
+    this.event = event
     this.tokenService = tokenService
   }
 
@@ -43,6 +47,8 @@ export class AxiosClient {
       const headers = options?.headers || {}
       const token = await this.getAccessToken()
       // const validateStatus = (status: number) => status >= 200 && status < 500
+
+      if (isServer()) { headers['User-Agent'] = this.event.userAgent }
 
       headers['Accept'] ??= 'application/json'
       headers['Content-Type'] ??= 'application/json'

@@ -23,6 +23,7 @@ export class AppServiceProvider implements IServiceProvider {
       .singletonIf(AxiosClient, (container) => {
         return new AxiosClient({
           axios: container.make('axios'),
+          event: container.make('event'),
           tokenService: container.make('tokenService')
         })
       })
