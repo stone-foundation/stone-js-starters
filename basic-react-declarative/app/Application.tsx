@@ -1,17 +1,21 @@
-import { NodeHttp } from "@stone-js/node-http-adapter"
-import { IncomingEvent, IEventHandler, ILogger, LogLevel, StoneApp } from "@stone-js/core"
+import { ReactNode } from "react"
+import { Browser } from "@stone-js/browser-adapter"
+import { IncomingEvent, ILogger, LogLevel, StoneApp } from "@stone-js/core"
+import { IComponentEventHandler, ReactIncomingEvent, RenderContext, UseReact } from "@stone-js/use-react"
 
 /**
  * Application
  * 
  * This is the main application entry point.
  * 
- * @NodeHttp() is used to enable the Node HTTP adapter.
+ * @UseReact() is used to enable the React.
+ * @Browser() is used to enable the Browser adapter.
  * @StoneApp() is used to enable the Stone application, it is required.
  */
-@NodeHttp()
+@Browser()
+@UseReact()
 @StoneApp({ logger: { level: LogLevel.INFO } })
-export class Application implements IEventHandler<IncomingEvent> {
+export class Application implements IComponentEventHandler<ReactIncomingEvent> {
   /**
    * Logger is a service for logging.
   */
@@ -43,6 +47,19 @@ export class Application implements IEventHandler<IncomingEvent> {
 
     // Return a JSON response
     return { message }
+  }
+
+  /**
+   * Render the component.
+   * 
+   * @returns The rendered component.
+   */
+  render ({ data }: RenderContext<ResponseData>): ReactNode {
+    return (
+      <section className="container">
+        <h1 className="h1 text-center mt-64">{data?.message}</h1>
+      </section>
+    )
   }
 }
 
