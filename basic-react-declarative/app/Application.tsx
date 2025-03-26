@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { Browser } from "@stone-js/browser-adapter"
-import { IncomingEvent, ILogger, LogLevel, StoneApp } from "@stone-js/core"
+import { ILogger, LogLevel, StoneApp } from "@stone-js/core"
 import { IComponentEventHandler, ReactIncomingEvent, RenderContext, UseReact } from "@stone-js/use-react"
 
 /**
@@ -38,7 +38,7 @@ export class Application implements IComponentEventHandler<ReactIncomingEvent> {
    * @param event Incoming event
    * @returns response
   */
-  handle(event: IncomingEvent): ResponseData {
+  handle(event: ReactIncomingEvent): ResponseData {
     // Get the name from the event
     const message = `Hello ${event.get<string>('name', 'World')}!`
 

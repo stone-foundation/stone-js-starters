@@ -1,4 +1,3 @@
-import { getString } from "@stone-js/env";
 import { Routing } from "@stone-js/router";
 import { Browser } from "@stone-js/browser-adapter";
 import { NodeHttp } from "@stone-js/node-http-adapter";
@@ -27,8 +26,8 @@ import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, P
 @Browser()
 @UseReact()
 @NodeConsole()
+@NodeHttp({ default: true, url: 'http://localhost:3100' })
 @StoneApp({ name: 'My Stone', logger: { level: LogLevel.INFO } })
-@NodeHttp({ default: true, url: getString('BASE_URL', 'http://localhost:3100') })
 export class Application implements IAdapterHook, IKernelHook<ReactIncomingEvent, ReactOutgoingResponse> {
   /**
    * Start the application

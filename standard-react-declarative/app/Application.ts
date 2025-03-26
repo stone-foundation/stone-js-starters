@@ -20,8 +20,8 @@ import { StoneApp, AdapterHookListenerContext, Hook, LogLevel } from "@stone-js/
 @Routing()
 @Browser()
 @UseReact()
-@NodeHttp({ default: true })
 @StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
+@NodeHttp({ default: true })
 export class Application {
   /**
    * Run before the application starts

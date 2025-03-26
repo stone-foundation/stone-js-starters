@@ -7,7 +7,7 @@ export default defineConfig({
     include: ['./tests/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     coverage: {
       provider: 'v8',
-      include: ['app/**/*.ts'],
+      include: ['app/**/*.ts', 'app/**/*.tsx'],
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
       thresholds: {

@@ -22,8 +22,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "lint": "ts-standard src",
-    "lint:fix": "ts-standard --fix src tests",
+    "lint": "ts-standard **/app",
+    "lint:fix": "ts-standard --fix app tests",
     "prepare": "husky"
   },
   "devDependencies": {
