@@ -1,6 +1,6 @@
-# Stone.js TypeScript basic starter
+# Stone.js TypeScript standard starter
 
-Stone.js's basic starter to create web app using declarative API.
+Stone.js's standard starter to create react app using declarative API.
 
 ## Project Setup
 

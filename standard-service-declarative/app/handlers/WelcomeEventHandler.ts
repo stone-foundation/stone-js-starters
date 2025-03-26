@@ -32,8 +32,10 @@ export class WelcomeEventHandler {
 
   /**
    * Welcome
-   * 
    * With explicit json response type.
+   * 
+   * @param event - The incoming HTTP event
+   * @returns A welcome message
   */
   @Get('/:name?')
   @JsonHttpResponse(200)

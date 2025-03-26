@@ -1,0 +1,45 @@
+{
+  "name": "@stone-js/starters",
+  "version": "0.0.1",
+  "description": "Stone.js starters",
+  "author": "Mr. Stone <evensstone@gmail.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/stonemjs/starters.git"
+  },
+  "homepage": "https://github.com/stonemjs/starters#readme",
+  "bugs": {
+    "url": "https://github.com/stonemjs/starters/issues"
+  },
+  "keywords": [
+    "Starters",
+    "Scaffolding",
+    "Stone.js"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "lint": "ts-standard src",
+    "lint:fix": "ts-standard --fix src tests",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "husky": "^9.1.6",
+    "ts-standard": "^12.0.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3"
+  },
+  "ts-standard": {
+    "globals": [
+      "it",
+      "expect",
+      "describe",
+      "beforeEach"
+    ]
+  }
+}

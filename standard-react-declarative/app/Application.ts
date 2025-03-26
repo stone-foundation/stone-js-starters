@@ -1,4 +1,6 @@
 import { Routing } from "@stone-js/router";
+import { UseReact } from "@stone-js/use-react";
+import { Browser } from "@stone-js/browser-adapter";
 import { NodeHttp } from "@stone-js/node-http-adapter";
 import { StoneApp, AdapterHookListenerContext, Hook, LogLevel } from "@stone-js/core";
 
@@ -7,14 +9,18 @@ import { StoneApp, AdapterHookListenerContext, Hook, LogLevel } from "@stone-js/
  * 
  * This is the main application entry point.
  * 
- * @StoneApp() is used to enable the Stone application, it is required.
+ * @UseReact() is used to enable the React.
+ * @Browser() is used to enable the Browser adapter.
  * @Routing() is used to enable the routing feature.
  * @NodeHttp() is used to enable the Node HTTP adapter.
+ * @StoneApp() is used to enable the Stone application, it is required.
  * 
  * Lifecycle hooks are used here just for demonstration purposes.
  */
 @Routing()
-@NodeHttp()
+@Browser()
+@UseReact()
+@NodeHttp({ default: true })
 @StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
 export class Application {
   /**

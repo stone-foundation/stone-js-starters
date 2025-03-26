@@ -18,6 +18,7 @@
     "test:cvg": "npm run test -- --coverage"
   },
   "dependencies": {
+    "@stone-js/env": "file:/Users/evenspierre/Projects/StoneJS/env",
     "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
     "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
     "@stone-js/http-core": "file:/Users/evenspierre/Projects/StoneJS/http-core",

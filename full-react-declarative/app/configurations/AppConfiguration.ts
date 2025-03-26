@@ -1,3 +1,4 @@
+import { getString } from "@stone-js/env";
 import { Configuration, IBlueprint, IConfiguration, Promiseable } from "@stone-js/core";
 
 /**
@@ -10,7 +11,7 @@ export class AppConfiguration implements IConfiguration {
    */
   configure(blueprint: IBlueprint): Promiseable<void> {
     blueprint
-      .set('app.api.baseURL', 'http://localhost:8080')
       .set('stone.kernel.skipMiddleware', false)
+      .set('app.api.baseURL', getString('API_BASE_URL', 'http://localhost:8080'))
   }
 }

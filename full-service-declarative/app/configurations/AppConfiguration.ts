@@ -1,5 +1,5 @@
 import { Config } from "@libsql/client"
-// import { getString } from "@stone-js/env"
+import { getString } from "@stone-js/env"
 import { MetaCORSHeadersMiddleware } from "@stone-js/http-core"
 import { Configuration, IBlueprint, IConfiguration, LogLevel, Promiseable } from "@stone-js/core"
 
@@ -31,7 +31,7 @@ export class AppConfiguration implements IConfiguration {
    */
   private databaseConfig(): Config {
     return {
-      url: 'file:local.db'//getString('DATABASE_URL', 'file:local.db'),
+      url: getString('DATABASE_URL', 'file:local.db'),
     }
   }
 
@@ -43,7 +43,7 @@ export class AppConfiguration implements IConfiguration {
       jwt: {
         expiresIn: 3600,
       },
-      secret: 'non_prod_secret',//getString('SECURITY_JWT_SECRET', 'non_prod_secret'),
+      secret: getString('SECURITY_JWT_SECRET', 'non_prod_secret'),
       bcrypt: {
         saltRounds: 10,
       },
