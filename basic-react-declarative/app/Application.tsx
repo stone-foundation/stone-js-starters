@@ -1,7 +1,8 @@
-import { ReactNode } from "react"
+import { JSX } from "react"
 import { Browser } from "@stone-js/browser-adapter"
-import { ILogger, LogLevel, StoneApp } from "@stone-js/core"
-import { IComponentEventHandler, ReactIncomingEvent, RenderContext, UseReact } from "@stone-js/use-react"
+import { NodeConsole } from "@stone-js/node-cli-adapter"
+import { ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core"
+import { ReactIncomingEvent, UseReact, HeadContext, IPage, PageHeadContext, PageRenderContext } from "@stone-js/use-react"
 
 /**
  * Application
@@ -14,8 +15,9 @@ import { IComponentEventHandler, ReactIncomingEvent, RenderContext, UseReact } f
  */
 @Browser()
 @UseReact()
+@NodeConsole()
 @StoneApp({ logger: { level: LogLevel.INFO } })
-export class Application implements IComponentEventHandler<ReactIncomingEvent> {
+export class Application implements IPage<ReactIncomingEvent> {
   /**
    * Logger is a service for logging.
   */
@@ -50,11 +52,27 @@ export class Application implements IComponentEventHandler<ReactIncomingEvent> {
   }
 
   /**
+   * Set the page head tags, like title, meta, link, script, style.
+   * 
+   * @returns The head context.
+   */
+  head ({ event }: PageHeadContext): Promiseable<HeadContext> {
+    return {
+      title: `Hello ${event.get<string>('name', 'World')}!`,
+      description: 'This is a simple example of a React application using Stone.js',
+      metas: [
+        { name: 'author', content: 'Stone.js' },
+        { name: 'keywords', content: 'stone,js,react,example' }
+      ]
+    }
+  }
+
+  /**
    * Render the component.
    * 
    * @returns The rendered component.
    */
-  render ({ data }: RenderContext<ResponseData>): ReactNode {
+  render ({ data }: PageRenderContext<ResponseData>): JSX.Element {
     return (
       <section className="container">
         <h1 className="h1 text-center mt-64">{data?.message}</h1>

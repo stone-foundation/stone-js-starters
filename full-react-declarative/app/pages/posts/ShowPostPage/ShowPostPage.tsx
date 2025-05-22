@@ -1,12 +1,11 @@
-import { ReactNode } from "react";
+import { JSX } from "react";
 import { Post } from "../../../models/Post";
 import { User } from "../../../models/User";
 import { ILogger, isNotEmpty } from "@stone-js/core";
-import { IComponentEventHandler } from "@stone-js/router";
 import { PostService } from "../../../services/PostService";
 import { CommentService } from "../../../services/CommentService";
 import { PostDetails } from "../../../components/PostDetails/PostDetails";
-import { IRouter, Page, ReactIncomingEvent, RenderContext } from "@stone-js/use-react";
+import { IPage, IRouter, Page, PageRenderContext, ReactIncomingEvent } from "@stone-js/use-react";
 
 /**
  * Show Post Page options.
@@ -22,7 +21,7 @@ export interface ShowPostPageOptions {
  * Show Post Page component.
  */
 @Page('/posts/:post@id(\\d+)', { bindings: { post: 'postService@findBy' } })
-export class ShowPostPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class ShowPostPage implements IPage<ReactIncomingEvent> {
   private readonly router: IRouter
   private readonly logger: ILogger
   private readonly postService: PostService
@@ -46,7 +45,7 @@ export class ShowPostPage implements IComponentEventHandler<ReactIncomingEvent> 
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ event }: RenderContext<Post>): ReactNode {
+  render ({ event }: PageRenderContext<Post>): JSX.Element {
     const post = event.get<Post>('post')
     const user = event.getUser<User>() ?? {} as User
 

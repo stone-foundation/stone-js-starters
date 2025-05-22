@@ -1,4 +1,4 @@
-import { FactoryService, ILogger } from "@stone-js/core"
+import { defineService, ILogger } from "@stone-js/core"
 
 /**
  * Welcome Service Options
@@ -8,18 +8,30 @@ export interface WelcomeServiceOptions {
 }
 
 /**
- * Interface for the Welcome Service
-*/
-export interface WelcomeService {
-  welcome(name: string): { message: string }
-}
+ * Welcome Service Type
+ */
+export type WelcomeService = ReturnType<typeof WelcomeService>
 
 /**
  * Welcome Service
-*/
-export const welcomeService: FactoryService = ({ logger }: WelcomeServiceOptions): WelcomeService => ({
+ */
+export const WelcomeService = ({ logger }: WelcomeServiceOptions) => ({
+  /**
+   * Welcome
+   * 
+   * @param name - The name
+   * @returns A welcome message
+   */
   welcome(name: string): { message: string } {
     logger.info(`Welcome ${name}`)
     return { message: `Hello ${name}!` }
   }
 })
+
+/**
+ * Welcome Service Blueprint
+ */
+export const WelcomeServiceBlueprint = defineService (
+  WelcomeService,
+  { alias: 'welcomeService', isFactory: true }
+)

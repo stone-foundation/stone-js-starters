@@ -1,3 +1,4 @@
+import { Snapshot } from "@stone-js/use-react"
 import { UserEvent } from "../events/UserEvent"
 import { User, UserInput } from "../models/User"
 import { UserClient } from "../clients/UserClient"
@@ -80,6 +81,7 @@ export class UserService {
    * @returns The found user
    * @throws UserNotFoundError
    */
+  @Snapshot()
   async findBy(key: string, value: any): Promise<User | undefined> {
     return await this.find({ [key]: value })
   }

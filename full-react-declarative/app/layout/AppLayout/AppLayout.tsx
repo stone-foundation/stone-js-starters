@@ -1,10 +1,9 @@
 import './AppLayout.css'
-import { ReactNode } from "react";
+import { JSX } from "react";
 import { User } from "../../models/User";
 import { IBlueprint, isNotEmpty } from '@stone-js/core';
-import { IComponentEventHandler } from "@stone-js/router";
 import { SecurityService } from '../../services/SecurityService';
-import { IRouter, PageLayout, ReactIncomingEvent, RenderLayoutContext, StoneLink, StoneOutlet } from "@stone-js/use-react";
+import { IPageLayout, IRouter, PageLayout, PageLayoutRenderContext, ReactIncomingEvent, StoneLink, StoneOutlet } from "@stone-js/use-react";
 
 /**
  * App Layout options.
@@ -19,7 +18,7 @@ export interface AppLayoutOptions {
  * App Layout component.
  */
 @PageLayout({ name: 'default' })
-export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
+export class AppLayout implements IPageLayout {
   private readonly router: IRouter
   private readonly blueprint: IBlueprint
   private readonly securityService: SecurityService
@@ -41,8 +40,8 @@ export class AppLayout implements IComponentEventHandler<ReactIncomingEvent> {
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ event, children }: RenderLayoutContext<ReactNode>) {
-    const user = event.getUser<User>() ?? {} as User
+  render ({ container, children }: PageLayoutRenderContext): JSX.Element {
+    const user = container.make<ReactIncomingEvent>('event').getUser<User>() ?? {} as User
 
     return (
       <div className='app-layout'>

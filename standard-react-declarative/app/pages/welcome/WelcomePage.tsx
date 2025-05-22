@@ -1,7 +1,6 @@
-import { ReactNode } from "react";
-import { IComponentEventHandler } from "@stone-js/router";
+import { JSX } from "react";
 import { WelcomeService } from "../../services/WelcomeService";
-import { Page, ReactIncomingEvent, RenderContext } from "@stone-js/use-react";
+import { Page, ReactIncomingEvent, PageRenderContext, IPage } from "@stone-js/use-react";
 
 /**
  * WelcomePage Options
@@ -21,7 +20,7 @@ export interface ResponseData {
  * Welcome Page component.
  */
 @Page('/:name?')
-export class WelcomePage implements IComponentEventHandler<ReactIncomingEvent> {
+export class WelcomePage implements IPage<ReactIncomingEvent> {
   private readonly welcomeService: WelcomeService
 
   /**
@@ -48,7 +47,7 @@ export class WelcomePage implements IComponentEventHandler<ReactIncomingEvent> {
    * 
    * @returns The rendered component.
    */
-  render ({ data }: RenderContext<ResponseData>): ReactNode {
+  render ({ data }: PageRenderContext<ResponseData>): JSX.Element {
     return (
       <section className="container">
         <h1 className="h1 text-center mt-64">{data?.message}</h1>

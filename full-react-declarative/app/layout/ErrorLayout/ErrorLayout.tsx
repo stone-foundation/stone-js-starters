@@ -1,20 +1,19 @@
 import './ErrorLayout.css';
-import { ReactNode } from "react";
-import { IComponentEventHandler } from "@stone-js/router";
-import { PageLayout, ReactIncomingEvent, RenderLayoutContext, StoneOutlet } from "@stone-js/use-react";
+import { JSX } from "react";
+import { PageLayout, IPageLayout, StoneOutlet, PageLayoutRenderContext } from "@stone-js/use-react";
 
 /**
  * Error Layout component.
  */
 @PageLayout({ name: 'error' })
-export class ErrorLayout implements IComponentEventHandler<ReactIncomingEvent> {
+export class ErrorLayout implements IPageLayout {
   /**
    * Render the component.
    * 
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ children }: RenderLayoutContext<ReactNode>) {
+  render ({ children }: PageLayoutRenderContext): JSX.Element {
     return (
       <>
         <header className="mt-64">

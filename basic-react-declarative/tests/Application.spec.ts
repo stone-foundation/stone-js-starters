@@ -1,6 +1,7 @@
+import { ILogger } from '@stone-js/core'
 import { Application } from '../app/Application'
 import { renderToString } from 'react-dom/server'
-import { ILogger, IncomingEvent } from '@stone-js/core'
+import { ReactIncomingEvent } from '@stone-js/use-react'
 
 // We must mock decorators to lighten the test environment
 vi.mock(import("@stone-js/core"), async (importOriginal) => {
@@ -49,7 +50,7 @@ describe('Application', () => {
   it('should handle incoming events', () => {
     // Arrange
     const expectedMessage = 'Hello World!'
-    const event = { get: () => 'World' } as unknown as IncomingEvent
+    const event = { get: () => 'World' } as unknown as ReactIncomingEvent
 
     // Act
     const response = app.handle(event) as { message: string }

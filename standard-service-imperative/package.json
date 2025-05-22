@@ -1,9 +1,9 @@
 {
-  "name": "ts-basic-service-declarative",
+  "name": "ts-basic-service-imperative",
   "version": "1.0.0",
-  "description": "Stone.js's starter to create nano services with typescript using declarative API.",
+  "description": "Stone.js's starter to create nano services with typescript using imperative API.",
   "author": "Mr. Stone <evensstone@gmail.com>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=20.0.0"

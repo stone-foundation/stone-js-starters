@@ -1,11 +1,10 @@
 import './CreatePostPage.css';
-import { ReactNode } from "react";
+import { JSX } from "react";
 import { ILogger } from "@stone-js/core";
 import { PostInput } from "../../../models/Post";
-import { IComponentEventHandler } from "@stone-js/router";
 import { PostService } from "../../../services/PostService";
 import { PostForm } from '../../../components/PostForm/PostForm';
-import { IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
+import { IPage, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
 
 /**
  * Create Post Page options.
@@ -20,7 +19,7 @@ export interface CreatePostPageOptions {
  * Create Post Page component.
  */
 @Page('/posts/create')
-export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class CreatePostPage implements IPage<ReactIncomingEvent> {
   private readonly router: IRouter
   private readonly logger: ILogger
   private readonly postService: PostService
@@ -41,7 +40,7 @@ export class CreatePostPage implements IComponentEventHandler<ReactIncomingEvent
    * 
    * @returns The rendered component.
    */
-  render (): ReactNode {
+  render (): JSX.Element {
     return (
       <>
         <h1>New Post</h1>

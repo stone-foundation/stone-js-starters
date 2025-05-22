@@ -2,7 +2,7 @@ import { Routing } from "@stone-js/router";
 import { UseReact } from "@stone-js/use-react";
 import { Browser } from "@stone-js/browser-adapter";
 import { NodeHttp } from "@stone-js/node-http-adapter";
-import { StoneApp, AdapterHookListenerContext, Hook, LogLevel } from "@stone-js/core";
+import { StoneApp, AdapterHookListenerContext, Hook, LogLevel, Logger } from "@stone-js/core";
 
 /**
  * Application
@@ -20,8 +20,8 @@ import { StoneApp, AdapterHookListenerContext, Hook, LogLevel } from "@stone-js/
 @Routing()
 @Browser()
 @UseReact()
-@StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
 @NodeHttp({ default: true })
+@StoneApp({ name: 'MyApp', logger: { level: LogLevel.INFO } })
 export class Application {
   /**
    * Run before the application starts
@@ -30,7 +30,7 @@ export class Application {
    */
   @Hook('onStart')
   onStart ({ blueprint }: AdapterHookListenerContext): void {
-    console.log(`${blueprint.get('stone.name', 'Stone App')} is starting...`)
+    Logger.log(`${blueprint.get('stone.name', 'Stone App')} is starting...`)
   }
 
   /**
@@ -40,6 +40,6 @@ export class Application {
    */
   @Hook('onStop')
   onStop ({ blueprint }: AdapterHookListenerContext): void {
-    console.log(`${blueprint.get('stone.name', 'Stone App')} is stopping...`)
+    Logger.log(`${blueprint.get('stone.name', 'Stone App')} is stopping...`)
   }
 }

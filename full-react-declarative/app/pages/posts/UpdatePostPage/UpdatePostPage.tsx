@@ -1,9 +1,9 @@
+import { JSX } from "react";
 import { ILogger, isNotEmpty } from "@stone-js/core";
 import { Post, PostInput } from "../../../models/Post";
-import { IComponentEventHandler } from "@stone-js/router";
 import { PostService } from "../../../services/PostService";
 import { PostForm } from "../../../components/PostForm/PostForm";
-import { Page, ReactIncomingEvent, RenderContext, StoneLink } from "@stone-js/use-react";
+import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from "@stone-js/use-react";
 
 /**
  * Update Post Page options.
@@ -17,7 +17,7 @@ export interface UpdatePostPageOptions {
  * Update Post Page component.
  */
 @Page('/posts/:post@id(\\d+)/edit', { bindings: { post: 'postService@findBy' } })
-export class UpdatePostPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class UpdatePostPage implements IPage<ReactIncomingEvent> {
   private readonly logger: ILogger
   private readonly postService: PostService
 
@@ -37,7 +37,7 @@ export class UpdatePostPage implements IComponentEventHandler<ReactIncomingEvent
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ event }: RenderContext<Post>) {
+  render ({ event }: PageRenderContext<Post>): JSX.Element {
     const post = event.get<Post>('post')
     
     if (isNotEmpty<Post>(post)) {

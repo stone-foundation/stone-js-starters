@@ -45,8 +45,8 @@ import { PipelineHookContext } from "@stone-js/pipeline";
  */
 @Routing()
 @NodeConsole()
-@StoneApp({ name: 'MyApps', logger: { level: LogLevel.ERROR } })
-@NodeHttp({ middleware: [MetaBodyEventMiddleware, MetaFilesEventMiddleware], default: true, url: getString('BASE_URL', 'http://localhost:8080') })
+@StoneApp({ name: 'MyApps', logger: { level: LogLevel.INFO } })
+@NodeHttp({ default: true, middleware: [MetaBodyEventMiddleware, MetaFilesEventMiddleware], url: getString('BASE_URL', 'http://localhost:8080') })
 export class Application implements IBlueprintHook, IAdapterHook, IKernelHook<IncomingHttpEvent, OutgoingHttpResponse> {
   /**
    * Run before the blueprint is prepared

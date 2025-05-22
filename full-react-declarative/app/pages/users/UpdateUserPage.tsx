@@ -1,9 +1,8 @@
-import { ReactNode } from "react";
+import { JSX } from "react";
 import { User, UserInput } from "../../models/User";
 import { UserService } from "../../services/UserService";
-import { IComponentEventHandler } from "@stone-js/router";
 import { UserForm } from "../../components/UserForm/UserForm";
-import { Page, ReactIncomingEvent, RenderContext, StoneLink } from "@stone-js/use-react";
+import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from "@stone-js/use-react";
 
 /**
  * Update User Page options.
@@ -16,7 +15,7 @@ export interface UpdateUserPageOptions {
  * Update User Page component.
  */
 @Page('/users/:user@id(\\d+)/edit', { bindings: { user: 'userService@findBy' } })
-export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class UpdateUserPage implements IPage<ReactIncomingEvent> {
   private readonly userService: UserService
 
   /**
@@ -34,7 +33,7 @@ export class UpdateUserPage implements IComponentEventHandler<ReactIncomingEvent
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ event }: RenderContext): ReactNode {
+  render ({ event }: PageRenderContext): JSX.Element {
     const user = event.get<User>('user')
 
     return (

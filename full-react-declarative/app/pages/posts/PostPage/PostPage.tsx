@@ -1,8 +1,8 @@
+import { JSX } from "react";
 import { Post } from "../../../models/Post";
-import { IComponentEventHandler } from "@stone-js/router";
 import { PostService } from "../../../services/PostService";
 import { PostItem } from "../../../components/PostItem/PostItem";
-import { Page, ReactIncomingEvent, RenderContext, StoneLink } from "@stone-js/use-react";
+import { IPage, Page, PageRenderContext, ReactIncomingEvent, StoneLink } from "@stone-js/use-react";
 
 /**
  * Post Page options.
@@ -15,7 +15,7 @@ export interface PostPageOptions {
  * List Post Page component.
  */
 @Page('/posts')
-export class PostPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class PostPage implements IPage<ReactIncomingEvent> {
   private readonly postService: PostService
 
   /**
@@ -43,7 +43,7 @@ export class PostPage implements IComponentEventHandler<ReactIncomingEvent> {
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ data: posts }: RenderContext<Post[]>) {
+  render ({ data: posts }: PageRenderContext<Post[]>): JSX.Element {
     return (
       <>
         <h1>

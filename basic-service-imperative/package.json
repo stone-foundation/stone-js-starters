@@ -20,6 +20,7 @@
   "dependencies": {
     "@stone-js/cli": "file:/Users/evenspierre/Projects/StoneJS/cli",
     "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
+    "@stone-js/node-cli-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-cli-adapter",
     "@stone-js/node-http-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-http-adapter"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { IncomingHttpEvent } from "@stone-js/http-core";
-import { WelcomeService } from "../services/welcomeService";
-import { FactoryEventHandler, FunctionalEventHandler } from "@stone-js/router";
+import { WelcomeService } from "../services/WelcomeService";
+import { defineRoute, FactoryEventHandler, FunctionalEventHandler } from "@stone-js/router";
 
 /**
  * Welcome Event Handler Options
@@ -10,10 +10,22 @@ export interface WelcomeEventHandlerOptions {
 }
 
 /**
+ * Response data
+ */
+export interface ResponseData {
+  message: string
+}
+
+/**
  * Welcome
 */
-export const welcome: FactoryEventHandler<IncomingHttpEvent> = (
+export const WelcomeEventHandler: FactoryEventHandler<IncomingHttpEvent> = (
   { welcomeService }: WelcomeEventHandlerOptions
-): FunctionalEventHandler<IncomingHttpEvent> => (event: IncomingHttpEvent): { message: string } => {
+): FunctionalEventHandler<IncomingHttpEvent> => (event: IncomingHttpEvent): ResponseData => {
   return welcomeService.welcome(event.get<string>('name', 'World'))
 }
+
+/**
+ * WelcomeEventHandler Blueprint
+ */
+export const WelcomeEventHandlerBlueprint = defineRoute(WelcomeEventHandler, { path: '/:name?', isFactory: true })

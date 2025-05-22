@@ -1,4 +1,5 @@
 import { NodeHttp } from "@stone-js/node-http-adapter"
+import { NodeConsole } from "@stone-js/node-cli-adapter"
 import { IncomingEvent, IEventHandler, ILogger, LogLevel, StoneApp } from "@stone-js/core"
 
 /**
@@ -9,7 +10,8 @@ import { IncomingEvent, IEventHandler, ILogger, LogLevel, StoneApp } from "@ston
  * @NodeHttp() is used to enable the Node HTTP adapter.
  * @StoneApp() is used to enable the Stone application, it is required.
  */
-@NodeHttp()
+@NodeConsole()
+@NodeHttp({ default: true })
 @StoneApp({ logger: { level: LogLevel.INFO } })
 export class Application implements IEventHandler<IncomingEvent> {
   /**

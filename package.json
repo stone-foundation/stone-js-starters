@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Stone.js starters",
   "author": "Mr. Stone <evensstone@gmail.com>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/stonemjs/starters.git"

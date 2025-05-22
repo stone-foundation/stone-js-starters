@@ -1,11 +1,10 @@
 import './LoginPage.css'
 import { IBlueprint } from '@stone-js/core';
 import { UserLogin } from "../../models/User";
-import { IComponentEventHandler } from "@stone-js/router";
-import { SecurityService } from "../../services/SecurityService";
+import { Dispatch, JSX, SetStateAction, useState } from "react";
 import { LoginForm } from "../../components/LoginForm/LoginForm";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
-import { ErrorManager, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
+import { SecurityService } from "../../services/SecurityService";
+import { IPage, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
 
 /**
  * Login Page options.
@@ -13,7 +12,6 @@ import { ErrorManager, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-r
 interface LoginPageOptions {
   router: IRouter
   blueprint: IBlueprint
-  errorManager: ErrorManager
   securityService: SecurityService
 }
 
@@ -21,7 +19,7 @@ interface LoginPageOptions {
  * Login Page component.
  */
 @Page('/login', { layout: 'security' })
-export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class LoginPage implements IPage<ReactIncomingEvent> {
   private readonly router: IRouter
   private readonly blueprint: IBlueprint
   private readonly securityService: SecurityService
@@ -43,7 +41,7 @@ export class LoginPage implements IComponentEventHandler<ReactIncomingEvent> {
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render (): ReactNode {
+  render (): JSX.Element {
     const [error, setError] = useState<boolean>(false)
 
     return (

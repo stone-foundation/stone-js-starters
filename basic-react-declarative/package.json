@@ -23,7 +23,8 @@
     "@stone-js/cli": "file:/Users/evenspierre/Projects/StoneJS/cli",
     "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
     "@stone-js/use-react": "file:/Users/evenspierre/Projects/StoneJS/use-react",
-    "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter"
+    "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
+    "@stone-js/node-cli-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-cli-adapter"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.25.9",

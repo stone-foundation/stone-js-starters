@@ -1,14 +1,14 @@
+import { JSX } from "react";
 import { UserInput } from "../../models/User";
 import { UserService } from "../../services/UserService";
-import { IComponentEventHandler } from "@stone-js/router";
 import { UserForm } from "../../components/UserForm/UserForm";
-import { Page, ReactIncomingEvent, StoneLink } from "@stone-js/use-react";
+import { IPage, Page, ReactIncomingEvent, StoneLink } from "@stone-js/use-react";
 
 /**
  * Create User Page component.
  */
 @Page('/users/create')
-export class CreateUserPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class CreateUserPage implements IPage<ReactIncomingEvent> {
   private readonly userService: UserService
 
   /**
@@ -26,7 +26,7 @@ export class CreateUserPage implements IComponentEventHandler<ReactIncomingEvent
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render () {
+  render (): JSX.Element {
     return (
       <>
         <h1>User form</h1>

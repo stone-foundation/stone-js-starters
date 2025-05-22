@@ -1,8 +1,7 @@
-import { IComponentEventHandler } from "@stone-js/router";
-import { Page, ReactIncomingEvent } from "@stone-js/use-react";
+import { Dispatch, JSX, SetStateAction, useState } from "react";
 import { SecurityService } from "../../services/SecurityService";
 import { UserRegister, UserRegisterErrors } from "../../models/User";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { IPage, Page, ReactIncomingEvent } from "@stone-js/use-react";
 import { RegisterForm } from "../../components/RegisterForm/RegisterForm";
 
 /**
@@ -16,7 +15,7 @@ interface RegisterPageOptions {
  * Register Page component.
  */
 @Page('/register', { layout: 'security' })
-export class RegisterPage implements IComponentEventHandler<ReactIncomingEvent> {
+export class RegisterPage implements IPage<ReactIncomingEvent> {
   private readonly securityService: SecurityService
 
   /**
@@ -34,7 +33,7 @@ export class RegisterPage implements IComponentEventHandler<ReactIncomingEvent> 
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render (): ReactNode {
+  render (): JSX.Element {
     const [done, setDone] = useState<boolean>(false)
     const [error, setError] = useState<UserRegisterErrors>({})
 

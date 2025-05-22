@@ -1,9 +1,9 @@
 import { Routing } from "@stone-js/router";
 import { Browser } from "@stone-js/browser-adapter";
+import { Hook, UseReact } from "@stone-js/use-react";
 import { NodeHttp } from "@stone-js/node-http-adapter";
 import { NodeConsole } from "@stone-js/node-cli-adapter";
-import { ReactIncomingEvent, ReactOutgoingResponse, Hook, UseReact } from "@stone-js/use-react";
-import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
+import { IBlueprint, IContainer, ILogger, LogLevel, Promiseable, StoneApp } from "@stone-js/core";
 
 /**
  * Application
@@ -27,8 +27,8 @@ import { IAdapterHook, IBlueprint, IContainer, IKernelHook, ILogger, LogLevel, P
 @UseReact()
 @NodeConsole()
 @NodeHttp({ default: true, url: 'http://localhost:3100' })
-@StoneApp({ name: 'My Stone', logger: { level: LogLevel.INFO } })
-export class Application implements IAdapterHook, IKernelHook<ReactIncomingEvent, ReactOutgoingResponse> {
+@StoneApp({ name: 'My Stone', logger: { level: LogLevel.DEBUG } })
+export class Application {
   /**
    * Start the application
    * Run at each cold start.

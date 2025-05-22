@@ -1,0 +1,46 @@
+{
+  "name": "full-react-imperative",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Stone.js's full starter to create react app using imperative API.",
+  "author": "Mr. Stone <evensstone@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "stone dev",
+    "build": "stone build",
+    "preview": "stone preview",
+    "build:ssr": "stone build --ssr",
+    "test": "vitest run",
+    "test:cvg": "npm run test -- --coverage"
+  },
+  "dependencies": {
+    "@stone-js/env": "file:/Users/evenspierre/Projects/StoneJS/env",
+    "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
+    "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
+    "@stone-js/http-core": "file:/Users/evenspierre/Projects/StoneJS/http-core",
+    "@stone-js/node-cli-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-cli-adapter",
+    "@stone-js/node-http-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-http-adapter",
+    "@stone-js/router": "file:/Users/evenspierre/Projects/StoneJS/router",
+    "@stone-js/cli": "file:/Users/evenspierre/Projects/StoneJS/cli",
+    "@stone-js/filesystem": "file:/Users/evenspierre/Projects/StoneJS/filesystem",
+    "@stone-js/use-react": "file:/Users/evenspierre/Projects/StoneJS/use-react",
+    "axios": "^1.7.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.25.9",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-typescript": "^7.27.0",
+    "@types/axios": "^0.14.4",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@vitest/coverage-v8": "^3.0.9",
+    "vitest": "^3.0.9"
+  }
+}

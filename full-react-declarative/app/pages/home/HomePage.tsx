@@ -1,18 +1,24 @@
-import { ReactNode } from "react";
-import { IComponentEventHandler } from "@stone-js/router";
-import { Page, ReactIncomingEvent, StoneLink } from "@stone-js/use-react";
+import { JSX } from "react";
+import { IPage, Page, ReactIncomingEvent, StoneLink, HeadContext } from "@stone-js/use-react";
 
 /**
  * Home Page component.
  */
 @Page('/')
-export class HomePage implements IComponentEventHandler<ReactIncomingEvent> {
+export class HomePage implements IPage<ReactIncomingEvent> {
+  head (): HeadContext {
+    return {
+      title: 'Home',
+      description: 'Welcome to the Stone.js Blog Dashboard'
+    }
+  }
+
   /**
    * Render the component.
    * 
    * @returns The rendered component.
    */
-  render (): ReactNode {
+  render (): JSX.Element {
     return (
       <div>
         <h1>Stone.js Blog Dashboard</h1>
