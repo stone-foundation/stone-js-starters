@@ -11,6 +11,11 @@ export interface Post {
   authorId: number
   createdAt: number
   updatedAt: number
+  imagePath?: string
+  likesCount: number
+  sharesCount: number
+  commentsCount: number
+  likedByCurrentUser: boolean
 }
 
 /**

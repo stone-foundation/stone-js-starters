@@ -56,13 +56,6 @@ button {
   min-width: 0;
 }
 
-/* Right panel */
-.main-right {
-  position: sticky;
-  top: 72px;
-  align-self: start;
-}
-
 /* Footer */
 .app-footer {
   padding: 1rem;

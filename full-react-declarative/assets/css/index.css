@@ -59,8 +59,8 @@ h1, h2, h3, h4, h5, h6 {
   padding: 32px;
 }
 .logo {
-  width: 32px;
-  height: auto;
+  width: 64px;
+  height: 64px;
 }
 .panel {
   padding: 16px;

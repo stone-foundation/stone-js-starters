@@ -1,3 +1,4 @@
+import './CommentWidget.css'
 import { User } from "../../models/User"
 import { Post } from "../../models/Post"
 import { FC, useEffect, useState } from "react"
@@ -11,27 +12,36 @@ import { CommentInput, CommentView } from "../../models/Comment"
  */
 export interface CommentWidgetOptions {
   post: Post
-  user: User
+  currentUser: User
   commentService: CommentService
 }
 
 /**
  * Comment Items component.
  */
-export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentService }) => {
+export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, commentService }) => {
+  const [limit, setLimit] = useState(10)
   const [comments, setComments] = useState<CommentView[]>([])
+  const [showMoreComments, setShowMoreComments] = useState(false)
   const [fetchingStatus, setFetchingStatus] = useState<'idle' | 'loading' | 'error'>('idle')
 
   // Fetch comments
   const fetchComments = async () => {
     try {
       setFetchingStatus('loading')
-      const comments = await commentService.list(post.id)
+      const comments = await commentService.list(post.id, limit)
       setFetchingStatus('idle')
       setComments(comments)
+      setShowMoreComments(comments.length < post.commentsCount)
     } catch (_: any) {
       setFetchingStatus('error')
     }
+  }
+
+  const fetchMoreComments = async () => {
+    setLimit(limit + 10)
+    setShowMoreComments(false)
+    await fetchComments()
   }
 
   // Save comment
@@ -53,12 +63,14 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
     const commentInput: CommentInput = {
       id,
       content,
-      postId: post.id
+      likesCount: 0,
+      postId: post.id,
+      likedByCurrentUser: false,
     }
 
     const commentView: CommentView = {
       ...commentInput,
-      author: user,
+      author: currentUser,
       status: 'saving',
       createdAt: Date.now(),
     }
@@ -73,20 +85,34 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
 
   // Render
   if (comments.length === 0 && fetchingStatus === 'loading') {
-    return <p>Loading comments...</p>
+    return <p className='comment-loading'>Loading comments...</p>
   } else if (comments.length === 0 && fetchingStatus === 'error') {
-    return <p>Error fetching comments</p>
-  } else if (comments.length === 0 && fetchingStatus === 'idle') {
-    return <p>No comments yet</p>
+    return <p className='comment-error'>Error fetching comments</p>
   } else {
     return (
-      <div>
-        <CommentForm onSubmit={handleOnSubmit} />
-        <div>
+      <div className="comment-section">
+        <CommentForm
+          currentUser={currentUser}
+          onSubmit={handleOnSubmit}
+        />
+        <ul className="comment-list">
           {comments.map((comment) => (
-            <CommentItem key={comment.id} commentView={comment} onRetry={saveComment} />
+            <CommentItem
+              key={comment.id}
+              currentUser={currentUser}
+              commentView={comment}
+              onRetry={saveComment}
+            />
           ))}
-        </div>
+        </ul>
+        {showMoreComments && (
+          <button
+            className="show-more-comments"
+            onClick={async () => await fetchMoreComments()}
+          >
+            Show more comments
+          </button>
+        )}
       </div>
     )
   }

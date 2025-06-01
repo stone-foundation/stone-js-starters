@@ -4,8 +4,14 @@
 export interface User {
   id: number
   name: string
+  bio?: string
   email: string
   avatar: string
+  coverImage: string
+  postCount: number
+  commentCount: number
+  isOnline: boolean
+  lastSeen: number
   createdAt: number
 }
 

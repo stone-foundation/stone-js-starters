@@ -1,14 +1,13 @@
-import './AppLayout.css'
+import './SettingsLayout.css'
 import { JSX } from "react";
 import { LayoutHeader } from '../../components/LayoutHeader/LayoutHeader';
 import { LayoutLeftMenu } from '../../components/LayoutLeftMenu/LayoutLeftMenu';
-import { RightAsidePanel } from '../../components/RightAsidePanel/RightAsidePanel';
 import { definePageLayout, IPageLayout, PageLayoutRenderContext, StoneOutlet } from "@stone-js/use-react";
 
 /**
  * App Layout component.
  */
-export const AppLayout = (): IPageLayout => ({
+export const SettingsLayout = (): IPageLayout => ({
   /**
    * Render the component.
    * 
@@ -29,9 +28,6 @@ export const AppLayout = (): IPageLayout => ({
           <main className="main-center">
             <StoneOutlet>{children}</StoneOutlet>
           </main>
-          <aside className="main-right">
-            <RightAsidePanel container={container} />
-          </aside>
         </div>
 
         <footer className="app-footer">
@@ -45,4 +41,4 @@ export const AppLayout = (): IPageLayout => ({
 /**
  * App Layout blueprint.
  */
-export const AppLayoutBlueprint = definePageLayout(AppLayout, { name: 'default' })
+export const SettingsLayoutBlueprint = definePageLayout(SettingsLayout, { name: 'settings' })

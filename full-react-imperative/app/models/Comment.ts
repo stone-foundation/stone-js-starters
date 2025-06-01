@@ -10,6 +10,8 @@ export interface Comment {
   authorId: number
   postId: number
   createdAt: number
+  likesCount: number
+  likedByCurrentUser: boolean
 }
 
 /**
@@ -19,6 +21,8 @@ export interface CommentInput {
   id: number
   content: string
   postId: number
+  likesCount: number
+  likedByCurrentUser: boolean
 }
 
 /**
