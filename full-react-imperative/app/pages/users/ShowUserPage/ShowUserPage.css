@@ -61,13 +61,4 @@
 /* Timeline Section */
 .profile-timeline {
   margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.no-posts {
-  text-align: center;
-  font-style: italic;
-  color: #6b7280;
 }

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
 import { Post } from '../../models/Post'
 import { User } from '../../models/User'
+import { FC, ReactNode, useState } from 'react'
 import { UserBadge } from '../UserBadge/UserBadge'
 
 /**
@@ -9,7 +9,7 @@ import { UserBadge } from '../UserBadge/UserBadge'
 interface PostCardOptions {
   post: Post
   currentUser?: User
-  children: React.ReactNode
+  children: ReactNode
   onEdit?: (post: Post) => void
   onDelete: (post: Post) => Promise<void>
 }
@@ -17,7 +17,7 @@ interface PostCardOptions {
 /**
  * PostCard component.
  */
-export const PostCard: React.FC<PostCardOptions> = ({ children, post, currentUser, onEdit, onDelete }) => {
+export const PostCard: FC<PostCardOptions> = ({ children, post, currentUser, onEdit, onDelete }) => {
   const [showMenu, setShowMenu] = useState(false)
   const [showComment, setShowComment] = useState(post.commentsCount > 0)
 

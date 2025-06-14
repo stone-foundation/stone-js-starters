@@ -1,17 +1,15 @@
-import dayjs from 'dayjs'
+import './CommentItem.css'
 import { FC, useState } from 'react'
 import { User } from '../../models/User'
+import { dateTimeFromNow } from '../../utils'
 import { CommentView } from '../../models/Comment'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
-
-dayjs.extend(relativeTime)
 
 /**
  * Comment Item Props
  */
 export interface CommentItemProps {
-  currentUser?: User
+  currentUser: User
   commentView: CommentView
   onToggleLike?: (comment: CommentView) => void
   onDeleteComment?: (comment: CommentView) => void
@@ -37,10 +35,10 @@ export const CommentItem: FC<CommentItemProps> = ({ currentUser, commentView, on
       <div className="comment-bubble">
         <div className="comment-meta">
           <strong>{comment.author.name}</strong>
-          <span>{dayjs(comment.createdAt).fromNow()}</span>
+          <span>{dateTimeFromNow(comment.createdAt)}</span>
         </div>
         <p className="comment-text">{comment.content}</p>
-        {comment.author.id === currentUser?.id && onDeleteComment && (
+        {comment.author.id === currentUser.id && onDeleteComment && (
           <button className="comment-delete" onClick={() => onDeleteComment(comment)}>✕</button>
         )}
         <div className="comment-reactions">

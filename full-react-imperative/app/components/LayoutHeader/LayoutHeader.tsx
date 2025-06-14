@@ -5,7 +5,6 @@ import { Dropdown } from '../Dropdown/Dropdown'
 import { UserBadge } from '../UserBadge/UserBadge'
 import { IContainer, isNotEmpty } from '@stone-js/core'
 import { SecurityService } from '../../services/SecurityService'
-import { NotificationBadge } from '../NotificationBadge/NotificationBadge'
 import { IRouter, ReactIncomingEvent, StoneLink } from '@stone-js/use-react'
 
 /**
@@ -34,12 +33,12 @@ export const LayoutHeader: FC<LayoutHeaderOptions> = ({ container }) => {
       </div>
       {isNotEmpty<User>(user) && (
         <div className="header-right">
-          <NotificationBadge notifications={[]} />
           <div className='dropdown-wrapper'>
-            <UserBadge user={user} onClick={() => setShowDropdown(!showDropdown)} />
+            <UserBadge withLink={false} user={user} onClick={() => setShowDropdown(!showDropdown)} />
             <Dropdown show={showDropdown} onClose={() => setShowDropdown(false)}>
               <ul className="dropdown-menu">
-                <li><StoneLink to="/manage">Manage Profile</StoneLink></li>
+                <li><StoneLink to={`/users/${user.id}`}>Show Profile</StoneLink></li>
+                <li><StoneLink to={`/users/${user.id}/edit`}>Manage Profile</StoneLink></li>
                 <li><button onClick={logout.bind(this, router, securityService)}>Logout</button></li>
               </ul>
             </Dropdown>

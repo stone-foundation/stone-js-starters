@@ -1,3 +1,7 @@
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 /**
  * Format date time
@@ -14,4 +18,14 @@ export const formatDateTime = (date: number) => {
     minute: '2-digit',
     second: '2-digit',
   }).format(date)
+}
+
+/**
+ * Get the time from now
+ * 
+ * @param date - Date in milliseconds
+ * @returns The time from now
+ */
+export const dateTimeFromNow = (date: number) => {
+  return dayjs(date).fromNow()
 }

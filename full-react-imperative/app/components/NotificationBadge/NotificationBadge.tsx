@@ -1,6 +1,6 @@
 import './NotificationBadge.css'
-import dayjs from 'dayjs'
 import { FC, useState } from 'react'
+import { dateTimeFromNow } from '../../utils'
 import { Dropdown } from '../Dropdown/Dropdown'
 import { StoneLink } from '@stone-js/use-react'
 
@@ -49,7 +49,7 @@ export const NotificationBadge: FC<NotificationBadgeOptions> = ({ notifications:
               >
                 {n.link ? <StoneLink to={n.link}>{n.message}</StoneLink> : n.message}
                 <span className="notification-time">
-                  {dayjs(n.createdAt).date()}
+                  {dateTimeFromNow(n.createdAt)}
                 </span>
               </li>
             ))

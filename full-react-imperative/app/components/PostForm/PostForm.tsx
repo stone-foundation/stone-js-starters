@@ -1,5 +1,6 @@
-import { FC, useRef } from 'react';
-import { PostInput } from '../../models/Post';
+import './PostForm.css'
+import { PostInput } from '../../models/Post'
+import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react'
 
 /**
  * Post Form Options
@@ -9,39 +10,67 @@ export interface PostFormOptions {
   onSubmit: (post: PostInput) => Promise<void>
 }
 
-/**
- * Post Form component.
- * 
- * @param options - The options to create the Post Form component.
- */
 export const PostForm: FC<PostFormOptions> = ({ post, onSubmit }) => {
-  // Create a reference to the post
-  const postRef = useRef<PostInput>({
-    title: post?.title ?? '',
-    content: post?.content ?? ''
-  });
+  const [text, setText] = useState(post?.content ?? '')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
-  // Handle the form submit
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    await onSubmit(postRef.current)
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => setImagePreview(reader.result as string)
+      reader.readAsDataURL(file)
+    }
   }
 
-  // Handle the field change
-  const onChange = (field: keyof PostInput) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    postRef.current[field] = event.target.value;
-  };
+  const handleRemoveImage = () => {
+    setImagePreview(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
-  // Render the component
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    // Handle form submission logic here
+    onSubmit({
+      content: text,
+      title: text.substring(0, 32), // Assuming title is the first 32 characters of content
+      // image: imagePreview ? { url: imagePreview } : undefined
+    })
+    setText('')
+    handleRemoveImage()
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor='title'>Title:</label>
-      <input id='title' type='text' onChange={onChange('title')} defaultValue={postRef.current.title} />
-      
-      <label htmlFor='content'>Content:</label>
-      <input id='content' type='text' onChange={onChange('content')} defaultValue={postRef.current.content} />
-      
-      <button type='submit'>Publish</button>
+    <form className="post-form" onSubmit={handleSubmit}>
+      <textarea
+        className="post-textarea"
+        placeholder="What's on your mind?"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={3}
+      />
+      {imagePreview && (
+        <div className="image-preview">
+          <img src={imagePreview} alt="Preview" />
+          <button type="button" onClick={handleRemoveImage} className="remove-image-btn">✕</button>
+        </div>
+      )}
+      <div className="post-form-footer">
+        <label className="upload-btn">
+          📷 Photo
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+            hidden
+          />
+        </label>
+        <button className="submit-btn" type="submit" disabled={!text.trim() && !imagePreview}>
+          Publish
+        </button>
+      </div>
     </form>
-  );
-};
+  )
+}

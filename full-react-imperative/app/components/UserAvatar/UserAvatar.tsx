@@ -2,13 +2,13 @@ import './UserAvatar.css'
 import { FC, useState } from 'react'
 import { User } from '../../models/User'
 import { StoneLink } from '@stone-js/use-react'
-import { IBlueprint, isNotEmpty } from '@stone-js/core'
 
 /**
  * UserAvatar options.
  */
 interface UserAvatarOptions {
   user: User
+  withLink?: boolean
   className?: string
   size?: 'sm' | 'md' | 'lg' | number
 }
@@ -19,7 +19,8 @@ interface UserAvatarOptions {
 export const UserAvatar: FC<UserAvatarOptions> = ({
   user,
   size = 'md',
-  className = ''
+  className = '',
+  withLink = true
 }) => {
   const [imgError, setImgError] = useState(false)
   const fallback = user.name?.charAt(0).toUpperCase() || '?'
@@ -35,7 +36,7 @@ export const UserAvatar: FC<UserAvatarOptions> = ({
   const shouldShowFallback = !user.avatar || imgError
 
   return shouldShowFallback ? (
-    <StoneLink to={`/users/${user.id}`}>
+    <StoneLink to={withLink ? `/users/${user.id}` : undefined} href='#'>
       <div
         className={`user-avatar-fallback ${className}`}
         style={{ width: dimension, height: dimension, fontSize: dimension / 2.2 }}
@@ -44,7 +45,7 @@ export const UserAvatar: FC<UserAvatarOptions> = ({
       </div>
     </StoneLink>
   ) : (
-    <StoneLink to={`/users/${user.id}`}>
+    <StoneLink to={withLink ? `/users/${user.id}` : undefined} href='#'>
       <img
         src={user.avatar}
         alt={user.name}
@@ -54,17 +55,4 @@ export const UserAvatar: FC<UserAvatarOptions> = ({
       />
     </StoneLink>
   )
-}
-
-
-
-/**
- * Get the user avatar.
- * 
- * @param user - The user to get the avatar.
- * @returns The user avatar.
- */
-export function getUserAvatar (blueprint: IBlueprint, user: User): string {
-  const baseUrl = blueprint.get<string>('app.api.baseURL', '')
-  return isNotEmpty<string>(user.avatar) ? `${baseUrl}/users/${user.id}/avatar` : '/assets/avatar.png'
 }

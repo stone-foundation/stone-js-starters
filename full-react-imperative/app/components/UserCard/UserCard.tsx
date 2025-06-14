@@ -1,11 +1,8 @@
-import React from 'react'
-import dayjs from 'dayjs'
+import { FC } from 'react'
 import { User } from '../../models/User'
+import { dateTimeFromNow } from '../../utils'
 import { StoneLink } from '@stone-js/use-react'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
-
-dayjs.extend(relativeTime)
 
 /**
  * UserCard options.
@@ -17,7 +14,7 @@ interface UserCardOptions {
 /**
  * UserCard component.
  */
-export const UserCard: React.FC<UserCardOptions> = ({ user }) => {
+export const UserCard: FC<UserCardOptions> = ({ user }) => {
   return (
     <div className="user-card">
       <div className="user-card-header">
@@ -38,7 +35,7 @@ export const UserCard: React.FC<UserCardOptions> = ({ user }) => {
 
       {!user.isOnline && (
         <div className="user-last-seen">
-          Last seen {dayjs(user.lastSeen).fromNow()}
+          Last seen {dateTimeFromNow(user.lastSeen)}
         </div>
       )}
     </div>

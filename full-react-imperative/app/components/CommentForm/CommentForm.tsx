@@ -1,9 +1,10 @@
-import { FC, useRef } from 'react'
+import './CommentForm.css'
 import { User } from '../../models/User'
+import { FC, useRef, FormEvent } from 'react'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 
 /**
- * Comment Form Props
+ * CommentForm options.
  */
 export interface CommentFormOptions {
   currentUser: User
@@ -11,13 +12,13 @@ export interface CommentFormOptions {
 }
 
 /**
- * Comment Form component.
+ * CommentForm component.
  */
 export const CommentForm: FC<CommentFormOptions> = ({ currentUser, onSubmit }) => {
   const contentRef = useRef<HTMLInputElement>(null)
 
   // Handle the form submit
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (contentRef.current === null) return
 

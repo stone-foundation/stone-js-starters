@@ -1,9 +1,10 @@
 import { JSX } from "react";
+import { updatePost } from "../../utils";
+import { Post } from "../../../models/Post";
 import { ILogger, isNotEmpty } from "@stone-js/core";
-import { Post, PostInput } from "../../../models/Post";
 import { PostService } from "../../../services/PostService";
 import { PostForm } from "../../../components/PostForm/PostForm";
-import { IPage, ReactIncomingEvent, PageRenderContext, StoneLink, definePage } from "@stone-js/use-react";
+import { IPage, ReactIncomingEvent, PageRenderContext, definePage } from "@stone-js/use-react";
 
 /**
  * Update Post Page options.
@@ -28,14 +29,10 @@ export const UpdatePostPage = ({ logger, postService }: UpdatePostPageOptions): 
     
     if (isNotEmpty<Post>(post)) {
       return (
-        <>
-          <h1>{post.title}</h1>
-          <PostForm
-            post={post}
-            onSubmit={async (postInput) => await updatePost(logger, postService, post.id, postInput)}
-          />
-          <StoneLink to={`/posts/${post.id}`}>Back</StoneLink>
-        </>
+        <PostForm
+          post={post}
+          onSubmit={async (postInput) => await updatePost(logger, postService, post.id, postInput)}
+        />
       )
     }
 
@@ -46,26 +43,6 @@ export const UpdatePostPage = ({ logger, postService }: UpdatePostPageOptions): 
     )
   }
 })
-
-/**
- * Update the post.
- * 
- * @param post - The post to update.
- */
-export async function updatePost (
-  logger: ILogger,
-  postService: PostService,
-  id: number,
-  post: PostInput
-): Promise<void> {
-  try {
-    await postService.update(id, post)
-    window.alert('Post updated successfully')
-  } catch (error: any) {
-    window.alert('Error updating the post')
-    logger.error(error.message, { error })
-  }
-}
 
 /**
  * Update Post Page Blueprint.

@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { User, UserInput } from "../../../models/User";
 import { UserService } from "../../../services/UserService";
-import { ProfileForm } from "../../../components/UserForm/ProfileForm";
+import { ProfileForm } from "../../../components/ProfileForm/ProfileForm";
 import { IPage, ReactIncomingEvent, PageRenderContext, definePage } from "@stone-js/use-react";
 
 /**

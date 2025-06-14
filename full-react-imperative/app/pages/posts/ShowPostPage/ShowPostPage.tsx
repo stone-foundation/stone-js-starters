@@ -1,10 +1,12 @@
 import { JSX } from "react";
+import { deletePost } from "../../utils";
 import { Post } from "../../../models/Post";
 import { User } from "../../../models/User";
 import { ILogger, isNotEmpty } from "@stone-js/core";
 import { PostService } from "../../../services/PostService";
+import { PostCard } from "../../../components/PostCard/PostCard";
 import { CommentService } from "../../../services/CommentService";
-import { PostDetails } from "../../../components/PostDetails/PostDetails";
+import { CommentWidget } from "../../../components/CommentWidget/CommentWidget";
 import { definePage, IPage, IRouter, PageRenderContext, ReactIncomingEvent } from "@stone-js/use-react";
 
 /**
@@ -34,40 +36,21 @@ export const ShowPostPage = ({ router, logger, postService, commentService }: Sh
     // Render the component
     if(isNotEmpty<Post>(post)) {
       return (
-        <PostDetails
-          user={user}
+        <PostCard
+          key={post.id}
           post={post}
-          commentService={commentService}
+          currentUser={user}
+          onEdit={() => router.navigate(`/posts/${post.id}/edit`)}
           onDelete={deletePost.bind(this, router, logger, postService, post)}
-        />
+        >
+          <CommentWidget post={post} currentUser={user} commentService={commentService} />
+        </PostCard>
       )
     }
 
     return <article><h1>Post not found</h1></article>
   }
 })
-
-/**
- * Delete the post.
- * 
- * @param post - The post to delete.
- */
-export async function deletePost (
-  router: IRouter,
-  logger: ILogger,
-  postService: PostService,
-  post: Post
-): Promise<void> {
-  if (window.confirm('Are you sure you want to delete this post?')) {
-    try {
-      await postService.delete(post.id)
-      router.navigate('/posts')
-    } catch (error: any) {
-      window.alert('Error deleting the post')
-      logger.error(error.message, { error })
-    }
-  }
-}
 
 /**
  * Show Post Page Blueprint.

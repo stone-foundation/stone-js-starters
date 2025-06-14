@@ -1,32 +1,54 @@
-import dayjs from 'dayjs'
 import { JSX } from "react";
+import { createPost } from "../../utils";
 import { User } from "../../../models/User";
-import { isNotEmpty } from "@stone-js/core";
-import relativeTime from 'dayjs/plugin/relativeTime'
+import { Post } from "../../../models/Post";
+import { dateTimeFromNow } from "../../../utils";
+import { ILogger, isNotEmpty } from "@stone-js/core";
+import { PostService } from "../../../services/PostService";
 import { UserService } from "../../../services/UserService";
+import { PostForm } from "../../../components/PostForm/PostForm";
 import { UserAvatar } from "../../../components/UserAvatar/UserAvatar";
-import { IPage, ReactIncomingEvent, PageRenderContext, definePage } from "@stone-js/use-react";
-
-dayjs.extend(relativeTime)
+import { PostWidget } from "../../../components/PostWidget/PostWidget";
+import { IPage, ReactIncomingEvent, PageRenderContext, definePage, HeadContext, IRouter } from "@stone-js/use-react";
 
 /**
  * Show User Page options.
  */
 export interface ShowUserPageOptions {
+  router: IRouter
+  logger: ILogger
+  postService: PostService
   userService: UserService
 }
 
 /**
  * Show User Page component.
  */
-export const ShowUserPage = ({}: { userService: UserService }): IPage<ReactIncomingEvent> => ({
+export const ShowUserPage = ({ router, logger, postService }: ShowUserPageOptions): IPage<ReactIncomingEvent> => ({
+  head (): HeadContext {
+    return {
+      title: 'User Profile',
+      description: 'Welcome to the user profile page',
+    }
+  },
+
+  /**
+   * Handle the incoming event.
+   * 
+   * @param event - The incoming event.
+   * @returns List of posts.
+   */
+  async handle (event: ReactIncomingEvent): Promise<Post[]> {
+    return await postService.list(event.get<number>('limit', 10))
+  },
+
   /**
    * Render the component.
    * 
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
-  render ({ event }: PageRenderContext): JSX.Element {
+  render ({ data, event, container }: PageRenderContext): JSX.Element {
     const user = event.get<User>('user') ?? {} as User
 
     return (
@@ -44,20 +66,15 @@ export const ShowUserPage = ({}: { userService: UserService }): IPage<ReactIncom
             <p className="status">
               {user.isOnline
                 ? <span className="online">🟢 Online</span>
-                : `Last seen ${dayjs(user.lastSeen).fromNow()}`}
+                : `Last seen ${dateTimeFromNow(user.lastSeen)}`}
             </p>
           </div>
         </div>
 
-        {/* <div className="profile-timeline">
-          {posts.length === 0 ? (
-            <p className="no-posts">This user has no posts yet.</p>
-          ) : (
-            posts.map(post => (
-              <PostCard key={post.id} post={post} currentUserId={currentUserId} />
-            ))
-          )}
-        </div> */}
+        <section className="profile-timeline">
+          <PostForm onSubmit={createPost.bind(this, router, logger, postService)} />
+          <PostWidget items={data ?? []} event={event} container={container} />
+        </section>
       </div>
     )
   }

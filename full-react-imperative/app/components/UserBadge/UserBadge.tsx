@@ -1,18 +1,16 @@
 import './UserBadge.css'
-import dayjs from 'dayjs'
 import { FC } from 'react'
 import { User } from '../../models/User'
+import { dateTimeFromNow } from '../../utils'
 import { StoneLink } from '@stone-js/use-react'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
-
-dayjs.extend(relativeTime)
 
 /**
  * UserBadge options.
  */
 interface UserBadgeOptions {
   user: User
+  withLink?: boolean
   createdAt?: number
   className?: string
   onClick?: () => void
@@ -29,6 +27,7 @@ export const UserBadge: FC<UserBadgeOptions> = ({
   size = 'md',
   direction = 'horizontal',
   onClick,
+  withLink = true,
   className = ''
 }) => {
   return (
@@ -37,12 +36,12 @@ export const UserBadge: FC<UserBadgeOptions> = ({
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      <UserAvatar user={user} size={size} />
+      <UserAvatar withLink={withLink} user={user} size={size} />
       <div className="user-badge-info">
-        <StoneLink to={`/users/${user.id}`} className="user-badge-name">
+        <StoneLink to={withLink ? `/users/${user.id}` : undefined} href='#' className="user-badge-name">
           {user.name}
         </StoneLink>
-        {createdAt && <span className="user-badge-details">{dayjs(createdAt).fromNow()}</span>}
+        {createdAt && <span className="user-badge-details">{dateTimeFromNow(createdAt)}</span>}
         {!createdAt && user.email && <span className="user-badge-details">{user.email}</span>}
       </div>
     </div>

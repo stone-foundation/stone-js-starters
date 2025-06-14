@@ -17,7 +17,7 @@ export const RightAsidePanel: FC<RightAsidePanelProps> = ({ container }) => {
 
   useEffect(() => {
     userService.list(5).then(users => {
-      setOnline(users.slice(0, 5)) // Assuming the first 5 users are online
+      setOnline(users.slice(0, 5))
       setNewbies(users.slice(0, 5))
       setPopular(users.slice(0, 5))
     })
