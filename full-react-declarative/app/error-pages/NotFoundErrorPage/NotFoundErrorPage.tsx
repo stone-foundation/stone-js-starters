@@ -1,8 +1,8 @@
 import './NotFoundErrorPage.css'
-import { JSX } from 'react';
-import { ILogger } from "@stone-js/core";
-import { RouteNotFoundError } from "@stone-js/router";
-import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { ILogger } from '@stone-js/core'
+import { RouteNotFoundError } from '@stone-js/router'
+import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from '@stone-js/use-react'
 
 /**
  * NotFound Error Handler component.
@@ -25,20 +25,20 @@ export class NotFoundErrorPage implements IErrorPage<ReactIncomingEvent> {
 
   /**
    * Handle the error.
-   * 
+   *
    * @param error - The error to handle.
    * @param event - The incoming event.
    * @returns The response.
    */
   @PageStatus(404)
-  handle (error: RouteNotFoundError, event: ReactIncomingEvent) {
+  handle (error: RouteNotFoundError, event: ReactIncomingEvent): { message: string } {
     this.logger.error(error.message, { error })
     return { message: `Page not found: ${event.pathname}` }
   }
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */

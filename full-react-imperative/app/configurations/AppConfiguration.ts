@@ -1,6 +1,6 @@
-import { getString } from "@stone-js/env";
-import { NODE_HTTP_PLATFORM } from "@stone-js/node-http-adapter";
-import { defineConfig, IBlueprint, Promiseable } from "@stone-js/core";
+import { getString } from '@stone-js/env'
+import { NODE_HTTP_PLATFORM } from '@stone-js/node-http-adapter'
+import { defineConfig, IBlueprint, Promiseable } from '@stone-js/core'
 
 /**
  * App Configuration

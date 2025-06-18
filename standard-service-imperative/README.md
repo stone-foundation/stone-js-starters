@@ -1,6 +1,6 @@
-# Stone.js TypeScript basic starter
+# Stone.js - Standard starter
 
-Stone.js starter to create nano services with typescript using declarative API.
+Stone.js's standard starter to create web app using imperative API.
 
 ## Project Setup
 

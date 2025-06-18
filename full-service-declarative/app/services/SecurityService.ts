@@ -1,11 +1,11 @@
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-import { SessionService } from "./SessionService"
-import { UserRepository } from "../repositories/UserRepository"
-import { BadCredentialsError } from "../errors/CredentialsError"
-import { IBlueprint, isEmpty, isNotEmpty, Service } from "@stone-js/core"
-import { BadRequestError, IncomingHttpEvent, UnauthorizedError } from "@stone-js/http-core"
-import { UserLogin, UserToken, UserRegister, UserChangePassword, UserModel, UserTokenPayload } from "../models/User"
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { SessionService } from './SessionService'
+import { UserRepository } from '../repositories/UserRepository'
+import { BadCredentialsError } from '../errors/CredentialsError'
+import { IBlueprint, isEmpty, isNotEmpty, Service } from '@stone-js/core'
+import { BadRequestError, IncomingHttpEvent, UnauthorizedError } from '@stone-js/http-core'
+import { UserLogin, UserToken, UserRegister, UserChangePassword, UserModel, UserTokenPayload } from '../models/User'
 
 /**
  * Security Service Options
@@ -18,7 +18,7 @@ export interface SecurityServiceOptions {
 
 /**
  * Security Service
- * 
+ *
  * @Service() decorator is used to define a new service
  * @Service() is an alias of @Stone() decorator.
  * The alias is required to get benefits of desctructuring Dependency Injection.
@@ -33,7 +33,7 @@ export class SecurityService {
   /**
    * Create a new Security Service
   */
-  constructor({ blueprint, userRepository, sessionService }: SecurityServiceOptions) {
+  constructor ({ blueprint, userRepository, sessionService }: SecurityServiceOptions) {
     this.blueprint = blueprint
     this.userRepository = userRepository
     this.sessionService = sessionService
@@ -41,11 +41,11 @@ export class SecurityService {
 
   /**
    * Login a user
-   * 
+   *
    * @param credentials - The user to login
    * @returns The user token
   */
-  async login(event: IncomingHttpEvent, credentials: UserLogin): Promise<UserToken> {
+  async login (event: IncomingHttpEvent, credentials: UserLogin): Promise<UserToken> {
     const user = await this.userRepository.findBy(credentials)
 
     if (isEmpty(user)) {
@@ -59,16 +59,16 @@ export class SecurityService {
     return {
       tokenType: 'bearer',
       expiresIn: this.blueprint.get<number>('security.jwt.expiresIn', 3600),
-      accessToken: await this.generateToken(user, event.ip, event.userAgent),
+      accessToken: await this.generateToken(user, event.ip, event.userAgent)
     }
   }
 
   /**
    * Refresh a token
-   * 
+   *
    * @param token - The token to refresh
   */
-  async refresh(token: string): Promise<UserToken> {
+  async refresh (token: string): Promise<UserToken> {
     const payload = this.verifyToken(token)
     const user = await this.userRepository.findById(payload.user.id)
 
@@ -79,27 +79,27 @@ export class SecurityService {
     return {
       tokenType: 'bearer',
       expiresIn: this.blueprint.get<number>('security.jwt.expiresIn', 3600),
-      accessToken: await this.generateToken(user, payload.session.ip, payload.session.userAgent ?? undefined),
+      accessToken: await this.generateToken(user, payload.session.ip, payload.session.userAgent ?? undefined)
     }
   }
 
   /**
    * Logout a user
-   * 
+   *
    * @param token - The token to logout
   */
-  async logout(token: string): Promise<void> {
+  async logout (token: string): Promise<void> {
     const payload = this.verifyToken(token)
     await this.sessionService.close(payload.session)
   }
 
   /**
    * Authenticate a user
-   * 
+   *
    * @param token - The token to authenticate
    * @returns The authenticated user
   */
-  async authenticate(token: string, ip: string, userAgent?: string): Promise<UserModel> {
+  async authenticate (token: string, ip: string, userAgent?: string): Promise<UserModel> {
     const payload = this.verifyToken(token)
     const user = await this.userRepository.findById(payload.user.id)
 
@@ -111,7 +111,7 @@ export class SecurityService {
       throw new UnauthorizedError('User not found')
     }
 
-    this.sessionService.updateLastActivity(payload.session)
+    await this.sessionService.updateLastActivity(payload.session)
 
     return user
   }
@@ -123,7 +123,7 @@ export class SecurityService {
    * @returns The hashed password.
    */
   async hashPassword (password: string): Promise<string> {
-    return await bcrypt.hash(password, this.blueprint.get<number>('security.bcrypt.saltRounds', 10));
+    return await bcrypt.hash(password, this.blueprint.get<number>('security.bcrypt.saltRounds', 10))
   }
 
   /**
@@ -134,7 +134,7 @@ export class SecurityService {
    * @returns `true` if the password matches, otherwise `false`.
    */
   async comparePassword (password: string, hashedPassword?: string | null): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword ?? '');
+    return await bcrypt.compare(password, hashedPassword ?? '')
   }
 
   /**
@@ -186,16 +186,16 @@ export class SecurityService {
         this.blueprint.get<string>('security.secret', 'secret')
       ) as UserTokenPayload
     } catch (error: any) {
-      throw new UnauthorizedError('Invalid token', { cause: error})
+      throw new UnauthorizedError('Invalid token', { cause: error })
     }
   }
 
   /**
    * Register a user
-   * 
+   *
    * @param user - The user to register
   */
-  async register(payload: UserRegister): Promise<void> {
+  async register (payload: UserRegister): Promise<void> {
     const user = await this.userRepository.findBy({ email: payload.email })
 
     if (isNotEmpty(user)) {
@@ -214,15 +214,15 @@ export class SecurityService {
 
   /**
    * Change the user password
-   * 
+   *
    * @param user - The user to change the password
    * @param password - The password to change
   */
-  async changePassword(user?: UserModel, password?: UserChangePassword): Promise<void> {
+  async changePassword (user?: UserModel, password?: UserChangePassword): Promise<void> {
     if (isEmpty(user)) {
       throw new UnauthorizedError('User not found')
     }
-    
+
     if (isEmpty(password) || !(await this.comparePassword(password.password, user.password))) {
       throw new UnauthorizedError('Invalid user password')
     }

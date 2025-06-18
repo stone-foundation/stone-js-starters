@@ -11,6 +11,15 @@ vi.mock(import("@stone-js/core"), async (importOriginal) => {
 })
 
 // We must mock decorators to lighten the test environment
+vi.mock(import("@stone-js/node-cli-adapter"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    NodeConsole: vi.fn(() => vi.fn()),
+  }
+})
+
+// We must mock decorators to lighten the test environment
 vi.mock(import("@stone-js/node-http-adapter"), async (importOriginal) => {
   const actual = await importOriginal()
   return {

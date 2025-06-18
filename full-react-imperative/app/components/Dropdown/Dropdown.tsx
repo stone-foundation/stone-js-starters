@@ -19,9 +19,9 @@ export const Dropdown: FC<DropdownOptions> = ({
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent): void => {
       const target = e.target as HTMLElement
-      if (!ref.current?.contains(target) && !target.closest('.dropdown-wrapper')) {
+      if (ref.current?.contains(target) !== true && (target.closest('.dropdown-wrapper') == null)) {
         onClose()
       }
     }

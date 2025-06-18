@@ -1,6 +1,6 @@
-# Stone.js TypeScript standard starter
+# Stone.js - Standard starter
 
-Stone.js's standard starter to create react app using declarative API.
+Stone.js's standard starter to create react app using imperative API.
 
 ## Project Setup
 

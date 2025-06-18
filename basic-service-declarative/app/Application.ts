@@ -1,12 +1,12 @@
-import { NodeHttp } from "@stone-js/node-http-adapter"
-import { NodeConsole } from "@stone-js/node-cli-adapter"
-import { IncomingEvent, IEventHandler, ILogger, LogLevel, StoneApp } from "@stone-js/core"
+import { NodeHttp } from '@stone-js/node-http-adapter'
+import { NodeConsole } from '@stone-js/node-cli-adapter'
+import { IncomingEvent, IEventHandler, ILogger, LogLevel, StoneApp } from '@stone-js/core'
 
 /**
  * Application
- * 
+ *
  * This is the main application entry point.
- * 
+ *
  * @NodeHttp() is used to enable the Node HTTP adapter.
  * @StoneApp() is used to enable the Stone application, it is required.
  */
@@ -23,7 +23,7 @@ export class Application implements IEventHandler<IncomingEvent> {
    * Create a new instance of Application
    * At this point, all the dependencies are resolved and injected.
    * You can access the container and all the services.
-   * 
+   *
    * @param logger - Logger service.
   */
   constructor ({ logger }: { logger: ILogger }) {
@@ -32,13 +32,13 @@ export class Application implements IEventHandler<IncomingEvent> {
 
   /**
    * Handle incoming events
-   * 
+   *
    * @param event Incoming event
    * @returns response
   */
-  handle(event: IncomingEvent): ResponseData {
+  handle (event: IncomingEvent): ResponseData {
     // Get the name from the event
-    const message = `Hello ${event.get<string>('name', 'World')}!`
+    const message = `Hello ${String(event.get<string>('name', 'World'))}!`
 
     // Log a message
     this.logger.info(message)

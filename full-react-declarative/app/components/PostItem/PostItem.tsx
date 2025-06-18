@@ -1,17 +1,17 @@
-import { FC } from "react";
-import { Post } from "../../models/Post";
-import { StoneLink } from "@stone-js/use-react";
+import { FC } from 'react'
+import { Post } from '../../models/Post'
+import { StoneLink } from '@stone-js/use-react'
 
 /**
  * Post Item Options
  */
 export interface PostItemOptions {
-  post: Post;
+  post: Post
 }
 
 /**
  * Post Item component.
- * 
+ *
  * @param options - The options to create the Post Item component.
  */
 export const PostItem: FC<PostItemOptions> = ({ post }) => {
@@ -30,5 +30,5 @@ export const PostItem: FC<PostItemOptions> = ({ post }) => {
         <StoneLink to={`/posts/${post.id}/edit`}>Edit</StoneLink>
       </p>
     </article>
-  );
-};
+  )
+}

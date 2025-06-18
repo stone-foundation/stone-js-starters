@@ -1,8 +1,8 @@
 import './ForbiddenErrorPage.css'
-import { JSX } from 'react';
-import { ILogger } from "@stone-js/core";
-import { ForbiddenError } from '../../errors/ForbiddenError';
-import { IErrorPage, ReactIncomingEvent, ErrorPageRenderContext, defineErrorPage } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { ILogger } from '@stone-js/core'
+import { ForbiddenError } from '../../errors/ForbiddenError'
+import { IErrorPage, ReactIncomingEvent, ErrorPageRenderContext, defineErrorPage } from '@stone-js/use-react'
 
 /**
  * Forbidden Error Page.
@@ -10,7 +10,7 @@ import { IErrorPage, ReactIncomingEvent, ErrorPageRenderContext, defineErrorPage
 export const ForbiddenErrorPage = ({ logger }: { logger: ILogger }): IErrorPage<ReactIncomingEvent> => ({
   /**
    * Handle the error.
-   * 
+   *
    * @param error - The error to handle.
    * @returns The response.
    */
@@ -21,7 +21,7 @@ export const ForbiddenErrorPage = ({ logger }: { logger: ILogger }): IErrorPage<
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */

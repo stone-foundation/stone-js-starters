@@ -1,8 +1,8 @@
-import { Service } from "@stone-js/core"
-import { randomUUID } from "node:crypto"
-import { UserModel } from "../models/User"
-import { Session } from "../models/Session"
-import { SessionRepository } from "../repositories/SessionRepository"
+import { Service } from '@stone-js/core'
+import { randomUUID } from 'node:crypto'
+import { UserModel } from '../models/User'
+import { Session } from '../models/Session'
+import { SessionRepository } from '../repositories/SessionRepository'
 
 /**
  * Session Service Options
@@ -13,7 +13,7 @@ export interface SessionServiceOptions {
 
 /**
  * Session Service
- * 
+ *
  * @Service() decorator is used to define a new service
  * @Service() is an alias of @Stone() decorator.
  * The alias is required to get benefits of desctructuring Dependency Injection.
@@ -22,19 +22,19 @@ export interface SessionServiceOptions {
 @Service({ alias: 'sessionService' })
 export class SessionService {
   private readonly sessionRepository: SessionRepository
-  
+
   /**
    * Create a new Session Service
-   * 
+   *
    * @param options - The options to create the service
   */
-  constructor({ sessionRepository }: SessionServiceOptions) {
+  constructor ({ sessionRepository }: SessionServiceOptions) {
     this.sessionRepository = sessionRepository
   }
 
   /**
    * Finds all sessions.
-   * 
+   *
    * @param limit - The limit of sessions to list
    * @returns The list of sessions
    */
@@ -44,7 +44,7 @@ export class SessionService {
 
   /**
    * Finds a sessions by user.
-   * 
+   *
    * @param user - The user to look up
    * @param limit - The limit of sessions to list
    * @returns The list of sessions
@@ -55,7 +55,7 @@ export class SessionService {
 
   /**
    * Finds a session by ID.
-   * 
+   *
    * @param sessionId - The session ID to look up
    * @returns The session data or `undefined` if not found
    */
@@ -65,17 +65,17 @@ export class SessionService {
 
   /**
    * Finds the latest session of a user.
-   * 
+   *
    * @param user - The user to look up
    * @returns The latest session or `undefined` if not found
    */
-  getLatest (user: UserModel): Promise<Session | undefined> {
-    return this.sessionRepository.getLatest(user)
+  async getLatest (user: UserModel): Promise<Session | undefined> {
+    return await this.sessionRepository.getLatest(user)
   }
 
   /**
    * Creates a new session for a user.
-   * 
+   *
    * @param user - The user to create the session for
    * @param ip - The IP address of the user
    * @param userAgent - The user agent of the user
@@ -89,15 +89,15 @@ export class SessionService {
       createdAt: Date.now(),
       uuid: randomUUID(),
       lastActivityAt: Date.now(),
-      expiresAt: Date.now() + 3600,
+      expiresAt: Date.now() + 3600
     }
-    
+
     return await this.sessionRepository.create(session)
   }
 
   /**
    * Updates the last activity timestamp of a session.
-   * 
+   *
    * @param sessionId - The session ID to update
    * @returns `true` if the session was updated, otherwise `false`
    */
@@ -107,7 +107,7 @@ export class SessionService {
 
   /**
    * Extends a session expiration time.
-   * 
+   *
    * @param sessionId - The session ID to extend
    * @param additionalTime - Additional time in milliseconds
    * @returns `true` if the session was extended, otherwise `false`
@@ -120,7 +120,7 @@ export class SessionService {
 
   /**
    * Closes a session.
-   * 
+   *
    * @param sessionId - The session ID to close
    */
   async close (session: Session): Promise<void> {

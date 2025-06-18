@@ -1,4 +1,4 @@
-import { ILogger, Service } from "@stone-js/core"
+import { ILogger, Service } from '@stone-js/core'
 
 /**
  * Welcome Service Options
@@ -9,7 +9,7 @@ export interface WelcomeServiceOptions {
 
 /**
  * Welcome Service
- * 
+ *
  * @Service() decorator is used to define a new service
  * @Service() is an alias of @Stone() decorator.
  * The alias is required to get benefits of desctructuring Dependency Injection.
@@ -21,17 +21,17 @@ export class WelcomeService {
   /**
    * Create a new Welcome Service
   */
-  constructor({ logger }: WelcomeServiceOptions) {
-    this.logger = logger;
+  constructor ({ logger }: WelcomeServiceOptions) {
+    this.logger = logger
   }
 
   /**
    * Welcome
-   * 
+   *
    * @param name - The name
    * @returns A welcome message
    */
-  welcome(name: string): { message: string } {
+  welcome (name: string): { message: string } {
     this.logger.info(`Welcome ${name}`)
     return { message: `Hello ${name}!` }
   }

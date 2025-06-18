@@ -1,6 +1,15 @@
 import { IncomingHttpEvent } from '@stone-js/http-core'
-import { Application, ResponseData } from '../app/Application'
 import { FunctionalEventHandler, ILogger } from '@stone-js/core'
+import { AppConfig, FactoryHandler, ResponseData } from '../app/Application'
+
+vi.mock('@stone-js/core', async (mod) => {
+  const actual: any = await mod()
+  return {
+    ...actual,
+    isNotEmpty: vi.fn(() => true),
+    defineConfig: (config: any) => config
+  }
+})
 
 describe('Application', () => {
   let mockedLogger: ILogger
@@ -11,7 +20,7 @@ describe('Application', () => {
       info: vi.fn(),
     } as unknown as ILogger
 
-    app = Application({ logger: mockedLogger })
+    app = FactoryHandler({ logger: mockedLogger })
   })
 
   it('should create an event handler instance', () => {
@@ -27,5 +36,17 @@ describe('Application', () => {
     // Assert
     expect(response.message).toBe('Hello World!')
     expect(mockedLogger.info).toHaveBeenCalledWith('Hello World!')
+  })
+
+  it('should get config', () => {
+    // Arrange
+    const config: any = AppConfig
+    const blueprint: any = { is: () => true, set: vi.fn() }
+
+    // Act
+    config.afterConfigure(blueprint)
+
+    // Assert
+    expect(blueprint.set).toHaveBeenCalled()
   })
 })

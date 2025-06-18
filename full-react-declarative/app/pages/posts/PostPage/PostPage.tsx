@@ -1,8 +1,8 @@
-import { JSX } from "react";
-import { Post } from "../../../models/Post";
-import { PostService } from "../../../services/PostService";
-import { PostItem } from "../../../components/PostItem/PostItem";
-import { IPage, Page, PageRenderContext, ReactIncomingEvent, StoneLink } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { Post } from '../../../models/Post'
+import { PostService } from '../../../services/PostService'
+import { PostItem } from '../../../components/PostItem/PostItem'
+import { IPage, Page, PageRenderContext, ReactIncomingEvent, StoneLink } from '@stone-js/use-react'
 
 /**
  * Post Page options.
@@ -20,7 +20,7 @@ export class PostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new List Post Page component.
-   * 
+   *
    * @param options - The options to create the List Post Page component.
    */
   constructor ({ postService }: PostPageOptions) {
@@ -29,7 +29,7 @@ export class PostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Handle the incoming event.
-   * 
+   *
    * @param event - The incoming event.
    * @returns List of posts.
    */
@@ -39,7 +39,7 @@ export class PostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -48,7 +48,7 @@ export class PostPage implements IPage<ReactIncomingEvent> {
       <>
         <h1>
           <span>Posts</span>
-          <StoneLink to="/posts/create">New Post</StoneLink>
+          <StoneLink to='/posts/create'>New Post</StoneLink>
         </h1>
         <div>
           {posts?.length === 0 && <p>No posts found.</p>}

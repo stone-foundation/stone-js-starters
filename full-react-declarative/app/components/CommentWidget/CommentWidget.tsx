@@ -1,10 +1,10 @@
-import { User } from "../../models/User"
-import { Post } from "../../models/Post"
-import { FC, useEffect, useState } from "react"
-import { CommentItem } from "../CommentItem/CommentItem"
-import { CommentForm } from "../CommentForm/CommentForm"
-import { CommentService } from "../../services/CommentService"
-import { CommentInput, CommentView } from "../../models/Comment"
+import { User } from '../../models/User'
+import { Post } from '../../models/Post'
+import { FC, useEffect, useState } from 'react'
+import { CommentItem } from '../CommentItem/CommentItem'
+import { CommentForm } from '../CommentForm/CommentForm'
+import { CommentService } from '../../services/CommentService'
+import { CommentInput, CommentView } from '../../models/Comment'
 
 /**
  * Comment Widget Options
@@ -23,32 +23,34 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
   const [fetchingStatus, setFetchingStatus] = useState<'idle' | 'loading' | 'error'>('idle')
 
   // Fetch comments
-  const fetchComments = async () => {
-    try {
-      setFetchingStatus('loading')
-      const comments = await commentService.list(post.id)
-      setFetchingStatus('idle')
-      setComments(comments)
-    } catch (_: any) {
-      setFetchingStatus('error')
-    }
+  const fetchComments = (): void => {
+    setFetchingStatus('loading')
+    commentService
+      .list(post.id)
+      .then(comments => {
+        setComments(comments)
+        setFetchingStatus('idle')
+      })
+      .catch(() => {
+        setFetchingStatus('error')
+      })
   }
 
   // Save comment
-  const saveComment = async (commentInput: CommentInput) => {
-    try {
-      await commentService.create(post.id, commentInput)
-      await fetchComments()
-    } catch (_: any) {
-      setComments(comments.map(comment => ({
-        ...comment,
-        status: comment.id === commentInput.id ? 'error' : comment.status
-      })))
-    }
+  const saveComment = (commentInput: CommentInput): void => {
+    commentService
+      .create(post.id, commentInput)
+      .then(() => fetchComments())
+      .catch(() => {
+        setComments(comments.map(comment => ({
+          ...comment,
+          status: comment.id === commentInput.id ? 'error' : comment.status
+        })))
+      })
   }
 
   // Handle save
-  const handleOnSubmit = async (content: string) => {
+  const handleOnSubmit = (content: string): void => {
     const id = Math.random()
     const commentInput: CommentInput = {
       id,
@@ -60,16 +62,16 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, user, commentSer
       ...commentInput,
       author: user,
       status: 'saving',
-      createdAt: Date.now(),
+      createdAt: Date.now()
     }
 
     setComments([...comments, commentView])
 
-    await saveComment(commentInput)
+    saveComment(commentInput)
   }
 
   // Fetch comments on mount
-  useEffect(() => { fetchComments().then(() => {}) }, [post.id])
+  useEffect(() => { fetchComments() }, [post.id])
 
   // Render
   if (comments.length === 0 && fetchingStatus === 'loading') {

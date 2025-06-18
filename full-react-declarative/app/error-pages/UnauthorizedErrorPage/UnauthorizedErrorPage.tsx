@@ -1,8 +1,8 @@
 import './UnauthorizedErrorPage.css'
-import { JSX } from 'react';
-import { ILogger } from "@stone-js/core";
-import { UnauthorizedError } from '../../errors/UnauthorizedError';
-import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { ILogger } from '@stone-js/core'
+import { UnauthorizedError } from '../../errors/UnauthorizedError'
+import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from '@stone-js/use-react'
 
 /**
  * Unauthorized Error Handler component.
@@ -25,19 +25,19 @@ export class UnauthorizedErrorPage implements IErrorPage<ReactIncomingEvent> {
 
   /**
    * Handle the error.
-   * 
+   *
    * @param error - The error to handle.
    * @returns The response.
    */
   @PageStatus(403)
-  handle (error: UnauthorizedError) {
+  handle (error: UnauthorizedError): { message: string } {
     this.logger.error(error.message, { error })
     return { message: "I think you're an alien! Eh ?" }
   }
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */

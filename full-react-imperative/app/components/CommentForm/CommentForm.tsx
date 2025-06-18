@@ -18,28 +18,28 @@ export const CommentForm: FC<CommentFormOptions> = ({ currentUser, onSubmit }) =
   const contentRef = useRef<HTMLInputElement>(null)
 
   // Handle the form submit
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
     if (contentRef.current === null) return
 
     const content = contentRef.current.value.trim()
     if (content.length === 0) return // Prevent empty submissions
-    
+
     contentRef.current.value = '' // Clear input field
-    await onSubmit(content)
+    void onSubmit(content).catch(() => {})
   }
 
   // Render the component
   return (
-    <form className="comment-form" onSubmit={handleSubmit}>
+    <form className='comment-form' onSubmit={handleSubmit}>
       <UserAvatar user={currentUser} />
       <input
-        type="text"
+        type='text'
         ref={contentRef}
-        className="comment-input"
-        placeholder="Write a comment..."
+        className='comment-input'
+        placeholder='Write a comment...'
       />
-      <button className="comment-submit" type="submit">Add Comment</button>
+      <button className='comment-submit' type='submit'>Add Comment</button>
     </form>
   )
 }

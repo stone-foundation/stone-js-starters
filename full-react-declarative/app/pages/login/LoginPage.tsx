@@ -1,10 +1,10 @@
 import './LoginPage.css'
-import { IBlueprint } from '@stone-js/core';
-import { UserLogin } from "../../models/User";
-import { Dispatch, JSX, SetStateAction, useState } from "react";
-import { LoginForm } from "../../components/LoginForm/LoginForm";
-import { SecurityService } from "../../services/SecurityService";
-import { IPage, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
+import { IBlueprint } from '@stone-js/core'
+import { UserLogin } from '../../models/User'
+import { Dispatch, JSX, SetStateAction, useState } from 'react'
+import { LoginForm } from '../../components/LoginForm/LoginForm'
+import { SecurityService } from '../../services/SecurityService'
+import { IPage, IRouter, Page, ReactIncomingEvent } from '@stone-js/use-react'
 
 /**
  * Login Page options.
@@ -26,7 +26,7 @@ export class LoginPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Login Page component.
-   * 
+   *
    * @param options - The options to create the Login Page component.
    */
   constructor ({ router, blueprint, securityService }: LoginPageOptions) {
@@ -37,7 +37,7 @@ export class LoginPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -56,7 +56,7 @@ export class LoginPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Login the user.
-   * 
+   *
    * @param user - The user to login.
    */
   private async login (

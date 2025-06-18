@@ -1,24 +1,24 @@
 import './UserPage.css'
-import { JSX, useState } from "react";
-import { User } from "../../../models/User";
-import { UserService } from "../../../services/UserService";
-import { UserCard } from "../../../components/UserCard/UserCard";
-import { IPage, definePage, ReactIncomingEvent, PageRenderContext } from "@stone-js/use-react";
+import { JSX, useState } from 'react'
+import { User } from '../../../models/User'
+import { UserCard } from '../../../components/UserCard/UserCard'
+import { IUserService } from '../../../services/contracts/IUserService'
+import { IPage, definePage, ReactIncomingEvent, PageRenderContext } from '@stone-js/use-react'
 
 /**
  * User Page options.
  */
 export interface UserPageOptions {
-  userService: UserService
+  userService: IUserService
 }
 
 /**
  * User Page component.
  */
-export const UserPage = ({ userService }: { userService: UserService }): IPage<ReactIncomingEvent> => ({
+export const UserPage = ({ userService }: { userService: IUserService }): IPage<ReactIncomingEvent> => ({
   /**
    * Handle the incoming event.
-   * 
+   *
    * @param event - The incoming event.
    * @returns The event data.
    */
@@ -28,7 +28,7 @@ export const UserPage = ({ userService }: { userService: UserService }): IPage<R
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -36,16 +36,16 @@ export const UserPage = ({ userService }: { userService: UserService }): IPage<R
     const [query, setQuery] = useState('')
 
     return (
-      <div className="users-page">
-        <h1 className="users-title">Users</h1>
+      <div className='users-page'>
+        <h1 className='users-title'>Users</h1>
         <input
-          type="text"
-          placeholder="Search by name or email..."
+          type='text'
+          placeholder='Search by name or email...'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="users-search"
+          className='users-search'
         />
-        <div className="user-grid">
+        <div className='user-grid'>
           {data?.map(user => (<UserCard key={user.id} user={user} />))}
         </div>
       </div>

@@ -1,11 +1,11 @@
-import { ILogger } from "@stone-js/core"
-import { IRouter } from "@stone-js/use-react"
-import { PostInput, Post } from "../models/Post"
-import { PostService } from "../services/PostService"
+import { ILogger } from '@stone-js/core'
+import { IRouter } from '@stone-js/use-react'
+import { PostInput, Post } from '../models/Post'
+import { PostService } from '../services/PostService'
 
 /**
  * Create the post.
- * 
+ *
  * @param post - The post to save.
  */
 export async function createPost (
@@ -26,7 +26,7 @@ export async function createPost (
 
 /**
  * Delete the post.
- * 
+ *
  * @param post - The post to delete.
  */
 export async function deletePost (
@@ -48,7 +48,7 @@ export async function deletePost (
 
 /**
  * Update the post.
- * 
+ *
  * @param post - The post to update.
  */
 export async function updatePost (

@@ -1,11 +1,11 @@
-import { JSX } from "react";
-import { createPost } from "../utils";
-import { Post } from "../../models/Post";
-import { ILogger } from "@stone-js/core";
-import { PostService } from "../../services/PostService";
-import { PostForm } from "../../components/PostForm/PostForm";
-import { PostWidget } from "../../components/PostWidget/PostWidget";
-import { IPage, ReactIncomingEvent, HeadContext, definePage, IRouter, PageRenderContext } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { createPost } from '../utils'
+import { Post } from '../../models/Post'
+import { ILogger } from '@stone-js/core'
+import { PostForm } from '../../components/PostForm/PostForm'
+import { PostWidget } from '../../components/PostWidget/PostWidget'
+import { IPostService } from '../../services/contracts/IPostService'
+import { IPage, ReactIncomingEvent, HeadContext, definePage, IRouter, PageRenderContext } from '@stone-js/use-react'
 
 /**
  * HomePage options.
@@ -13,7 +13,7 @@ import { IPage, ReactIncomingEvent, HeadContext, definePage, IRouter, PageRender
 export interface HomePageOptions {
   router: IRouter
   logger: ILogger
-  postService: PostService
+  postService: IPostService
 }
 
 /**
@@ -29,7 +29,7 @@ export const HomePage = ({ router, logger, postService }: HomePageOptions): IPag
 
   /**
    * Handle the incoming event.
-   * 
+   *
    * @param event - The incoming event.
    * @returns List of posts.
    */
@@ -39,7 +39,7 @@ export const HomePage = ({ router, logger, postService }: HomePageOptions): IPag
 
   /**
    * Render the component.
-   * 
+   *
    * @returns The rendered component.
    */
   render ({ data = [], event, container }: PageRenderContext<Post[]>): JSX.Element {

@@ -1,6 +1,6 @@
-import axios, { AxiosInstance } from "axios";
-import { AxiosClient } from "../clients/AxiosClient";
-import { IBlueprint, IContainer, IServiceProvider, Provider } from "@stone-js/core";
+import axios, { AxiosInstance } from 'axios'
+import { AxiosClient } from '../clients/AxiosClient'
+import { IBlueprint, IContainer, IServiceProvider, Provider } from '@stone-js/core'
 
 /**
  * App Service Provider
@@ -9,15 +9,15 @@ import { IBlueprint, IContainer, IServiceProvider, Provider } from "@stone-js/co
 export class AppServiceProvider implements IServiceProvider {
   /**
    * Create a new instance of AppServiceProvider
-   * 
+   *
    * @param options
    */
-  constructor(private readonly container: IContainer) {}
+  constructor (private readonly container: IContainer) {}
 
   /**
    * Register services to the container
    */
-  register(): void {
+  register (): void {
     this.container
       .instanceIf('axios', this.getAxiosInstance(this.container))
       .singletonIf(AxiosClient, (container) => {
@@ -32,7 +32,7 @@ export class AppServiceProvider implements IServiceProvider {
 
   /**
    * Get Axios instance
-   * 
+   *
    * @param container - The container
    * @returns The Axios instance
    */

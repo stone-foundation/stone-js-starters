@@ -1,5 +1,5 @@
-import { JSX } from "react";
-import { IPage, Page, ReactIncomingEvent, StoneLink, HeadContext } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { IPage, Page, ReactIncomingEvent, StoneLink, HeadContext } from '@stone-js/use-react'
 
 /**
  * Home Page component.
@@ -15,7 +15,7 @@ export class HomePage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @returns The rendered component.
    */
   render (): JSX.Element {
@@ -26,17 +26,17 @@ export class HomePage implements IPage<ReactIncomingEvent> {
         <div>
           <h2>Posts</h2>
           <p>View the latest posts from the Stone.js Blog.</p>
-          <StoneLink to="/posts">View Posts</StoneLink>
+          <StoneLink to='/posts'>View Posts</StoneLink>
         </div>
         <div>
           <h2>Users</h2>
           <p>View the latest users from the Stone.js Blog.</p>
-          <StoneLink to="/users">View Users</StoneLink>
+          <StoneLink to='/users'>View Users</StoneLink>
         </div>
         <div>
           <h2>Manage</h2>
           <p>Manage your profile</p>
-          <StoneLink to="/manage">Manage</StoneLink>
+          <StoneLink to='/manage'>Manage</StoneLink>
         </div>
       </div>
     )

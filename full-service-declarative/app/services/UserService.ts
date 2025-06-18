@@ -1,8 +1,8 @@
-import { UserModel } from "../models/User"
-import { UserEvent } from "../events/UserEvent"
-import { NotFoundError } from "@stone-js/http-core"
-import { UserRepository } from "../repositories/UserRepository"
-import { EventEmitter, IContainer, isNotEmpty, Service } from "@stone-js/core"
+import { UserModel } from '../models/User'
+import { UserEvent } from '../events/UserEvent'
+import { NotFoundError } from '@stone-js/http-core'
+import { UserRepository } from '../repositories/UserRepository'
+import { EventEmitter, IContainer, isNotEmpty, Service } from '@stone-js/core'
 
 /**
  * User Service Options
@@ -14,7 +14,7 @@ export interface UserServiceOptions {
 
 /**
  * User Service
- * 
+ *
  * @Service() decorator is used to define a new service
  * @Service() is an alias of @Stone() decorator.
  * The alias is required to get benefits of desctructuring Dependency Injection.
@@ -27,12 +27,12 @@ export class UserService {
 
   /**
    * Resolve route binding
-   * 
+   *
    * @param key - The key of the binding
    * @param value - The value of the binding
    * @param container - The container
    */
-  static async resolveRouteBinding(key: string, value: any, container: IContainer): Promise<UserModel | undefined> {
+  static async resolveRouteBinding (key: string, value: any, container: IContainer): Promise<UserModel | undefined> {
     const userService = container.resolve<UserService>('userService')
     return await userService.findBy({ [key]: value })
   }
@@ -40,14 +40,14 @@ export class UserService {
   /**
    * Create a new User Service
   */
-  constructor({ userRepository, eventEmitter }: UserServiceOptions) {
-    this.eventEmitter = eventEmitter;
-    this.userRepository = userRepository;
+  constructor ({ userRepository, eventEmitter }: UserServiceOptions) {
+    this.eventEmitter = eventEmitter
+    this.userRepository = userRepository
   }
 
   /**
    * List users
-   * 
+   *
    * @param limit - The limit of users to list
    */
   async list (limit: number = 10): Promise<UserModel[]> {
@@ -56,19 +56,19 @@ export class UserService {
 
   /**
    * Find a user
-   * 
+   *
    * @param conditions - The conditions to find the user
    * @returns The found user
    */
   async findBy (conditions: Record<string, any>): Promise<UserModel> {
     const user = await this.userRepository.findById(conditions.id)
     if (isNotEmpty<UserModel>(user)) return user
-    throw new NotFoundError(`User with ID ${conditions.id} not found`)
+    throw new NotFoundError(`User with ID ${String(conditions.id)} not found`)
   }
 
   /**
    * Find a user
-   * 
+   *
    * @param conditions - The conditions to find the user
    * @returns The found user
    */
@@ -78,7 +78,7 @@ export class UserService {
 
   /**
    * Create a user
-   * 
+   *
    * @param payload - The user data to create
    */
   async create (payload: Omit<UserModel, 'id'>): Promise<bigint | undefined> {
@@ -88,7 +88,7 @@ export class UserService {
 
   /**
    * Update a user
-   * 
+   *
    * @param id - The id of the user to update
    * @param payload - The user data to update
    * @returns The updated user
@@ -101,7 +101,7 @@ export class UserService {
 
   /**
    * Delete a user
-   * 
+   *
    * @param id - The id of the user to delete
    */
   async delete (id: number): Promise<boolean> {

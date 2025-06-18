@@ -1,7 +1,7 @@
-import { UserService } from "../services/UserService";
-import { SecurityService } from "../services/SecurityService";
-import { IBlueprint, IMiddleware, Middleware, NextMiddleware } from "@stone-js/core";
-import { ISnapshot, isServer, ReactIncomingEvent, ReactOutgoingResponse, reactRedirectResponse } from "@stone-js/use-react";
+import { UserService } from '../services/UserService'
+import { SecurityService } from '../services/SecurityService'
+import { IBlueprint, IMiddleware, Middleware, NextMiddleware } from '@stone-js/core'
+import { ISnapshot, isServer, ReactIncomingEvent, ReactOutgoingResponse, reactRedirectResponse } from '@stone-js/use-react'
 
 /**
  * AuthMiddleware Options
@@ -28,10 +28,10 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
 
   /**
    * Create a new instance of AuthMiddleware
-   * 
+   *
    * @param userService
    */
-  constructor({ blueprint, snapshot, userService, securityService }: AuthMiddlewareOptions) {
+  constructor ({ blueprint, snapshot, userService, securityService }: AuthMiddlewareOptions) {
     this.snapshot = snapshot
     this.blueprint = blueprint
     this.userService = userService
@@ -40,12 +40,12 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
 
   /**
    * Handle the incoming event
-   * 
+   *
    * @param event - The incoming event
    * @param next - The next middleware
    * @returns The response
    */
-  async handle(
+  async handle (
     event: ReactIncomingEvent,
     next: NextMiddleware<ReactIncomingEvent, ReactOutgoingResponse>,
     excludes: string[] = []
@@ -53,7 +53,7 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
     if (!excludes.includes(event.pathname)) {
       if (!this.securityService.isAuthenticated()) {
         this.blueprint.set('app.requestedUrl', event.pathname)
-        return reactRedirectResponse({ url: '/login' })
+        return await reactRedirectResponse({ url: '/login' })
       }
       await this.resolveCurrentUser(event)
     }
@@ -63,15 +63,15 @@ export class AuthMiddleware implements IMiddleware<ReactIncomingEvent, ReactOutg
 
   /**
    * Resolve the current user and store it in the snapshot.
-   * 
+   *
    * This method uses the event fingerprint to store the user in the snapshot,
    * ensuring that the snapshot is valid per request. If the user is already
    * stored in the snapshot, it is retrieved from there; otherwise, it is
    * fetched from the server.
-   * 
+   *
    * @param event - The incoming event
    */
-  private async resolveCurrentUser(event: ReactIncomingEvent): Promise<void> {
+  private async resolveCurrentUser (event: ReactIncomingEvent): Promise<void> {
     if (isServer()) {
       const user = await this.userService.current()
       event.setUserResolver(() => user)

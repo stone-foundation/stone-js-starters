@@ -1,6 +1,6 @@
-import { BadCredentialsError } from "../errors/CredentialsError"
-import { ErrorHandler, IErrorHandler, ILogger, Promiseable } from "@stone-js/core"
-import { BadRequestError, HTTP_BAD_REQUEST, HTTP_INTERNAL_SERVER_ERROR, HTTP_NOT_FOUND, HTTP_UNAUTHORIZED, IncomingHttpEvent, NotFoundError, UnauthorizedError } from "@stone-js/http-core"
+import { BadCredentialsError } from '../errors/CredentialsError'
+import { ErrorHandler, IErrorHandler, ILogger, Promiseable } from '@stone-js/core'
+import { BadRequestError, HTTP_BAD_REQUEST, HTTP_INTERNAL_SERVER_ERROR, HTTP_NOT_FOUND, HTTP_UNAUTHORIZED, IncomingHttpEvent, NotFoundError, UnauthorizedError } from '@stone-js/http-core'
 
 /**
  * User Error Handler Options
@@ -18,21 +18,21 @@ export class SecurityErrorHandler implements IErrorHandler<IncomingHttpEvent> {
 
   /**
    * Create a new instance of SecurityErrorHandler
-   * 
+   *
    * @param logger
    */
-  constructor({ logger }: SecurityErrorHandlerOptions) {
+  constructor ({ logger }: SecurityErrorHandlerOptions) {
     this.logger = logger
   }
 
   /**
    * Handle CredentialsError and UnauthorizedError
-   * 
+   *
    * @param error - The error to handle
    * @param _event - The incoming event
    * @returns The response
    */
-  handle(error: BadCredentialsError | UnauthorizedError | NotFoundError | BadRequestError, _event: IncomingHttpEvent): Promiseable<unknown> {
+  handle (error: BadCredentialsError | UnauthorizedError | NotFoundError | BadRequestError, _event: IncomingHttpEvent): Promiseable<unknown> {
     this.logger.error(error.message)
     let message: string = 'An error occurred'
     let statusCode: number = HTTP_INTERNAL_SERVER_ERROR

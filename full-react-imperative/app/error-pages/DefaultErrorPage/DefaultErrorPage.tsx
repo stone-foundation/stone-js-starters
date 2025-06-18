@@ -1,7 +1,7 @@
 import './DefaultErrorPage.css'
 import { JSX } from 'react'
-import { ILogger } from "@stone-js/core";
-import { IErrorPage, ReactIncomingEvent, ErrorPageRenderContext, defineErrorPage } from "@stone-js/use-react";
+import { ILogger } from '@stone-js/core'
+import { IErrorPage, ReactIncomingEvent, ErrorPageRenderContext, defineErrorPage } from '@stone-js/use-react'
 
 /**
  * Default Error Page.
@@ -9,18 +9,18 @@ import { IErrorPage, ReactIncomingEvent, ErrorPageRenderContext, defineErrorPage
 export const DefaultErrorPage = ({ logger }: { logger: ILogger }): IErrorPage<ReactIncomingEvent> => ({
   /**
    * Handle the error.
-   * 
+   *
    * @param error - The error to handle.
    * @returns The response.
    */
   handle (error: any): { message: string } {
     logger.error(error.message, { error })
-    return { message: "Oops! Something went wrong!" }
+    return { message: 'Oops! Something went wrong!' }
   },
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */

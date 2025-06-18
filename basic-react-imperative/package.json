@@ -20,17 +20,17 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@stone-js/cli": "file:/Users/evenspierre/Projects/StoneJS/cli",
-    "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
-    "@stone-js/use-react": "file:/Users/evenspierre/Projects/StoneJS/use-react",
-    "@stone-js/browser-adapter": "file:/Users/evenspierre/Projects/StoneJS/browser-adapter",
-    "@stone-js/node-cli-adapter": "file:/Users/evenspierre/Projects/StoneJS/node-cli-adapter"
+    "@stone-js/core": "^0.1.0",
+    "@stone-js/use-react": "^0.2.0",
+    "@stone-js/browser-adapter": "^0.1.0",
+    "@stone-js/node-cli-adapter": "^0.2.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.25.9",
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-typescript": "^7.27.0",
-    "@types/node": "^22.10.7",
+    "@stone-js/cli": "^0.1.1",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "@vitest/coverage-v8": "^3.0.9",

@@ -1,10 +1,10 @@
-import { FC } from "react";
-import { Post } from "../../models/Post";
-import { User } from "../../models/User";
-import { formatDateTime } from "../../utils";
-import { StoneLink } from "@stone-js/use-react";
-import { CommentWidget } from "../CommentWidget/CommentWidget";
-import { CommentService } from "../../services/CommentService";
+import { FC } from 'react'
+import { Post } from '../../models/Post'
+import { User } from '../../models/User'
+import { formatDateTime } from '../../utils'
+import { StoneLink } from '@stone-js/use-react'
+import { CommentWidget } from '../CommentWidget/CommentWidget'
+import { CommentService } from '../../services/CommentService'
 
 /**
  * Post details Options
@@ -18,10 +18,14 @@ export interface PostDetailsOptions {
 
 /**
  * Post details component.
- * 
+ *
  * @param options - The options to create the Post details component.
  */
 export const PostDetails: FC<PostDetailsOptions> = ({ user, onDelete, post, commentService }) => {
+  const deletePost = (): void => {
+    void onDelete(post).catch(() => {})
+  }
+
   return (
     <article>
       <h1>{post.title}</h1>
@@ -32,9 +36,9 @@ export const PostDetails: FC<PostDetailsOptions> = ({ user, onDelete, post, comm
       <p>{post.content}</p>
       <p>
         <StoneLink to={`/posts/${post.id}/edit`}>Edit</StoneLink>
-        <button onClick={async () => await onDelete(post)}>Delete</button>
+        <button onClick={deletePost}>Delete</button>
       </p>
       <CommentWidget user={user} commentService={commentService} post={post} />
     </article>
-  );
-};
+  )
+}

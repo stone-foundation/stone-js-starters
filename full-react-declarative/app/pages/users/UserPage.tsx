@@ -1,7 +1,7 @@
-import { JSX } from "react";
-import { User } from "../../models/User";
-import { UserService } from "../../services/UserService";
-import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { User } from '../../models/User'
+import { UserService } from '../../services/UserService'
+import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from '@stone-js/use-react'
 
 export interface UserPageOptions {
   userService: UserService
@@ -16,7 +16,7 @@ export class UserPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Update User Page component.
-   * 
+   *
    * @param userService - The user service.
    */
   constructor ({ userService }: UserPageOptions) {
@@ -25,7 +25,7 @@ export class UserPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Handle the incoming event.
-   * 
+   *
    * @param event - The incoming event.
    * @returns The event data.
    */
@@ -35,7 +35,7 @@ export class UserPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -50,7 +50,7 @@ export class UserPage implements IPage<ReactIncomingEvent> {
             </li>
           ))}
         </ul>
-        <p><StoneLink to="/users/create">New User</StoneLink></p>
+        <p><StoneLink to='/users/create'>New User</StoneLink></p>
       </>
     )
   }

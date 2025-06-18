@@ -1,11 +1,11 @@
-import { JSX } from "react";
-import { Post } from "../../../models/Post";
-import { User } from "../../../models/User";
-import { ILogger, isNotEmpty } from "@stone-js/core";
-import { PostService } from "../../../services/PostService";
-import { CommentService } from "../../../services/CommentService";
-import { PostDetails } from "../../../components/PostDetails/PostDetails";
-import { IPage, IRouter, Page, PageRenderContext, ReactIncomingEvent } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { Post } from '../../../models/Post'
+import { User } from '../../../models/User'
+import { ILogger, isNotEmpty } from '@stone-js/core'
+import { PostService } from '../../../services/PostService'
+import { CommentService } from '../../../services/CommentService'
+import { PostDetails } from '../../../components/PostDetails/PostDetails'
+import { IPage, IRouter, Page, PageRenderContext, ReactIncomingEvent } from '@stone-js/use-react'
 
 /**
  * Show Post Page options.
@@ -29,7 +29,7 @@ export class ShowPostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Post Page component.
-   * 
+   *
    * @param options - The options to create the Post Page component.
    */
   constructor ({ router, logger, postService, commentService }: ShowPostPageOptions) {
@@ -41,16 +41,16 @@ export class ShowPostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
   render ({ event }: PageRenderContext<Post>): JSX.Element {
     const post = event.get<Post>('post')
-    const user = event.getUser<User>() ?? {} as User
+    const user = event.getUser<User>() ?? {} as unknown as User
 
     // Render the component
-    if(isNotEmpty<Post>(post)) {
+    if (isNotEmpty<Post>(post)) {
       return (
         <PostDetails
           user={user}
@@ -66,7 +66,7 @@ export class ShowPostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Delete the post.
-   * 
+   *
    * @param post - The post to delete.
    */
   private async deletePost (post: Post): Promise<void> {

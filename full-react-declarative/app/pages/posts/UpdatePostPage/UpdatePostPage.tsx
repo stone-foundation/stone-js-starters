@@ -1,9 +1,9 @@
-import { JSX } from "react";
-import { ILogger, isNotEmpty } from "@stone-js/core";
-import { Post, PostInput } from "../../../models/Post";
-import { PostService } from "../../../services/PostService";
-import { PostForm } from "../../../components/PostForm/PostForm";
-import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { ILogger, isNotEmpty } from '@stone-js/core'
+import { Post, PostInput } from '../../../models/Post'
+import { PostService } from '../../../services/PostService'
+import { PostForm } from '../../../components/PostForm/PostForm'
+import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from '@stone-js/use-react'
 
 /**
  * Update Post Page options.
@@ -23,7 +23,7 @@ export class UpdatePostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Post Page component.
-   * 
+   *
    * @param options - The options to create the Post Page component.
    */
   constructor ({ logger, postService }: UpdatePostPageOptions) {
@@ -33,13 +33,13 @@ export class UpdatePostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
   render ({ event }: PageRenderContext<Post>): JSX.Element {
     const post = event.get<Post>('post')
-    
+
     if (isNotEmpty<Post>(post)) {
       return (
         <>
@@ -62,7 +62,7 @@ export class UpdatePostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Update the post.
-   * 
+   *
    * @param post - The post to update.
    */
   private async updatePost (id: number, post: PostInput): Promise<void> {

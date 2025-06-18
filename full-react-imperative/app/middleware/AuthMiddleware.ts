@@ -1,16 +1,16 @@
-import { UserService } from "../services/UserService";
-import { SecurityService } from "../services/SecurityService";
-import { defineMiddleware, FunctionalMiddleware, IBlueprint, NextMiddleware } from "@stone-js/core";
-import { ReactIncomingEvent, ReactOutgoingResponse, reactRedirectResponse, ReactRuntime } from "@stone-js/use-react";
+import { IUserService } from '../services/contracts/IUserService'
+import { ISecurityService } from '../services/contracts/ISecurityService'
+import { defineMiddleware, FunctionalMiddleware, IBlueprint, NextMiddleware } from '@stone-js/core'
+import { ReactIncomingEvent, ReactOutgoingResponse, reactRedirectResponse, ReactRuntime } from '@stone-js/use-react'
 
 /**
  * AuthMiddleware Options
 */
 export interface AuthMiddlewareOptions {
   blueprint: IBlueprint
-  userService: UserService
+  userService: IUserService
   reactRuntime: ReactRuntime
-  securityService: SecurityService
+  securityService: ISecurityService
 }
 
 /**
@@ -24,7 +24,7 @@ export const AuthMiddleware = ({
 }: AuthMiddlewareOptions): FunctionalMiddleware<ReactIncomingEvent, ReactOutgoingResponse> => {
   /**
    * Handle the incoming event
-   * 
+   *
    * @param event - The incoming event
    * @param next - The next middleware
    * @returns The response
@@ -37,7 +37,7 @@ export const AuthMiddleware = ({
     if (!excludes.includes(event.pathname)) {
       if (!securityService.isAuthenticated()) {
         blueprint.set('app.requestedUrl', event.pathname)
-        return reactRedirectResponse({ url: '/login' })
+        return await reactRedirectResponse({ url: '/login' })
       }
       const user = await reactRuntime.snapshot('currentUser', async () => await userService.current())
       event.setUserResolver(() => user)

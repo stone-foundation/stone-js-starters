@@ -1,9 +1,9 @@
 import './AppLayout.css'
-import { JSX } from "react";
-import { User } from "../../models/User";
-import { IBlueprint, isNotEmpty } from '@stone-js/core';
-import { SecurityService } from '../../services/SecurityService';
-import { IPageLayout, IRouter, PageLayout, PageLayoutRenderContext, ReactIncomingEvent, StoneLink, StoneOutlet } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { User } from '../../models/User'
+import { IBlueprint, isNotEmpty } from '@stone-js/core'
+import { SecurityService } from '../../services/SecurityService'
+import { IPageLayout, IRouter, PageLayout, PageLayoutRenderContext, ReactIncomingEvent, StoneLink, StoneOutlet } from '@stone-js/use-react'
 
 /**
  * App Layout options.
@@ -25,7 +25,7 @@ export class AppLayout implements IPageLayout {
 
   /**
    * Create a new App Layout component.
-   * 
+   *
    * @param options - The options to create the App Layout component.
    */
   constructor ({ router, blueprint, securityService }: AppLayoutOptions) {
@@ -36,26 +36,26 @@ export class AppLayout implements IPageLayout {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
   render ({ container, children }: PageLayoutRenderContext): JSX.Element {
-    const user = container.make<ReactIncomingEvent>('event').getUser<User>() ?? {} as User
+    const user = container.make<ReactIncomingEvent>('event').getUser<User>() ?? {} as unknown as User
 
     return (
       <div className='app-layout'>
         <header>
           <p>
             <StoneLink to='/' className='logo'>
-              <img src='/logo.png' alt="Stone.js Logo" />
+              <img src='/logo.png' alt='Stone.js Logo' />
               <span>Stone.js</span>
             </StoneLink>
           </p>
           {isNotEmpty<User>(user) && (
             <p>
               <span>
-                <img src={this.getUserAvatar(user)} alt="Stone.js Logo" />
+                <img src={this.getUserAvatar(user)} alt='Stone.js Logo' />
               </span>
               <span>
                 <span>{user.name}</span>
@@ -64,10 +64,9 @@ export class AppLayout implements IPageLayout {
             </p>
           )}
           <p>
-          {isNotEmpty<User>(user)
-            ? <button onClick={this.logout.bind(this)}>Logout</button>
-            : <StoneLink to='/login'>Login</StoneLink>
-          }
+            {isNotEmpty<User>(user)
+              ? <button onClick={() => this.logout()}>Logout</button>
+              : <StoneLink to='/login'>Login</StoneLink>}
           </p>
         </header>
         <main>
@@ -81,16 +80,17 @@ export class AppLayout implements IPageLayout {
   /**
    * Logout the user.
    */
-  async logout (): Promise<void> {
+  logout (): void {
     if (window.confirm('Are you sure you want to logout?')) {
-      await this.securityService.logout()
-      this.router.navigate('/', true)
+      void this.securityService.logout().then(() => {
+        this.router.navigate('/', true)
+      })
     }
   }
 
   /**
    * Get the user avatar.
-   * 
+   *
    * @param user - The user to get the avatar.
    * @returns The user avatar.
    */

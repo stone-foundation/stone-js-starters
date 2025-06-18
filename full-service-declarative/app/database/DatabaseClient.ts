@@ -1,4 +1,6 @@
-import { Client, Config, createClient } from "@libsql/client";
+import { Client, Config, createClient } from '@libsql/client'
+
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 
 /**
  * DatabaseClient
@@ -11,14 +13,14 @@ export class DatabaseClient {
    */
   static get client (): Client {
     if (this._client === undefined) {
-      throw new Error("Database client is not initialized.")
+      throw new Error('Database client is not initialized.')
     }
     return this._client
   }
 
   /**
    * Create a new client instance
-   * 
+   *
    * @param config - The configuration object for the client
    * @returns The client instance
    */

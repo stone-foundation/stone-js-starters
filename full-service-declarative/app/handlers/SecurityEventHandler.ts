@@ -1,8 +1,8 @@
-import { ILogger } from "@stone-js/core"
-import { EventHandler, Post } from "@stone-js/router"
-import { SecurityService } from "../services/SecurityService"
-import { IncomingHttpEvent, NoContentHttpResponse } from "@stone-js/http-core"
-import { UserChangePassword, UserLogin, UserRegister, UserToken } from "../models/User"
+import { ILogger } from '@stone-js/core'
+import { EventHandler, Post } from '@stone-js/router'
+import { SecurityService } from '../services/SecurityService'
+import { IncomingHttpEvent, NoContentHttpResponse } from '@stone-js/http-core'
+import { UserChangePassword, UserLogin, UserRegister, UserToken } from '../models/User'
 
 /**
  * Security Event Handler Options
@@ -14,7 +14,7 @@ export interface SecurityEventHandlerOptions {
 
 /**
  * Security Event Handler
- * 
+ *
  * @EventHandler() is a decorator that marks a class as a handler.
  * @EventHandler() think about it as a controller in other frameworks.
  * Stone.js also provides a @Controller() decorator that is an alias to @EventHandler().
@@ -27,23 +27,23 @@ export class SecurityEventHandler {
 
   /**
    * Create a new instance of SecurityEventHandler
-   * 
+   *
    * @param securityService
    * @param logger
    */
-  constructor({ securityService, logger }: SecurityEventHandlerOptions) {
+  constructor ({ securityService, logger }: SecurityEventHandlerOptions) {
     this.logger = logger
     this.securityService = securityService
   }
 
   /**
    * Login a user
-   * 
+   *
    * @param event - IncomingHttpEvent
    * @returns UserToken
   */
   @Post('/login', { name: 'login' })
-  async login(event: IncomingHttpEvent): Promise<UserToken> {
+  async login (event: IncomingHttpEvent): Promise<UserToken> {
     return await this.securityService.login(
       event,
       event.getBody<UserLogin>({ email: '', password: '' })
@@ -52,13 +52,13 @@ export class SecurityEventHandler {
 
   /**
    * Logout a user
-   * 
+   *
    * @param event - IncomingHttpEvent
    * @returns void
   */
   @Post('/logout', { name: 'logout' })
   @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async logout(event: IncomingHttpEvent): Promise<void> {
+  async logout (event: IncomingHttpEvent): Promise<void> {
     await this.securityService.logout(
       event.get<string>('Authorization', '').replace('Bearer ', '')
     )
@@ -66,12 +66,12 @@ export class SecurityEventHandler {
 
   /**
    * Refresh a token
-   * 
+   *
    * @param event - IncomingHttpEvent
    * @returns UserToken
   */
   @Post('/refresh', { name: 'refresh' })
-  async refresh(event: IncomingHttpEvent): Promise<UserToken> {
+  async refresh (event: IncomingHttpEvent): Promise<UserToken> {
     return await this.securityService.refresh(
       event.get<string>('Authorization', '').replace('Bearer ', '')
     )
@@ -79,13 +79,13 @@ export class SecurityEventHandler {
 
   /**
    * Register a user
-   * 
+   *
    * @param event - IncomingHttpEvent
    * @returns UserToken
   */
   @Post('/register', { name: 'register' })
   @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async register(event: IncomingHttpEvent): Promise<void> {
+  async register (event: IncomingHttpEvent): Promise<void> {
     await this.securityService.register(
       event.getBody<UserRegister>({} as any)
     )
@@ -93,13 +93,13 @@ export class SecurityEventHandler {
 
   /**
    * Change password
-   * 
+   *
    * @param event - IncomingHttpEvent
    * @returns void
   */
   @Post('/change-password', { name: 'change-password' })
   @NoContentHttpResponse({ 'content-type': 'application/json' })
-  async changePassword(event: IncomingHttpEvent): Promise<void> {
+  async changePassword (event: IncomingHttpEvent): Promise<void> {
     await this.securityService.changePassword(
       event.getUser(),
       event.getBody<UserChangePassword>()

@@ -34,15 +34,15 @@ export const UserBadge: FC<UserBadgeOptions> = ({
     <div
       className={`user-badge ${direction} ${className}`}
       onClick={onClick}
-      style={{ cursor: onClick ? 'pointer' : 'default' }}
+      style={{ cursor: (onClick != null) ? 'pointer' : 'default' }}
     >
       <UserAvatar withLink={withLink} user={user} size={size} />
-      <div className="user-badge-info">
-        <StoneLink to={withLink ? `/users/${user.id}` : undefined} href='#' className="user-badge-name">
+      <div className='user-badge-info'>
+        <StoneLink to={withLink ? `/users/${user.id}` : undefined} href='#' className='user-badge-name'>
           {user.name}
         </StoneLink>
-        {createdAt && <span className="user-badge-details">{dateTimeFromNow(createdAt)}</span>}
-        {!createdAt && user.email && <span className="user-badge-details">{user.email}</span>}
+        {createdAt !== undefined && <span className='user-badge-details'>{dateTimeFromNow(createdAt)}</span>}
+        {createdAt === undefined && user.email !== undefined && <span className='user-badge-details'>{user.email}</span>}
       </div>
     </div>
   )

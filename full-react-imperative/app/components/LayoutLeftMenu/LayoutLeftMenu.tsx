@@ -15,16 +15,16 @@ export interface LayoutLeftMenuOptions {
  * LayoutLeftMenu component.
  */
 export const LayoutLeftMenu: FC<LayoutLeftMenuOptions> = ({ container }) => {
-  const user = container.make<ReactIncomingEvent>('event').getUser<User>() ?? {} as User
+  const user = container.make<ReactIncomingEvent>('event').getUser<User>() ?? {} as unknown as User
 
   return (
-    <nav className="main-nav">
-      <StoneLink to="/" className="nav-btn">Home</StoneLink>
-      <StoneLink to="/users" className="nav-btn">Users</StoneLink>
+    <nav className='main-nav'>
+      <StoneLink to='/' className='nav-btn'>Home</StoneLink>
+      <StoneLink to='/users' className='nav-btn'>Users</StoneLink>
       {isNotEmpty<User>(user) && (
         <>
-          <StoneLink to={`/users/${user.id}`} className="nav-btn">Profile</StoneLink>
-          <StoneLink to="/settings" className="nav-btn">Settings</StoneLink>
+          <StoneLink to={`/users/${user.id}`} className='nav-btn'>Profile</StoneLink>
+          <StoneLink to='/settings' className='nav-btn'>Settings</StoneLink>
         </>
       )}
     </nav>

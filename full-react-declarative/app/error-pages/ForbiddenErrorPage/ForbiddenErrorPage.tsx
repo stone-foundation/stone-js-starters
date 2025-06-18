@@ -1,8 +1,8 @@
 import './ForbiddenErrorPage.css'
-import { JSX } from 'react';
-import { ILogger } from "@stone-js/core";
-import { ForbiddenError } from '../../errors/ForbiddenError';
-import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { ILogger } from '@stone-js/core'
+import { ForbiddenError } from '../../errors/ForbiddenError'
+import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from '@stone-js/use-react'
 
 /**
  * Forbidden Error Handler component.
@@ -25,19 +25,19 @@ export class ForbiddenErrorPage implements IErrorPage<ReactIncomingEvent> {
 
   /**
    * Handle the error.
-   * 
+   *
    * @param error - The error to handle.
    * @returns The response.
    */
   @PageStatus(403)
-  handle (error: ForbiddenError) {
+  handle (error: ForbiddenError): { message: string } {
     this.logger.error(error.message, { error })
     return { message: "I think you're not supposed to be here! Eh ?" }
   }
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */

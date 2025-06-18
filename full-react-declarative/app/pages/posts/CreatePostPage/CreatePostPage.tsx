@@ -1,10 +1,10 @@
-import './CreatePostPage.css';
-import { JSX } from "react";
-import { ILogger } from "@stone-js/core";
-import { PostInput } from "../../../models/Post";
-import { PostService } from "../../../services/PostService";
-import { PostForm } from '../../../components/PostForm/PostForm';
-import { IPage, IRouter, Page, ReactIncomingEvent } from "@stone-js/use-react";
+import './CreatePostPage.css'
+import { JSX } from 'react'
+import { ILogger } from '@stone-js/core'
+import { PostInput } from '../../../models/Post'
+import { PostService } from '../../../services/PostService'
+import { PostForm } from '../../../components/PostForm/PostForm'
+import { IPage, IRouter, Page, ReactIncomingEvent } from '@stone-js/use-react'
 
 /**
  * Create Post Page options.
@@ -26,7 +26,7 @@ export class CreatePostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Post Page component.
-   * 
+   *
    * @param options - The options to create the Post Page component.
    */
   constructor ({ router, logger, postService }: CreatePostPageOptions) {
@@ -37,7 +37,7 @@ export class CreatePostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @returns The rendered component.
    */
   render (): JSX.Element {
@@ -51,7 +51,7 @@ export class CreatePostPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create the post.
-   * 
+   *
    * @param post - The post to save.
    */
   private async createPost (postInput: PostInput): Promise<void> {

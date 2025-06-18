@@ -1,5 +1,5 @@
-import { UserEvent } from "../events/UserEvent";
-import { IEventListener, ILogger, Listener } from "@stone-js/core";
+import { UserEvent } from '../events/UserEvent'
+import { IEventListener, ILogger, Listener } from '@stone-js/core'
 
 /**
  * User Event Listener Options
@@ -17,16 +17,16 @@ export class UserEventListener implements IEventListener<UserEvent> {
 
   /**
    * Create a new instance of UserEventListener
-   * 
+   *
    * @param logger
    */
-  constructor({ logger }: UserEventListenerOptions) {
+  constructor ({ logger }: UserEventListenerOptions) {
     this.logger = logger
   }
 
   /**
    * Handle the UserEvent
-   * 
+   *
    * @param event - The event to handle
    */
   handle (event: UserEvent): void {

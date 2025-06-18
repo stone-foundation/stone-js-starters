@@ -1,13 +1,13 @@
-import { JSX } from "react";
-import { deletePost } from "../../utils";
-import { Post } from "../../../models/Post";
-import { User } from "../../../models/User";
-import { ILogger, isNotEmpty } from "@stone-js/core";
-import { PostService } from "../../../services/PostService";
-import { PostCard } from "../../../components/PostCard/PostCard";
-import { CommentService } from "../../../services/CommentService";
-import { CommentWidget } from "../../../components/CommentWidget/CommentWidget";
-import { definePage, IPage, IRouter, PageRenderContext, ReactIncomingEvent } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { deletePost } from '../../utils'
+import { Post } from '../../../models/Post'
+import { User } from '../../../models/User'
+import { ILogger, isNotEmpty } from '@stone-js/core'
+import { PostCard } from '../../../components/PostCard/PostCard'
+import { IPostService } from '../../../services/contracts/IPostService'
+import { ICommentService } from '../../../services/contracts/ICommentService'
+import { CommentWidget } from '../../../components/CommentWidget/CommentWidget'
+import { definePage, IPage, IRouter, PageRenderContext, ReactIncomingEvent } from '@stone-js/use-react'
 
 /**
  * Show Post Page options.
@@ -15,8 +15,8 @@ import { definePage, IPage, IRouter, PageRenderContext, ReactIncomingEvent } fro
 export interface ShowPostPageOptions {
   router: IRouter
   logger: ILogger
-  postService: PostService
-  commentService: CommentService
+  postService: IPostService
+  commentService: ICommentService
 }
 
 /**
@@ -25,16 +25,16 @@ export interface ShowPostPageOptions {
 export const ShowPostPage = ({ router, logger, postService, commentService }: ShowPostPageOptions): IPage<ReactIncomingEvent> => ({
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
   render ({ event }: PageRenderContext<Post>): JSX.Element {
     const post = event.get<Post>('post')
-    const user = event.getUser<User>() ?? {} as User
+    const user = event.getUser<User>() ?? {} as unknown as User
 
     // Render the component
-    if(isNotEmpty<Post>(post)) {
+    if (isNotEmpty<Post>(post)) {
       return (
         <PostCard
           key={post.id}
@@ -59,6 +59,6 @@ export const ShowPostPageBlueprint = definePage(
   ShowPostPage,
   {
     path: '/posts/:post@id(\\d+)',
-    bindings: { post: 'postService@findBy' } 
+    bindings: { post: 'postService@findBy' }
   }
 )

@@ -1,6 +1,6 @@
-import { IncomingHttpEvent } from "@stone-js/http-core";
-import { WelcomeService } from "../services/WelcomeService";
-import { defineRoute, FactoryEventHandler, FunctionalEventHandler } from "@stone-js/router";
+import { IncomingHttpEvent } from '@stone-js/http-core'
+import { WelcomeService } from '../services/welcomeService'
+import { defineRoute, FactoryEventHandler, FunctionalEventHandler } from '@stone-js/router'
 
 /**
  * Welcome Event Handler Options

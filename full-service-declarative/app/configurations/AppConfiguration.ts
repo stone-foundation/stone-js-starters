@@ -1,11 +1,11 @@
-import { Config } from "@libsql/client"
-import { getString } from "@stone-js/env"
-import { CORSHeadersMiddleware } from "@stone-js/http-core"
-import { Configuration, defineBlueprintMiddleware, IBlueprint, IConfiguration, LogLevel, Promiseable } from "@stone-js/core"
+import { Config } from '@libsql/client'
+import { getString } from '@stone-js/env'
+import { CORSHeadersMiddleware } from '@stone-js/http-core'
+import { Configuration, defineBlueprintMiddleware, IBlueprint, IConfiguration, LogLevel, Promiseable } from '@stone-js/core'
 
 /**
  * User Implicit Configuration
- * 
+ *
  * Explicit configuration takes precedence over implicit configuration.
  * Implicit configuration are defined at decorators level.
  */
@@ -13,10 +13,10 @@ import { Configuration, defineBlueprintMiddleware, IBlueprint, IConfiguration, L
 export class AppConfiguration implements IConfiguration {
   /**
    * Configure the application
-   * 
+   *
    * @param blueprint - The blueprint to configure
    */
-  configure(blueprint: IBlueprint): Promiseable<void> {
+  configure (blueprint: IBlueprint): Promiseable<void> {
     blueprint
       .set('database', this.databaseConfig())
       .set('security', this.securityConfig())
@@ -29,24 +29,24 @@ export class AppConfiguration implements IConfiguration {
   /**
    * Get the database configuration
    */
-  private databaseConfig(): Config {
+  private databaseConfig (): Config {
     return {
-      url: getString('DATABASE_URL', 'file:local.db'),
+      url: getString('DATABASE_URL', 'file:local.db')
     }
   }
 
   /**
    * Get the security configuration
    */
-  private securityConfig() {
+  private securityConfig (): Record<string, any> {
     return {
       jwt: {
-        expiresIn: 3600,
+        expiresIn: 3600
       },
       secret: getString('SECURITY_JWT_SECRET', 'non_prod_secret'),
       bcrypt: {
-        saltRounds: 10,
-      },
+        saltRounds: 10
+      }
     }
   }
 }

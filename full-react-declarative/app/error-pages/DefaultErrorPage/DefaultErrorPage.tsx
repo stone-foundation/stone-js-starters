@@ -1,7 +1,7 @@
 import './DefaultErrorPage.css'
 import { JSX } from 'react'
-import { ILogger } from "@stone-js/core";
-import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from "@stone-js/use-react";
+import { ILogger } from '@stone-js/core'
+import { ErrorPage, IErrorPage, PageStatus, ReactIncomingEvent, ErrorPageRenderContext } from '@stone-js/use-react'
 
 /**
  * Forbidden Error Handler component.
@@ -24,19 +24,19 @@ export class DefaultErrorPage implements IErrorPage<ReactIncomingEvent> {
 
   /**
    * Handle the error.
-   * 
+   *
    * @param error - The error to handle.
    * @returns The response.
    */
   @PageStatus(500)
-  handle (error: any) {
+  handle (error: any): { message: string } {
     this.logger.error(error.message, { error })
-    return { message: "Oops! Something went wrong!" }
+    return { message: 'Oops! Something went wrong!' }
   }
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */

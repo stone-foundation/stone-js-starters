@@ -1,8 +1,8 @@
-import { Dispatch, JSX, SetStateAction, useState } from "react";
-import { SecurityService } from "../../services/SecurityService";
-import { UserRegister, UserRegisterErrors } from "../../models/User";
-import { IPage, Page, ReactIncomingEvent } from "@stone-js/use-react";
-import { RegisterForm } from "../../components/RegisterForm/RegisterForm";
+import { Dispatch, JSX, SetStateAction, useState } from 'react'
+import { SecurityService } from '../../services/SecurityService'
+import { UserRegister, UserRegisterErrors } from '../../models/User'
+import { IPage, Page, ReactIncomingEvent } from '@stone-js/use-react'
+import { RegisterForm } from '../../components/RegisterForm/RegisterForm'
 
 /**
  * Register Page options.
@@ -20,7 +20,7 @@ export class RegisterPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Register Page component.
-   * 
+   *
    * @param options - The options to create the Register Page component.
    */
   constructor ({ securityService }: RegisterPageOptions) {
@@ -29,7 +29,7 @@ export class RegisterPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -50,7 +50,7 @@ export class RegisterPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Register the user.
-   * 
+   *
    * @param user - The user to register.
    */
   private async register (

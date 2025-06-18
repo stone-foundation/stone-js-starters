@@ -1,6 +1,6 @@
-import { JSX } from "react";
-import { WelcomeService } from "../../services/WelcomeService";
-import { Page, ReactIncomingEvent, PageRenderContext, IPage } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { WelcomeService } from '../../services/WelcomeService'
+import { Page, ReactIncomingEvent, PageRenderContext, IPage } from '@stone-js/use-react'
 
 /**
  * WelcomePage Options
@@ -25,16 +25,16 @@ export class WelcomePage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new instance of WelcomePage
-   * 
+   *
    * @param welcomeService
    */
-  constructor({ welcomeService }: WelcomePageOptions) {
+  constructor ({ welcomeService }: WelcomePageOptions) {
     this.welcomeService = welcomeService
   }
 
   /**
    * Handle the incoming event.
-   * 
+   *
    * @param event - The incoming event.
    * @returns A welcome message
   */
@@ -44,13 +44,13 @@ export class WelcomePage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @returns The rendered component.
    */
   render ({ data }: PageRenderContext<ResponseData>): JSX.Element {
     return (
-      <section className="container">
-        <h1 className="h1 text-center mt-64">{data?.message}</h1>
+      <section className='container'>
+        <h1 className='h1 text-center mt-64'>{data?.message}</h1>
       </section>
     )
   }

@@ -1,4 +1,4 @@
-# Stone.js TypeScript basic starter
+# Stone.js - Basic starter
 
 Stone.js's basic starter to create react app using imperative API.
 

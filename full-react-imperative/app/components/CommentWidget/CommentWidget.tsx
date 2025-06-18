@@ -1,11 +1,11 @@
 import './CommentWidget.css'
-import { User } from "../../models/User"
-import { Post } from "../../models/Post"
-import { FC, useEffect, useState } from "react"
-import { CommentItem } from "../CommentItem/CommentItem"
-import { CommentForm } from "../CommentForm/CommentForm"
-import { CommentService } from "../../services/CommentService"
-import { CommentInput, CommentView } from "../../models/Comment"
+import { User } from '../../models/User'
+import { Post } from '../../models/Post'
+import { FC, useEffect, useState } from 'react'
+import { CommentItem } from '../CommentItem/CommentItem'
+import { CommentForm } from '../CommentForm/CommentForm'
+import { CommentInput, CommentView } from '../../models/Comment'
+import { ICommentService } from '../../services/contracts/ICommentService'
 
 /**
  * Comment Widget Options
@@ -13,7 +13,7 @@ import { CommentInput, CommentView } from "../../models/Comment"
 export interface CommentWidgetOptions {
   post: Post
   currentUser: User
-  commentService: CommentService
+  commentService: ICommentService
 }
 
 /**
@@ -26,7 +26,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, com
   const [fetchingStatus, setFetchingStatus] = useState<'idle' | 'loading' | 'error'>('idle')
 
   // Fetch comments
-  const fetchComments = async () => {
+  const fetchComments = async (): Promise<void> => {
     try {
       setFetchingStatus('loading')
       const comments = await commentService.list(post.id, limit)
@@ -38,14 +38,14 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, com
     }
   }
 
-  const fetchMoreComments = async () => {
+  const fetchMoreComments = (): void => {
     setLimit(limit + 10)
     setShowMoreComments(false)
-    await fetchComments()
+    void fetchComments().catch(() => {})
   }
 
   // Save comment
-  const saveComment = async (commentInput: CommentInput) => {
+  const saveComment = async (commentInput: CommentInput): Promise<void> => {
     try {
       await commentService.create(post.id, commentInput)
       await fetchComments()
@@ -58,21 +58,21 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, com
   }
 
   // Handle save
-  const handleOnSubmit = async (content: string) => {
+  const handleOnSubmit = async (content: string): Promise<void> => {
     const id = Math.random()
     const commentInput: CommentInput = {
       id,
       content,
       likesCount: 0,
       postId: post.id,
-      likedByCurrentUser: false,
+      likedByCurrentUser: false
     }
 
     const commentView: CommentView = {
       ...commentInput,
       author: currentUser,
       status: 'saving',
-      createdAt: Date.now(),
+      createdAt: Date.now()
     }
 
     setComments([...comments, commentView])
@@ -81,7 +81,7 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, com
   }
 
   // Fetch comments on mount
-  useEffect(() => { fetchComments().then(() => {}) }, [post.id])
+  useEffect(() => { fetchComments().then(() => {}).catch(() => {}) }, [post.id])
 
   // Render
   if (comments.length === 0 && fetchingStatus === 'loading') {
@@ -90,12 +90,12 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, com
     return <p className='comment-error'>Error fetching comments</p>
   } else {
     return (
-      <div className="comment-section">
+      <div className='comment-section'>
         <CommentForm
           currentUser={currentUser}
           onSubmit={handleOnSubmit}
         />
-        <ul className="comment-list">
+        <ul className='comment-list'>
           {comments.map((comment) => (
             <CommentItem
               key={comment.id}
@@ -107,8 +107,8 @@ export const CommentWidget: FC<CommentWidgetOptions> = ({ post, currentUser, com
         </ul>
         {showMoreComments && (
           <button
-            className="show-more-comments"
-            onClick={async () => await fetchMoreComments()}
+            className='show-more-comments'
+            onClick={() => fetchMoreComments()}
           >
             Show more comments
           </button>

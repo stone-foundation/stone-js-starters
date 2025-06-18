@@ -1,10 +1,10 @@
 import './LoginPage.css'
-import { IBlueprint } from '@stone-js/core';
-import { UserLogin } from "../../models/User";
-import { Dispatch, JSX, SetStateAction, useState } from "react";
-import { LoginForm } from "../../components/LoginForm/LoginForm";
-import { SecurityService } from "../../services/SecurityService";
-import { definePage, IPage, IRouter, ReactIncomingEvent } from "@stone-js/use-react";
+import { IBlueprint } from '@stone-js/core'
+import { UserLogin } from '../../models/User'
+import { Dispatch, JSX, SetStateAction, useState } from 'react'
+import { LoginForm } from '../../components/LoginForm/LoginForm'
+import { ISecurityService } from '../../services/contracts/ISecurityService'
+import { definePage, IPage, IRouter, ReactIncomingEvent } from '@stone-js/use-react'
 
 /**
  * Login Page options.
@@ -12,7 +12,7 @@ import { definePage, IPage, IRouter, ReactIncomingEvent } from "@stone-js/use-re
 interface LoginPageOptions {
   router: IRouter
   blueprint: IBlueprint
-  securityService: SecurityService
+  securityService: ISecurityService
 }
 
 /**
@@ -21,7 +21,7 @@ interface LoginPageOptions {
 export const LoginPage = ({ router, blueprint, securityService }: LoginPageOptions): IPage<ReactIncomingEvent> => ({
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -41,13 +41,13 @@ export const LoginPage = ({ router, blueprint, securityService }: LoginPageOptio
 
 /**
  * Login the user.
- * 
+ *
  * @param user - The user to login.
  */
 export async function login (
   router: IRouter,
   blueprint: IBlueprint,
-  securityService: SecurityService,
+  securityService: ISecurityService,
   user: UserLogin,
   setError: Dispatch<SetStateAction<boolean>>
 ): Promise<void> {

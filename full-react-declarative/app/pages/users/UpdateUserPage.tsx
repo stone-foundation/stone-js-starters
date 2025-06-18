@@ -1,8 +1,8 @@
-import { JSX } from "react";
-import { User, UserInput } from "../../models/User";
-import { UserService } from "../../services/UserService";
-import { UserForm } from "../../components/UserForm/UserForm";
-import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from "@stone-js/use-react";
+import { JSX } from 'react'
+import { User, UserInput } from '../../models/User'
+import { UserService } from '../../services/UserService'
+import { UserForm } from '../../components/UserForm/UserForm'
+import { IPage, Page, ReactIncomingEvent, PageRenderContext, StoneLink } from '@stone-js/use-react'
 
 /**
  * Update User Page options.
@@ -20,7 +20,7 @@ export class UpdateUserPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Create a new Update User Page component.
-   * 
+   *
    * @param userService - The user service.
    */
   constructor ({ userService }: UpdateUserPageOptions) {
@@ -29,7 +29,7 @@ export class UpdateUserPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Render the component.
-   * 
+   *
    * @param options - The options for rendering the component.
    * @returns The rendered component.
    */
@@ -40,7 +40,7 @@ export class UpdateUserPage implements IPage<ReactIncomingEvent> {
       <>
         <h1>Update user</h1>
         <UserForm user={user} onSubmit={async (userInput) => await this.saveUser(user?.id ?? 0, userInput)} />
-        <StoneLink to={`/users/${user?.id}`}>Back to user</StoneLink>
+        <StoneLink to={`/users/${String(user?.id)}`}>Back to user</StoneLink>
         <StoneLink to='/users'>Go to users</StoneLink>
       </>
     )
@@ -48,7 +48,7 @@ export class UpdateUserPage implements IPage<ReactIncomingEvent> {
 
   /**
    * Save the user.
-   * 
+   *
    * @param user - The user
    */
   private async saveUser (id: number, user: UserInput): Promise<void> {

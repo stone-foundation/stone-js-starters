@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken"
-import { Session } from "./Session"
+import jwt from 'jsonwebtoken'
+import { Session } from './Session'
 
 /**
  * User Interface

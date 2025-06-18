@@ -1,6 +1,15 @@
-import { Application } from '../app/Application'
 import { renderToString } from 'react-dom/server'
 import { ILogger, IncomingEvent } from '@stone-js/core'
+import { FactoryHandler, AppConfig } from '../app/Application'
+
+vi.mock('@stone-js/core', async (mod) => {
+  const actual: any = await mod()
+  return {
+    ...actual,
+    isNotEmpty: vi.fn(() => true),
+    defineConfig: (config: any) => config
+  }
+})
 
 describe('Application', () => {
   let app: any
@@ -11,12 +20,26 @@ describe('Application', () => {
       info: vi.fn(),
     } as unknown as ILogger
 
-    app = Application({ logger: mockedLogger })
+    app = FactoryHandler({ logger: mockedLogger })
   })
 
   it('should create an application instance', () => {
     // Assert
     expect(app).toBeInstanceOf(Object)
+  })
+
+  it('get head values', async () => {
+    // Arrange
+    const expectedMessage = 'Hello World!'
+    const event = { get: () => 'World' } as unknown as IncomingEvent
+
+    // Act
+    const head = await app.head({ event })
+
+    // Assert
+    expect(head).toHaveProperty('metas')
+    expect(head.title).toBe(expectedMessage)
+    expect(head).toHaveProperty('description')
   })
 
   it('should handle incoming events', () => {
@@ -41,5 +64,17 @@ describe('Application', () => {
 
     // Assert
     expect(response).toMatchSnapshot()
+  })
+
+  it('should get config', () => {
+    // Arrange
+    const config: any = AppConfig
+    const blueprint: any = { is: () => true, set: vi.fn() }
+
+    // Act
+    config.afterConfigure(blueprint)
+
+    // Assert
+    expect(blueprint.set).toHaveBeenCalled()
   })
 })
