@@ -1,7 +1,7 @@
 import { ILogger } from '@stone-js/core'
 import { IRouter } from '@stone-js/use-react'
 import { PostInput, Post } from '../models/Post'
-import { PostService } from '../services/PostService'
+import { IPostService } from '../services/contracts/IPostService'
 
 /**
  * Create the post.
@@ -11,7 +11,7 @@ import { PostService } from '../services/PostService'
 export async function createPost (
   router: IRouter,
   logger: ILogger,
-  postService: PostService,
+  postService: IPostService,
   postInput: PostInput
 ): Promise<void> {
   try {
@@ -32,7 +32,7 @@ export async function createPost (
 export async function deletePost (
   router: IRouter,
   logger: ILogger,
-  postService: PostService,
+  postService: IPostService,
   post: Post
 ): Promise<void> {
   if (window.confirm('Are you sure you want to delete this post?')) {
@@ -53,7 +53,7 @@ export async function deletePost (
  */
 export async function updatePost (
   logger: ILogger,
-  postService: PostService,
+  postService: IPostService,
   id: number,
   post: PostInput
 ): Promise<void> {

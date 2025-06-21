@@ -38,7 +38,7 @@ Each starter reflects a different level of complexity and domain (microservice o
 | `full-react-declarative`     | Enterprise-ready app with head config, hydration, and complete structure |
 | `full-react-imperative`      | Full functional React app with SSR, hooks, tests, and platform config    |
 
-You can combine complexity level (`basic`, `standard`, `full`), domain (`react`, `service`), and style (`declarative`, `imperative`) to find the right starter — for example: `standard-react-imperative`.
+You can combine complexity level (`basic`, `standard`, `full`), domain (`react`, `service`), and style (`declarative`, `imperative`) to find the right starter, for example: `standard-react-imperative`.
 
 
 ## How It's Used

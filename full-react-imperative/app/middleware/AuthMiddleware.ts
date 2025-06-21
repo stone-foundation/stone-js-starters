@@ -37,7 +37,7 @@ export const AuthMiddleware = ({
     if (!excludes.includes(event.pathname)) {
       if (!securityService.isAuthenticated()) {
         blueprint.set('app.requestedUrl', event.pathname)
-        return await reactRedirectResponse({ url: '/login' })
+        return reactRedirectResponse({ url: '/login' })
       }
       const user = await reactRuntime.snapshot('currentUser', async () => await userService.current())
       event.setUserResolver(() => user)
