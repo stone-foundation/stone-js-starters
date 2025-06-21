@@ -24,7 +24,7 @@
     "@stone-js/browser-adapter": "^0.1.0",
     "@stone-js/pipeline": "^0.1.0",
     "@stone-js/http-core": "^0.1.0",
-    "@stone-js/node-http-adapter": "^0.1.0",
+    "@stone-js/node-http-adapter": "^0.2.0",
     "@stone-js/router": "^0.1.0",
     "@stone-js/core": "^0.1.0"
   },
